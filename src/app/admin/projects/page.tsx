@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe } from 'lucide-react';
+import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { Project, Technology } from '@/types';
@@ -30,6 +30,9 @@ export default function AdminProjectsPage() {
   const [featured, setFeatured] = useState(false);
   const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED'>('PUBLISHED');
   const [selectedTechIds, setSelectedTechIds] = useState<number[]>([]);
+  const [projectImages, setProjectImages] = useState<Array<{ imageUrl: string; displayOrder: number }>>([]);
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -89,6 +92,7 @@ export default function AdminProjectsPage() {
     setFeatured(false);
     setStatus('PUBLISHED');
     setSelectedTechIds([]);
+    setProjectImages([]);
     setViewMode('FORM');
     setMessage(null);
   };
@@ -105,6 +109,7 @@ export default function AdminProjectsPage() {
     setFeatured(project.featured);
     setStatus(project.status);
     setSelectedTechIds(project.technologies.map(t => t.id));
+    setProjectImages(project.images ? project.images.map(img => ({ imageUrl: img.imageUrl, displayOrder: img.displayOrder })) : []);
     setViewMode('FORM');
     setMessage(null);
   };
@@ -136,6 +141,100 @@ export default function AdminProjectsPage() {
     );
   };
 
+  const handleAddImage = () => {
+    setProjectImages(prev => [...prev, { imageUrl: '', displayOrder: prev.length }]);
+  };
+
+  const handleUpdateImage = (index: number, field: 'imageUrl' | 'displayOrder', value: any) => {
+    setProjectImages(prev => prev.map((img, idx) => {
+      if (idx === index) {
+        return {
+          ...img,
+          [field]: field === 'displayOrder' ? parseInt(value) || 0 : value
+        };
+      }
+      return img;
+    }));
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setProjectImages(prev => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingThumbnail(true);
+    try {
+      const url = await apiService.uploadFile(file);
+      setThumbnailUrl(url);
+      setMessage({
+        type: 'success',
+        text: locale === 'vi' ? 'Tải ảnh đại diện thành công!' : 'Thumbnail uploaded successfully!'
+      });
+    } catch (err: any) {
+      console.error('Failed to upload thumbnail:', err);
+      setMessage({
+        type: 'error',
+        text: locale === 'vi' ? `Lỗi tải ảnh: ${err.message}` : `Upload error: ${err.message}`
+      });
+    } finally {
+      setUploadingThumbnail(false);
+    }
+  };
+
+  const handleMultipleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingGallery(true);
+    setMessage(null);
+    const newImages = [...projectImages];
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        try {
+          const url = await apiService.uploadFile(file);
+          newImages.push({
+            imageUrl: url,
+            displayOrder: newImages.length
+          });
+          successCount++;
+        } catch (err) {
+          console.error(`Failed to upload file ${file.name}:`, err);
+          failCount++;
+        }
+      }
+
+      setProjectImages(newImages);
+
+      if (failCount === 0) {
+        setMessage({
+          type: 'success',
+          text: locale === 'vi' 
+            ? `Đã tải lên thành công ${successCount} ảnh minh họa!` 
+            : `Successfully uploaded ${successCount} illustrative images!`
+        });
+      } else {
+        setMessage({
+          type: 'error',
+          text: locale === 'vi'
+            ? `Đã tải lên ${successCount} ảnh thành công, thất bại ${failCount} ảnh.`
+            : `Uploaded ${successCount} successfully, failed ${failCount} images.`
+        });
+      }
+    } catch (err: any) {
+      console.error('Failed to run batch upload:', err);
+    } finally {
+      setUploadingGallery(false);
+      e.target.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !slug.trim() || !shortDescription.trim()) {
@@ -157,7 +256,8 @@ export default function AdminProjectsPage() {
       demoUrl,
       featured,
       status,
-      technologyIds: selectedTechIds
+      technologyIds: selectedTechIds,
+      images: projectImages.filter(img => img.imageUrl.trim() !== '')
     };
 
     try {
@@ -404,22 +504,165 @@ export default function AdminProjectsPage() {
                   className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200 resize-y"
                 />
               </div>
+
+              {/* Illustrative Images section */}
+              <div className="space-y-3 p-4 border border-border-custom/50 rounded-2xl bg-slate-950/20">
+                <div className="flex items-center justify-between border-b border-border-custom/30 pb-2">
+                  <span className="text-[10px] text-secondary uppercase font-bold tracking-wider">
+                    {locale === 'vi' ? 'Ảnh minh họa dự án' : 'Project Illustrative Images'}
+                  </span>
+                  
+                  {/* Upload button triggers multi-file upload */}
+                  <label className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-cyan-custom/10 hover:bg-cyan-custom/25 border border-cyan-custom/30 text-cyan-custom text-[10px] uppercase font-bold transition select-none cursor-pointer">
+                    <Plus className="w-3 h-3" />
+                    <span>{locale === 'vi' ? 'Tải ảnh từ máy' : 'Upload Images'}</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      multiple 
+                      onChange={handleMultipleGalleryUpload} 
+                      className="hidden" 
+                      disabled={uploadingGallery}
+                    />
+                  </label>
+                </div>
+
+                {uploadingGallery && (
+                  <div className="flex items-center justify-center space-x-2 py-3 border border-dashed border-cyan-custom/30 rounded-xl bg-cyan-custom/5 text-cyan-custom animate-pulse">
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span className="text-[10px] font-mono tracking-wider">
+                      {locale === 'vi' ? 'ĐANG TẢI LÊN ẢNH MINH HỌA...' : 'UPLOADING SCREENSHOTS...'}
+                    </span>
+                  </div>
+                )}
+
+                {projectImages.length === 0 ? (
+                  <p className="text-[10px] text-secondary italic font-sans py-2">
+                    {locale === 'vi' ? 'Chưa có ảnh minh họa nào được tải lên.' : 'No illustrative images uploaded yet.'}
+                  </p>
+                ) : (
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                    {projectImages.map((img, index) => (
+                      <div key={index} className="flex items-center gap-3 p-2.5 rounded-xl border border-border-custom bg-slate-900/40">
+                        {/* Thumbnail */}
+                        <div className="w-16 h-10 rounded border border-border-custom overflow-hidden bg-bg shrink-0">
+                          <img 
+                            src={img.imageUrl} 
+                            alt="preview" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=80'; }}
+                          />
+                        </div>
+
+                        {/* Image Path (Read-only) */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10px] font-mono text-cyan-custom/80 truncate">
+                            {img.imageUrl}
+                          </p>
+                        </div>
+
+                        {/* Order Input */}
+                        <div className="flex items-center space-x-2 shrink-0">
+                          <span className="text-[9px] text-secondary font-bold uppercase">{locale === 'vi' ? 'Thứ tự' : 'Order'}:</span>
+                          <input
+                            type="number"
+                            value={img.displayOrder}
+                            onChange={(e) => handleUpdateImage(index, 'displayOrder', e.target.value)}
+                            className="w-12 px-1.5 py-1 rounded-lg border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50 text-center"
+                          />
+                        </div>
+
+                        {/* Delete Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          className="p-1.5 rounded-lg border border-border-custom text-rose-400 hover:text-rose-500 hover:bg-rose-500/10 transition shrink-0"
+                          title={locale === 'vi' ? 'Xóa ảnh' : 'Remove Image'}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Right Column: URLs, Status, Tech Checkboxes */}
             <div className="lg:col-span-1 space-y-4">
               
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
-                  {locale === 'vi' ? 'Link ảnh nền đại diện' : 'Thumbnail Image URL'}
+              <div className="space-y-2">
+                <label className="text-[10px] text-secondary uppercase font-bold tracking-wider block">
+                  {locale === 'vi' ? 'Ảnh đại diện (Thumbnail)' : 'Thumbnail Image'}
                 </label>
-                <input
-                  type="text"
-                  value={thumbnailUrl}
-                  onChange={(e) => setThumbnailUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 transition duration-200"
-                />
+                
+                <div className="flex flex-col space-y-2.5">
+                  {/* Thumbnail Preview box */}
+                  <div className="relative aspect-video w-full rounded-2xl border border-border-custom bg-slate-950/40 overflow-hidden flex items-center justify-center shadow-inner group">
+                    {thumbnailUrl ? (
+                      <>
+                        <img 
+                          src={thumbnailUrl} 
+                          alt="Thumbnail Preview" 
+                          className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=300';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition duration-200 flex items-center justify-center space-x-2">
+                          <label className="p-2 rounded-xl bg-slate-900/90 border border-cyan-custom/30 text-cyan-custom text-xs flex items-center justify-center cursor-pointer select-none font-bold hover:bg-slate-800 transition">
+                            <Upload className="w-4 h-4 text-cyan-custom" />
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={handleThumbnailUpload} 
+                              className="hidden" 
+                              disabled={uploadingThumbnail}
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setThumbnailUrl('')}
+                            className="p-2 rounded-xl bg-slate-900/90 border border-rose-500/30 text-rose-400 hover:bg-slate-800 transition"
+                            title={locale === 'vi' ? 'Xóa ảnh' : 'Remove Image'}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-6 text-center text-secondary space-y-2">
+                        <Upload className="w-8 h-8 text-cyan-custom/60 animate-pulse" />
+                        <label className="px-3.5 py-1.5 rounded-xl bg-cyan-custom/10 hover:bg-cyan-custom/20 border border-cyan-custom/30 text-cyan-custom text-xs font-bold transition cursor-pointer select-none">
+                          <span>{uploadingThumbnail ? (locale === 'vi' ? 'Đang tải...' : 'Uploading...') : (locale === 'vi' ? 'Chọn file tải lên' : 'Select Local File')}</span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={handleThumbnailUpload} 
+                            className="hidden" 
+                            disabled={uploadingThumbnail}
+                          />
+                        </label>
+                        <p className="text-[9px] font-sans text-secondary/60">
+                          {locale === 'vi' ? 'Khuyên dùng ảnh tỷ lệ 16:9' : 'Recommended ratio 16:9'}
+                        </p>
+                      </div>
+                    )}
+
+                    {uploadingThumbnail && (
+                      <div className="absolute inset-0 bg-slate-950/70 flex flex-col items-center justify-center space-y-2">
+                        <RefreshCw className="w-6 h-6 text-cyan-custom animate-spin" />
+                        <span className="text-[10px] font-mono tracking-wider text-cyan-custom">UPLOADING...</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {thumbnailUrl && (
+                    <p className="text-[9px] text-secondary font-mono leading-tight break-all border border-border-custom/30 rounded-lg p-2 bg-slate-950/25">
+                      <span className="text-cyan-custom/75">{thumbnailUrl}</span>
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-1.5">

@@ -121,6 +121,30 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           {project.content || project.shortDescription}
         </div>
 
+        {/* Illustrative Images Gallery */}
+        {project.images && project.images.length > 0 && (
+          <div className="border-t border-border-custom/50 pt-5 space-y-4">
+            <h3 className="text-xs font-mono font-bold text-cyan-custom uppercase tracking-wider">
+              {locale === 'vi' ? 'Hình ảnh minh họa' : 'Illustrative Screenshots'}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {project.images.map((img) => (
+                <div 
+                  key={img.id} 
+                  className="rounded-xl overflow-hidden border border-border-custom bg-slate-950/40 relative group cursor-pointer"
+                >
+                  <img 
+                    src={img.imageUrl} 
+                    alt={`Screenshot of ${project.title}`}
+                    className="w-full h-auto object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                    onClick={() => window.open(img.imageUrl, '_blank')}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Action Links */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border-custom/50">
           {project.githubUrl && (

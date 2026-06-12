@@ -441,5 +441,36 @@ export const apiService = {
       headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to delete message');
+  },
+
+  // =============================================================
+  // 12. FILE UPLOAD APIS
+  // =============================================================
+  async uploadFile(file: File): Promise<string> {
+    if (DEBUG) console.log('Uploading file...', file.name);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetchWithTimeout('/api/v1/admin/files/upload', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: formData
+    });
+
+    if (!response.ok) {
+      let details = '';
+      try {
+        details = await response.text();
+      } catch (e) {
+        details = 'Cannot read error body';
+      }
+      throw new Error(`Upload failed: Status ${response.status} (${response.statusText}). Details: ${details}`);
+    }
+
+    const result = await response.json();
+    if (result.success && result.data && result.data.fileUrl) {
+      return result.data.fileUrl;
+    }
+    throw new Error(result.message || 'File upload failed');
   }
 };

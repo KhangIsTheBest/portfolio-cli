@@ -37,7 +37,7 @@ export interface Technology {
 export interface ProjectImage {
   id: number;
   imageUrl: string;
-  orderIndex: number;
+  displayOrder: number;
 }
 
 export interface Project {

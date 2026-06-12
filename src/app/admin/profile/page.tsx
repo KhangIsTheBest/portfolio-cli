@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Save, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2 } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -22,6 +22,31 @@ export default function AdminProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingAvatar(true);
+    setMessage(null);
+    try {
+      const url = await apiService.uploadFile(file);
+      setAvatarUrl(url);
+      setMessage({
+        type: 'success',
+        text: locale === 'vi' ? 'Tải ảnh đại diện thành công!' : 'Avatar uploaded successfully!'
+      });
+    } catch (err: any) {
+      console.error('Failed to upload avatar:', err);
+      setMessage({
+        type: 'error',
+        text: locale === 'vi' ? `Lỗi tải ảnh: ${err.message}` : `Upload error: ${err.message}`
+      });
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -194,22 +219,66 @@ export default function AdminProfilePage() {
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
-                {locale === 'vi' ? 'Đường dẫn ảnh đại diện (URL)' : 'Avatar Image URL'}
+            <div className="space-y-2">
+              <label className="text-[10px] text-secondary uppercase font-bold tracking-wider block">
+                {locale === 'vi' ? 'Ảnh đại diện' : 'Avatar Profile Image'}
               </label>
-              <input
-                type="text"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://api.dicebear.com/..."
-                className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
-              />
-              <p className="text-[9px] text-secondary font-sans leading-relaxed">
-                {locale === 'vi' 
-                  ? 'Nhập đường dẫn trực tiếp dẫn tới ảnh đại diện của bạn. Ví dụ link ảnh Dicebear hoặc Unsplash.'
-                  : 'Enter a direct URL link to your avatar profile photo. Examples include Dicebear, GitHub, or Unsplash links.'}
-              </p>
+              <div className="flex items-center space-x-4">
+                {/* Preview avatar */}
+                <div className="relative w-16 h-16 rounded-full border border-border-custom bg-slate-950/60 overflow-hidden shrink-0 flex items-center justify-center shadow-glow-sm">
+                  {avatarUrl ? (
+                    <img 
+                      src={avatarUrl} 
+                      alt="Avatar Preview" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://api.dicebear.com/7.x/bottts/svg'; // generic fallback
+                      }}
+                    />
+                  ) : (
+                    <User className="w-8 h-8 text-secondary" />
+                  )}
+                  {uploadingAvatar && (
+                    <div className="absolute inset-0 bg-slate-950/70 flex items-center justify-center">
+                      <RefreshCw className="w-4 h-4 text-cyan-custom animate-spin" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload action and state */}
+                <div className="flex flex-col space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <label className="px-3 py-1.5 rounded-xl border border-cyan-custom/30 bg-cyan-custom/5 hover:bg-cyan-custom/15 text-cyan-custom text-xs flex items-center justify-center cursor-pointer select-none font-bold transition">
+                      <Upload className="w-3.5 h-3.5 mr-1.5" />
+                      <span>{uploadingAvatar ? (locale === 'vi' ? 'Đang tải...' : 'Uploading...') : (locale === 'vi' ? 'Tải ảnh lên' : 'Upload Image')}</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleAvatarUpload} 
+                        className="hidden" 
+                        disabled={uploadingAvatar}
+                      />
+                    </label>
+                    {avatarUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setAvatarUrl('')}
+                        className="p-1.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition"
+                        title={locale === 'vi' ? 'Xóa ảnh' : 'Remove Image'}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[9px] text-secondary font-sans leading-tight">
+                    {avatarUrl ? (
+                      <span className="font-mono text-cyan-custom/75 break-all max-w-[200px] inline-block">{avatarUrl}</span>
+                    ) : (
+                      locale === 'vi' ? 'Chưa tải lên ảnh đại diện' : 'No avatar image uploaded'
+                    )}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
