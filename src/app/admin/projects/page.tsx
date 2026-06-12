@@ -97,21 +97,33 @@ export default function AdminProjectsPage() {
     setMessage(null);
   };
 
-  const handleEdit = (project: Project) => {
-    setEditingId(project.id);
-    setTitle(project.title);
-    setSlug(project.slug);
-    setShortDescription(project.shortDescription);
-    setContent(project.content || '');
-    setThumbnailUrl(project.thumbnailUrl);
-    setGithubUrl(project.githubUrl || '');
-    setDemoUrl(project.demoUrl || '');
-    setFeatured(project.featured);
-    setStatus(project.status);
-    setSelectedTechIds(project.technologies.map(t => t.id));
-    setProjectImages(project.images ? project.images.map(img => ({ imageUrl: img.imageUrl, displayOrder: img.displayOrder })) : []);
-    setViewMode('FORM');
-    setMessage(null);
+  const handleEdit = async (projectSummary: Project) => {
+    setLoading(true);
+    try {
+      const project = await apiService.getProjectBySlug(projectSummary.slug);
+      setEditingId(project.id);
+      setTitle(project.title);
+      setSlug(project.slug);
+      setShortDescription(project.shortDescription);
+      setContent(project.content || '');
+      setThumbnailUrl(project.thumbnailUrl);
+      setGithubUrl(project.githubUrl || '');
+      setDemoUrl(project.demoUrl || '');
+      setFeatured(project.featured);
+      setStatus(project.status);
+      setSelectedTechIds(project.technologies.map(t => t.id));
+      setProjectImages(project.images ? project.images.map(img => ({ imageUrl: img.imageUrl, displayOrder: img.displayOrder })) : []);
+      setViewMode('FORM');
+      setMessage(null);
+    } catch (err) {
+      console.error('Failed to load project details for editing:', err);
+      setMessage({
+        type: 'error',
+        text: locale === 'vi' ? 'Không thể tải chi tiết dự án để chỉnh sửa.' : 'Failed to load project details for editing.'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id: number) => {
