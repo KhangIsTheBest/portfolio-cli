@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+:root {
+  /* Default Cyan & Purple Cosmic Theme */
+  --bg-color: #080711;
+  --text-color: #f1f5f9;
+  --primary-color: #06b6d4;
+  --secondary-color: #94a3b8;
+  --cursor-color: #06b6d4;
+  --glow-color: rgba(6, 182, 212, 0.2);
+  --border-color: rgba(168, 85, 247, 0.25);
+  --card-bg: rgba(13, 10, 28, 0.65);
+  --terminal-header-bg: #120e25;
+  --cyan-color: #06b6d4;
+  --purple-color: #a855f7;
+}
+
+/* Theme matrix (Green Hacker) */
+.theme-matrix {
+  --bg-color: #030712;
+  --text-color: #22c55e;
+  --primary-color: #22c55e;
+  --secondary-color: #15803d;
+  --cursor-color: #22c55e;
+  --glow-color: rgba(34, 197, 94, 0.2);
+  --border-color: rgba(34, 197, 94, 0.3);
+  --card-bg: rgba(3, 7, 18, 0.8);
+  --terminal-header-bg: #052e16;
+}
+
+/* Theme dracula */
+.theme-dracula {
+  --bg-color: #282a36;
+  --text-color: #f8f8f2;
+  --primary-color: #bd93f9;
+  --secondary-color: #ff79c6;
+  --cursor-color: #50fa7b;
+  --glow-color: rgba(189, 147, 249, 0.25);
+  --border-color: rgba(189, 147, 249, 0.3);
+  --card-bg: rgba(40, 42, 54, 0.7);
+  --terminal-header-bg: #1e1f29;
+}
+
+/* Theme cyberpunk */
+.theme-cyberpunk {
+  --bg-color: #000b19;
+  --text-color: #00f0ff;
+  --primary-color: #ff007f;
+  --secondary-color: #00f0ff;
+  --cursor-color: #ff007f;
+  --glow-color: rgba(255, 0, 127, 0.25);
+  --border-color: rgba(0, 240, 255, 0.3);
+  --card-bg: rgba(0, 11, 25, 0.75);
+  --terminal-header-bg: #051937;
+}
+
+/* Theme amber (Retro CRT) */
+.theme-amber {
+  --bg-color: #0c0802;
+  --text-color: #f59e0b;
+  --primary-color: #f59e0b;
+  --secondary-color: #b45309;
+  --cursor-color: #f59e0b;
+  --glow-color: rgba(245, 158, 11, 0.25);
+  --border-color: rgba(245, 158, 11, 0.3);
+  --card-bg: rgba(12, 8, 2, 0.85);
+  --terminal-header-bg: #291500;
+}
+
+/* Theme snow (Minimal Light Mode) */
+.theme-snow {
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --primary-color: #2563eb;
+  --secondary-color: #64748b;
+  --cursor-color: #0f172a;
+  --glow-color: rgba(37, 99, 235, 0.05);
+  --border-color: rgba(226, 232, 240, 1);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --terminal-header-bg: #e2e8f0;
+}
+
+@theme inline {
+  --color-bg: var(--bg-color);
+  --color-text: var(--text-color);
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --color-cursor: var(--cursor-color);
+  --color-glow: var(--glow-color);
+  --color-border-custom: var(--border-color);
+  --color-card-custom: var(--card-bg);
+  --color-terminal-header: var(--terminal-header-bg);
+  
+  --color-cyan-custom: var(--cyan-color);
+  --color-purple-custom: var(--purple-color);
+
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Custom styles and animations */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-mono);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Blinking terminal cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Scanline / CRT overlay effect */
+.crt-effects::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 6px 100%;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+/* Retro screen flicker animation */
+@keyframes flicker {
+  0% { opacity: 0.975; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Glitch effect for titles */
+.glitch-text {
+  text-shadow: 0.05em 0 0 rgba(255,0,127,.75),
+              -0.025em -0.05em 0 rgba(0,240,255,.75),
+              0.025em 0.05em 0 rgba(245,158,11,.75);
+}
+
+/* Selection style */
+::selection {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+}
+
+/* Custom glow effect */
+.shadow-glow {
+  box-shadow: 0 0 15px var(--glow-color);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Pulse Slow Animation for background glows */
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.18; transform: scale(1.08); }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 10s ease-in-out infinite;
+}
