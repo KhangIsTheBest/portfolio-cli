@@ -42,7 +42,7 @@ export default function RootLayout({
             <Header />
 
             {/* Content Viewport */}
-            <div className="flex-1 flex flex-col w-full max-w-5xl mx-auto justify-center">
+            <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto justify-center">
               {children}
             </div>
 

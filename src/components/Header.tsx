@@ -44,8 +44,8 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-4 z-40 w-full border border-border-custom bg-card-custom/80 backdrop-blur-md rounded-2xl mb-8 select-text">
-      <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <nav className="sticky top-4 z-40 w-full max-w-7xl mx-auto border border-border-custom bg-card-custom/80 backdrop-blur-md rounded-2xl mb-8 select-text">
+      <div className="w-full px-4 md:px-6 py-3 flex items-center justify-between">
         
         {/* Logo & Brand */}
         <Link href="/" className="flex items-center space-x-2.5 group select-none">
@@ -56,19 +56,19 @@ export const Header: React.FC = () => {
           </div>
           <div>
             <h1 className="text-sm font-black tracking-widest text-text">
-              PORTFOLIO<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-custom to-purple-custom">.CLI</span>
+              PhanDuyKhang<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-custom to-purple-custom">.CLI</span>
             </h1>
             <p className="text-[8px] text-secondary font-mono">SYS_OK: HTTP_REST</p>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center space-x-1.5">
+        <div className="hidden lg:flex items-center space-x-1">
           {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold tracking-wide transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide transition-all duration-200 ${
                 isActive(item.href)
                   ? 'text-cyan-custom bg-cyan-custom/10 border border-cyan-custom/20'
                   : 'text-secondary border border-transparent hover:text-text hover:bg-slate-800/40'
@@ -80,11 +80,11 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Theme, Language, and Login button */}
-        <div className="hidden md:flex items-center space-x-3 select-none">
+        <div className="hidden lg:flex items-center space-x-2 select-none">
           {/* Language Toggle Button */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-900/60 border border-border-custom hover:border-primary/50 text-secondary hover:text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer"
+            className="flex items-center space-x-1 px-2.5 py-1.5 bg-slate-900/60 border border-border-custom hover:border-primary/50 text-secondary hover:text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer"
             title={locale === 'vi' ? 'Switch to English' : 'Chuyển sang Tiếng Việt'}
           >
             <Globe className="w-3.5 h-3.5 text-primary" />
@@ -96,7 +96,7 @@ export const Header: React.FC = () => {
           {/* Account Portal / Login Link */}
           <Link
             href={isLoggedIn ? (isAdmin ? '/admin' : '/contact') : '/login'}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-gradient-to-r from-cyan-custom/15 to-purple-custom/15 hover:from-cyan-custom/20 hover:to-purple-custom/20 border border-cyan-custom/25 hover:border-cyan-custom/60 text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer shadow-sm"
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-gradient-to-r from-cyan-custom/15 to-purple-custom/15 hover:from-cyan-custom/20 hover:to-purple-custom/20 border border-cyan-custom/25 hover:border-cyan-custom/60 text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer shadow-sm"
           >
             {isLoggedIn ? (
               <>
@@ -113,7 +113,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Hamburger Mobile Toggle Button */}
-        <div className="flex items-center space-x-2 md:hidden select-none">
+        <div className="flex items-center space-x-2 lg:hidden select-none">
           {/* Mobile Language Button */}
           <button
             onClick={toggleLanguage}
@@ -136,7 +136,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Navigation Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden px-4 pb-4 border-t border-border-custom bg-card-custom/95 rounded-b-2xl backdrop-blur-lg flex flex-col space-y-2.5 pt-3.5 animate-fade-in select-none">
+        <div className="lg:hidden px-4 pb-4 border-t border-border-custom bg-card-custom/95 rounded-b-2xl backdrop-blur-lg flex flex-col space-y-2.5 pt-3.5 animate-fade-in select-none">
           {menuItems.map((item) => (
             <Link
               key={item.href}
