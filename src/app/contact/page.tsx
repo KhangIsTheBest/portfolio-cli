@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Mail, Send, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Send, CheckCircle, UserCheck, LogOut, Info } from 'lucide-react';
+import Link from 'next/link';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -14,21 +15,54 @@ if (typeof window !== 'undefined') {
 }
 
 export default function ContactPage() {
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: '',
   });
+  
+  const [loggedInUser, setLoggedInUser] = useState<{ fullName: string; email: string; username: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Check login state on mount
+  useEffect(() => {
+    const profileStr = localStorage.getItem('user-profile');
+    if (profileStr) {
+      try {
+        const profile = JSON.parse(profileStr);
+        setLoggedInUser(profile);
+        setFormData((prev) => ({
+          ...prev,
+          name: profile.fullName || '',
+          email: profile.email || '',
+        }));
+      } catch (e) {
+        console.error('Failed to parse user profile:', e);
+      }
+    }
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-profile');
+    setLoggedInUser(null);
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,9 +89,16 @@ export default function ContactPage() {
       }
 
       setSubmitSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      
+      setFormData({
+        name: loggedInUser ? loggedInUser.fullName : '',
+        email: loggedInUser ? loggedInUser.email : '',
+        subject: '',
+        message: '',
+      });
+      
       setTimeout(() => setSubmitSuccess(false), 5000);
-    } catch (err) {
+    } catch {
       alert('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -69,10 +110,58 @@ export default function ContactPage() {
       {/* Accent bottom glow */}
       <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-purple-custom/10 blur-3xl -z-10 pointer-events-none" />
 
-      <div className="flex items-center space-x-2 border-b border-border-custom/50 pb-3">
-        <Mail className="w-5 h-5 text-cyan-custom" />
-        <h3 className="text-base font-bold text-text">{t('contact.title')}</h3>
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-border-custom/50 pb-3">
+        <div className="flex items-center space-x-2">
+          <Mail className="w-5 h-5 text-cyan-custom" />
+          <h3 className="text-base font-bold text-text">{t('contact.title')}</h3>
+        </div>
       </div>
+
+      {/* Login / Session Greeting Bar */}
+      {loggedInUser ? (
+        <div className="p-3 bg-cyan-custom/10 border border-cyan-custom/25 rounded-2xl flex items-center justify-between text-xs font-mono select-none">
+          <div className="flex items-center space-x-2 text-cyan-custom">
+            <UserCheck className="w-4 h-4 shrink-0" />
+            <span>
+              {locale === 'vi' 
+                ? `Chào mừng, ${loggedInUser.fullName}!` 
+                : `Welcome back, ${loggedInUser.fullName}!`}
+            </span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-1 text-rose-400 hover:text-rose-500 transition focus:outline-none"
+            title={locale === 'vi' ? 'Đăng xuất tài khoản' : 'Sign Out'}
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="font-bold">{locale === 'vi' ? 'Đăng xuất' : 'Logout'}</span>
+          </button>
+        </div>
+      ) : (
+        <div className="p-3 bg-slate-950/30 border border-border-custom rounded-2xl flex items-start space-x-2 text-xs text-secondary font-mono">
+          <Info className="w-4 h-4 shrink-0 text-purple-custom mt-0.5" />
+          <p className="leading-relaxed">
+            {locale === 'vi' ? (
+              <>
+                Bạn có thể{' '}
+                <Link href="/login" className="text-purple-custom hover:underline font-bold">
+                  Đăng nhập / Đăng ký tài khoản
+                </Link>{' '}
+                để tự động điền thông tin liên hệ của mình.
+              </>
+            ) : (
+              <>
+                You can{' '}
+                <Link href="/login" className="text-purple-custom hover:underline font-bold">
+                  Sign In / Sign Up
+                </Link>{' '}
+                to automatically pre-fill your details.
+              </>
+            )}
+          </p>
+        </div>
+      )}
 
       {submitSuccess ? (
         <div className="flex flex-col items-center justify-center py-10 text-center space-y-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl animate-fade-in font-mono">
@@ -87,6 +176,8 @@ export default function ContactPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Name input */}
             <div className="space-y-1">
               <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.nameLabel')}</label>
               <input
@@ -95,10 +186,17 @@ export default function ContactPage() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                readOnly={!!loggedInUser}
                 placeholder={t('contact.namePlaceholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+                className={`w-full px-4 py-2.5 rounded-xl border border-border-custom text-text text-sm focus:outline-none focus:border-cyan-custom transition ${
+                  loggedInUser 
+                    ? 'bg-slate-950/20 text-secondary cursor-not-allowed opacity-75 focus:border-border-custom' 
+                    : 'bg-slate-950/45'
+                }`}
               />
             </div>
+
+            {/* Email input */}
             <div className="space-y-1">
               <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.emailLabel')}</label>
               <input
@@ -107,12 +205,18 @@ export default function ContactPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
+                readOnly={!!loggedInUser}
                 placeholder={t('contact.emailPlaceholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+                className={`w-full px-4 py-2.5 rounded-xl border border-border-custom text-text text-sm focus:outline-none focus:border-cyan-custom transition ${
+                  loggedInUser 
+                    ? 'bg-slate-950/20 text-secondary cursor-not-allowed opacity-75 focus:border-border-custom' 
+                    : 'bg-slate-950/45'
+                }`}
               />
             </div>
           </div>
 
+          {/* Subject input */}
           <div className="space-y-1">
             <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.subjectLabel')}</label>
             <input
@@ -125,6 +229,7 @@ export default function ContactPage() {
             />
           </div>
 
+          {/* Message input */}
           <div className="space-y-1">
             <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.msgLabel')}</label>
             <textarea
@@ -138,6 +243,7 @@ export default function ContactPage() {
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
