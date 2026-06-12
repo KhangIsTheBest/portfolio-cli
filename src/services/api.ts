@@ -250,7 +250,15 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to create technology');
+    if (!response.ok) {
+      let details = '';
+      try {
+        details = await response.text();
+      } catch (e) {
+        details = 'Cannot read error body';
+      }
+      throw new Error(`Failed to create technology: Status ${response.status} (${response.statusText}). Details: ${details}`);
+    }
     const result: ApiResponse<Technology> = await response.json();
     if (result.success && result.data) {
       return result.data;
@@ -268,7 +276,15 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to update technology');
+    if (!response.ok) {
+      let details = '';
+      try {
+        details = await response.text();
+      } catch (e) {
+        details = 'Cannot read error body';
+      }
+      throw new Error(`Failed to update technology: Status ${response.status} (${response.statusText}). Details: ${details}`);
+    }
     const result: ApiResponse<Technology> = await response.json();
     if (result.success && result.data) {
       return result.data;
