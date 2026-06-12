@@ -208,3 +208,22 @@ body {
 .animate-pulse-slow {
   animation: pulseSlow 10s ease-in-out infinite;
 }
+
+/* Lightbox entrance animations */
+@keyframes lightboxFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lightboxZoom {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-lightbox-fade {
+  animation: lightboxFade 0.25s ease-out forwards;
+}
+
+.animate-lightbox-zoom {
+  animation: lightboxZoom 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}

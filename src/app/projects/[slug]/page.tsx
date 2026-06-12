@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Calendar, Layers } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, Layers, X } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
@@ -15,6 +15,25 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveImageUrl(null);
+      }
+    };
+    if (activeImageUrl) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [activeImageUrl]);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -62,7 +81,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 my-8 animate-fade-in">
+    <>
+      <div className="max-w-3xl mx-auto space-y-6 my-8 animate-fade-in">
       {/* Header breadcrumb */}
       <div className="flex items-center justify-between border-b border-border-custom/50 pb-3">
         <Link
@@ -137,7 +157,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                     src={img.imageUrl} 
                     alt={`Screenshot of ${project.title}`}
                     className="w-full h-auto object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                    onClick={() => window.open(img.imageUrl, '_blank')}
+                    onClick={() => setActiveImageUrl(img.imageUrl)}
                   />
                 </div>
               ))}
@@ -172,5 +192,35 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
     </div>
-  );
+
+    {/* Lightbox Modal */}
+    {activeImageUrl && (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-2xl p-4 animate-lightbox-fade"
+        onClick={() => setActiveImageUrl(null)}
+      >
+        {/* Close button */}
+        <button 
+          className="absolute top-5 right-5 z-50 p-2.5 rounded-full border border-border-custom/50 bg-slate-950/70 text-text hover:text-cyan-custom hover:bg-slate-900/40 hover:scale-110 active:scale-95 transition-all shadow-glow duration-200"
+          onClick={() => setActiveImageUrl(null)}
+          title={locale === 'vi' ? 'Đóng' : 'Close'}
+        >
+          <X className="w-5 h-5" />
+        </button>
+        
+        {/* Main image container */}
+        <div 
+          className="relative w-full max-w-[95vw] md:max-w-[92vw] max-h-[92vh] flex items-center justify-center select-none animate-lightbox-zoom"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <img 
+            src={activeImageUrl} 
+            alt="Screenshot Large Preview" 
+            className="w-auto h-auto max-w-full max-h-[92vh] object-contain rounded-xl shadow-glow border border-border-custom/40"
+          />
+        </div>
+      </div>
+    )}
+  </>
+);
 }
