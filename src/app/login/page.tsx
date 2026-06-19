@@ -82,13 +82,25 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       console.error('Auth action failed:', err);
-      setErrorMsg(
-        err.message || (
-          locale === 'vi' 
-            ? 'Tên tài khoản hoặc mật khẩu không chính xác!' 
-            : 'Invalid credentials or network issue.'
-        )
+      let displayError = err.message || (
+        locale === 'vi' 
+          ? 'Đã xảy ra lỗi hệ thống hoặc lỗi kết nối!' 
+          : 'Invalid credentials or network issue.'
       );
+
+      if (locale === 'vi') {
+        if (displayError.includes('already exists with username')) {
+          displayError = 'Tên tài khoản này đã tồn tại!';
+        } else if (displayError.includes('already exists with email')) {
+          displayError = 'Địa chỉ Email này đã được sử dụng!';
+        } else if (displayError.includes('Invalid username or password') || displayError.includes('Login failed') || displayError.includes('Unauthorized')) {
+          displayError = 'Tên đăng nhập hoặc mật khẩu không chính xác!';
+        } else if (displayError.includes('Validation failed')) {
+          displayError = 'Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại!';
+        }
+      }
+
+      setErrorMsg(displayError);
     } finally {
       setIsSubmitting(false);
     }

@@ -27,6 +27,7 @@ export default function ContactPage() {
   const [loggedInUser, setLoggedInUser] = useState<{ fullName: string; email: string; username: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Check login state on mount
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function ContactPage() {
       }
 
       setSubmitSuccess(true);
+      setErrorMsg(null);
       
       setFormData({
         name: loggedInUser ? loggedInUser.fullName : '',
@@ -98,8 +100,20 @@ export default function ContactPage() {
       });
       
       setTimeout(() => setSubmitSuccess(false), 5000);
-    } catch {
-      alert('Failed to send message. Please try again.');
+    } catch (err: any) {
+      console.error('Contact submission failed:', err);
+      let displayError = err.message || (
+        locale === 'vi' 
+          ? 'Gửi tin nhắn thất bại. Vui lòng thử lại!' 
+          : 'Failed to send message. Please try again.'
+      );
+      if (locale === 'vi') {
+        if (displayError.includes('Validation failed')) {
+          displayError = 'Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại!';
+        }
+      }
+      setErrorMsg(displayError);
+      setTimeout(() => setErrorMsg(null), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -175,6 +189,12 @@ export default function ContactPage() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errorMsg && (
+            <div className="flex items-center space-x-2.5 p-3 bg-rose-500/10 border border-rose-500/30 text-rose-500 rounded-xl text-xs font-mono select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             {/* Name input */}

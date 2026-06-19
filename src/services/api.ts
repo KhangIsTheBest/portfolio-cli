@@ -51,6 +51,33 @@ async function fetchWithTimeout(resource: string, options: RequestInit = {}, tim
   }
 }
 
+// Helper to handle and format errors from ApiResponse
+async function handleErrorResponse(response: Response, defaultMessage: string): Promise<never> {
+  try {
+    const text = await response.text();
+    if (text) {
+      const json = JSON.parse(text);
+      if (json && json.message) {
+        if (json.data && typeof json.data === 'object') {
+          // If there are validation details in data, append them
+          const details = Object.entries(json.data)
+            .map(([field, msg]) => `${field}: ${msg}`)
+            .join(', ');
+          if (details) {
+            throw new Error(`${json.message} (${details})`);
+          }
+        }
+        throw new Error(json.message);
+      }
+    }
+  } catch (e: any) {
+    if (e.message && !e.message.includes('Unexpected token') && !e.message.includes('JSON')) {
+      throw e;
+    }
+  }
+  throw new Error(`${defaultMessage} (Status ${response.status})`);
+}
+
 export const apiService = {
   // 1. PUBLIC PROFILE APIS
   async getProfile(): Promise<Profile> {
@@ -133,7 +160,9 @@ export const apiService = {
       },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to submit contact message');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to submit contact message');
+    }
     const result: ApiResponse<ContactResponse> = await response.json();
     if (result.success && result.data) {
       return result.data;
@@ -153,7 +182,9 @@ export const apiService = {
       },
       body: JSON.stringify({ username, password })
     });
-    if (!response.ok) throw new Error('Unauthorized or network error');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Login failed');
+    }
     const result = await response.json();
     console.log('Login API raw result:', result);
 
@@ -175,9 +206,9 @@ export const apiService = {
           token = result.data;
         } else if (typeof result.data === 'object') {
           token = result.data.token || result.data.accessToken || result.data.jwt || '';
-          roles = result.data.roles || roles;
-          fullName = result.data.fullName || fullName;
-          email = result.data.email || email;
+          roles = result.data.roles || (result.data.user?.role ? ["ROLE_" + result.data.user.role] : roles);
+          fullName = result.data.fullName || result.data.user?.username || fullName;
+          email = result.data.email || result.data.user?.email || email;
         }
       }
     }
@@ -208,7 +239,9 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Registration failed or network error');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Registration failed');
+    }
     const result = await response.json();
     if (result.success) {
       return result.data;
