@@ -38,6 +38,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     localStorage.removeItem('admin-token');
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-profile');
     router.push('/');
   };
 

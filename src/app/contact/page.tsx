@@ -78,6 +78,7 @@ export default function ContactPage() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('admin-token');
     localStorage.removeItem('user-token');
     localStorage.removeItem('user-profile');
     setLoggedInUser(null);

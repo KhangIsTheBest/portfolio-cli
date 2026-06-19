@@ -214,7 +214,7 @@ export const apiService = {
     }
 
     if (token) {
-      const isAdmin = roles.includes('ROLE_ADMIN') || username.toLowerCase().includes('admin');
+      const isAdmin = roles.includes('ROLE_ADMIN');
       if (isAdmin) {
         localStorage.removeItem('user-token');
         localStorage.removeItem('user-profile');

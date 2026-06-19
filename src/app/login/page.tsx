@@ -24,16 +24,35 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Session check states
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
+  const [loggedInRole, setLoggedInRole] = useState<'admin' | 'user' | null>(null);
+  const [profileName, setProfileName] = useState('');
+
   // Check if already authenticated on mount
   useEffect(() => {
     const adminToken = localStorage.getItem('admin-token');
     const userToken = localStorage.getItem('user-token');
     if (adminToken) {
-      router.push('/admin');
+      setAlreadyLoggedIn(true);
+      setLoggedInRole('admin');
+      setProfileName('Administrator');
     } else if (userToken) {
-      router.push('/contact');
+      setAlreadyLoggedIn(true);
+      setLoggedInRole('user');
+      const profileStr = localStorage.getItem('user-profile');
+      if (profileStr) {
+        try {
+          const profile = JSON.parse(profileStr);
+          setProfileName(profile.fullName || profile.username || 'Guest');
+        } catch (e) {
+          setProfileName('Guest');
+        }
+      } else {
+        setProfileName('Guest');
+      }
     }
-  }, [router]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +91,7 @@ export default function LoginPage() {
         // Login API call
         const data = await apiService.login(username.trim(), password.trim());
         const roles = data.roles || [];
-        const isAdmin = roles.includes('ROLE_ADMIN') || username.toLowerCase().includes('admin');
+        const isAdmin = roles.includes('ROLE_ADMIN');
         
         if (isAdmin) {
           router.push('/admin');
@@ -105,6 +124,97 @@ export default function LoginPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (alreadyLoggedIn) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative animate-fade-in">
+        <div className="max-w-md w-full space-y-8 p-8 border border-border-custom glass-panel rounded-3xl relative">
+          {/* Accent Top Orb */}
+          <div className="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-cyan-custom/10 blur-xl pointer-events-none" />
+
+          {/* Logo and Headings */}
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 rounded-2xl bg-gradient-to-br from-cyan-custom to-purple-custom shadow-glow p-0.5 flex items-center justify-center text-bg mb-4 select-none">
+              <div className="w-full h-full rounded-[14px] bg-bg flex items-center justify-center text-cyan-custom">
+                <Layers className="w-6 h-6" />
+              </div>
+            </div>
+            <h2 className="text-xl font-black tracking-widest text-text">
+              PORTFOLIO
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-custom to-purple-custom">
+                .SESSION
+              </span>
+            </h2>
+            <p className="mt-2 text-xs font-mono text-secondary">
+              {locale === 'vi' ? 'Bạn đang ở trong phiên đăng nhập' : 'You are currently logged in'}
+            </p>
+          </div>
+
+          {/* Session Profile Card */}
+          <div className="p-5 rounded-2xl border border-border-custom/50 bg-slate-950/45 flex flex-col items-center space-y-3.5 relative overflow-hidden">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-custom/20 to-purple-custom/20 flex items-center justify-center border border-cyan-custom/30 text-cyan-custom">
+              <User className="w-8 h-8" />
+            </div>
+            
+            <div className="text-center space-y-1">
+              <h3 className="text-sm font-bold text-text">{profileName}</h3>
+              <p className="text-[10px] font-mono text-secondary">
+                {locale === 'vi' ? 'Vai trò:' : 'Role:'}{' '}
+                <span className="text-cyan-custom uppercase font-bold">
+                  {loggedInRole === 'admin' ? (locale === 'vi' ? 'Quản trị viên' : 'Administrator') : (locale === 'vi' ? 'Thành viên' : 'Visitor/Guest')}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                if (loggedInRole === 'admin') {
+                  router.push('/admin');
+                } else {
+                  router.push('/contact');
+                }
+              }}
+              className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-custom to-purple-custom text-bg font-bold text-xs hover:brightness-110 active:scale-[0.98] transition-all hover:shadow-glow cursor-pointer"
+            >
+              <span>
+                {locale === 'vi' ? 'Tiếp tục vào trang của bạn' : 'Continue to Your Panel'}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem('admin-token');
+                localStorage.removeItem('user-token');
+                localStorage.removeItem('user-profile');
+                setAlreadyLoggedIn(false);
+                setLoggedInRole(null);
+                setProfileName('');
+              }}
+              className="flex items-center justify-center w-full px-4 py-3 rounded-xl border border-border-custom text-rose-500 hover:bg-rose-500/10 font-bold text-xs active:scale-[0.98] transition-all cursor-pointer"
+            >
+              <span>
+                {locale === 'vi' ? 'Đăng xuất tài khoản này' : 'Sign Out of This Account'}
+              </span>
+            </button>
+          </div>
+
+          {/* Back Link */}
+          <div className="text-center pt-2.5 border-t border-border-custom/30 mt-4">
+            <Link
+              href="/"
+              className="inline-flex items-center space-x-1.5 text-xs text-secondary hover:text-cyan-custom transition font-mono"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>{locale === 'vi' ? 'Quay về trang chính' : 'Return to Website'}</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative animate-fade-in">
