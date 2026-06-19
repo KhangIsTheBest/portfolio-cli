@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, CheckCircle2, ShieldAlert, ArrowLeft, Loader2, UserCircle } from 'lucide-react';
+import { User, Mail, Lock, CheckCircle2, ShieldAlert, ArrowLeft, Loader2, UserCircle, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
@@ -54,6 +54,13 @@ export default function GuestProfilePage() {
 
     loadProfile();
   }, [router, locale]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin-token');
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-profile');
+    router.push('/');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,6 +253,16 @@ export default function GuestProfilePage() {
             ) : (
               <span>{locale === 'vi' ? 'Lưu thay đổi' : 'Save Changes'}</span>
             )}
+          </button>
+
+          {/* Logout Button */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl border border-border-custom text-rose-500 hover:bg-rose-500/10 font-bold text-xs active:scale-[0.98] transition-all cursor-pointer mt-2"
+          >
+            <LogOut className="w-4 h-4 shrink-0" />
+            <span>{locale === 'vi' ? 'Đăng xuất tài khoản' : 'Sign Out'}</span>
           </button>
         </form>
 

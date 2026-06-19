@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layers, ShieldAlert, KeyRound, UserRound, ArrowLeft, Mail, CheckCircle2, User } from 'lucide-react';
+import { Layers, ShieldAlert, KeyRound, UserRound, ArrowLeft, Mail, CheckCircle2, User, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
@@ -17,12 +17,16 @@ export default function LoginPage() {
   // Form states
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Session check states
   const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
@@ -72,6 +76,12 @@ export default function LoginPage() {
           return;
         }
 
+        if (password !== confirmPassword) {
+          setErrorMsg(locale === 'vi' ? 'Mật khẩu xác nhận không trùng khớp!' : 'Passwords do not match!');
+          setIsSubmitting(false);
+          return;
+        }
+
         await apiService.register({
           username: username.trim(),
           password: password.trim(),
@@ -87,6 +97,7 @@ export default function LoginPage() {
         // Reset and switch back to login mode
         setIsRegisterMode(false);
         setPassword('');
+        setConfirmPassword('');
       } else {
         // Login API call
         const data = await apiService.login(username.trim(), password.trim());
@@ -96,7 +107,7 @@ export default function LoginPage() {
         if (isAdmin) {
           router.push('/admin');
         } else {
-          router.push('/contact');
+          router.push('/');
         }
       }
     } catch (err: any) {
@@ -174,7 +185,7 @@ export default function LoginPage() {
                 if (loggedInRole === 'admin') {
                   router.push('/admin');
                 } else {
-                  router.push('/contact');
+                  router.push('/');
                 }
               }}
               className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-custom to-purple-custom text-bg font-bold text-xs hover:brightness-110 active:scale-[0.98] transition-all hover:shadow-glow cursor-pointer"
@@ -337,15 +348,51 @@ export default function LoginPage() {
                   <KeyRound className="w-4 h-4" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-secondary hover:text-cyan-custom transition focus:outline-none cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
+
+            {/* Confirm Password field (Register only) */}
+            {isRegisterMode && (
+              <div className="space-y-1 relative">
+                <label className="text-[9px] font-mono font-bold uppercase text-secondary">
+                  {locale === 'vi' ? 'Xác nhận mật khẩu *' : 'Confirm Password *'}
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-secondary">
+                    <KeyRound className="w-4 h-4" />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-secondary hover:text-cyan-custom transition focus:outline-none cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -377,6 +424,7 @@ export default function LoginPage() {
               onClick={() => {
                 setIsRegisterMode(false);
                 setErrorMsg(null);
+                setConfirmPassword('');
               }}
               className="text-cyan-custom hover:underline focus:outline-none"
             >
@@ -387,6 +435,7 @@ export default function LoginPage() {
               onClick={() => {
                 setIsRegisterMode(true);
                 setErrorMsg(null);
+                setConfirmPassword('');
               }}
               className="text-purple-custom hover:underline focus:outline-none"
             >

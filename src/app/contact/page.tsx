@@ -170,20 +170,11 @@ export default function ContactPage() {
           <div className="flex items-center space-x-3">
             <Link
               href="/profile"
-              className="text-cyan-custom hover:text-cyan-custom/80 hover:underline font-bold transition"
+              className="text-cyan-custom hover:text-cyan-custom/85 hover:underline font-black font-mono transition"
               title={locale === 'vi' ? 'Xem hồ sơ cá nhân' : 'View account profile'}
             >
-              {locale === 'vi' ? 'Hồ sơ' : 'Profile'}
+              {locale === 'vi' ? 'Hồ sơ cá nhân' : 'Account Profile'}
             </Link>
-            <span className="text-cyan-custom/30 select-none">|</span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-1 text-rose-400 hover:text-rose-500 transition focus:outline-none"
-              title={locale === 'vi' ? 'Đăng xuất tài khoản' : 'Sign Out'}
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span className="font-bold">{locale === 'vi' ? 'Đăng xuất' : 'Logout'}</span>
-            </button>
           </div>
         </div>
       ) : (

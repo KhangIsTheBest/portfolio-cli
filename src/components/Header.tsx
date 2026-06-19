@@ -43,6 +43,10 @@ export const Header: React.FC = () => {
     setLanguage(locale === 'vi' ? 'en' : 'vi');
   };
 
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <nav className="sticky top-4 z-40 w-full max-w-7xl mx-auto border border-border-custom bg-card-custom/80 backdrop-blur-md rounded-2xl mb-8 select-text">
       <div className="w-full px-4 md:px-6 py-3 flex items-center justify-between">
