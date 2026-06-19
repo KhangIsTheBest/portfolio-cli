@@ -95,7 +95,7 @@ export const Header: React.FC = () => {
 
           {/* Account Portal / Login Link */}
           <Link
-            href={isLoggedIn ? (isAdmin ? '/admin' : '/contact') : '/login'}
+            href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
             className="flex items-center space-x-1.5 px-3 py-1.5 bg-gradient-to-r from-cyan-custom/15 to-purple-custom/15 hover:from-cyan-custom/20 hover:to-purple-custom/20 border border-cyan-custom/25 hover:border-cyan-custom/60 text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer shadow-sm"
           >
             {isLoggedIn ? (
@@ -154,7 +154,7 @@ export const Header: React.FC = () => {
           
           {/* Mobile Login / Account Button */}
           <Link
-            href={isLoggedIn ? (isAdmin ? '/admin' : '/contact') : '/login'}
+            href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
             onClick={() => setMobileMenuOpen(false)}
             className="w-full text-center py-2.5 rounded-xl text-xs font-mono font-bold tracking-wide transition-all bg-gradient-to-r from-cyan-custom/10 to-purple-custom/10 border border-cyan-custom/25 hover:border-cyan-custom/50 text-cyan-custom block mt-2"
           >

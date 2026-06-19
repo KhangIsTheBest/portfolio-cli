@@ -29,21 +29,44 @@ export default function ContactPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Check login state on mount
+  // Check login state on mount and sync latest profile from backend
   useEffect(() => {
     const profileStr = localStorage.getItem('user-profile');
+    let cachedProfile: any = null;
+    
     if (profileStr) {
       try {
-        const profile = JSON.parse(profileStr);
-        setLoggedInUser(profile);
+        cachedProfile = JSON.parse(profileStr);
+        setLoggedInUser(cachedProfile);
         setFormData((prev) => ({
           ...prev,
-          name: profile.fullName || '',
-          email: profile.email || '',
+          name: cachedProfile.fullName || '',
+          email: cachedProfile.email || '',
         }));
       } catch (e) {
         console.error('Failed to parse user profile:', e);
       }
+    }
+
+    const userToken = localStorage.getItem('user-token');
+    if (userToken) {
+      // Fetch latest profile from backend in background to sync
+      apiService.getUserProfile().then((data) => {
+        const updatedProfile = {
+          fullName: data.fullName || data.username,
+          email: data.email || '',
+          username: data.username
+        };
+        localStorage.setItem('user-profile', JSON.stringify(updatedProfile));
+        setLoggedInUser(updatedProfile);
+        setFormData((prev) => ({
+          ...prev,
+          name: updatedProfile.fullName,
+          email: updatedProfile.email,
+        }));
+      }).catch((err) => {
+        console.error('Failed to sync user profile with backend:', err);
+      });
     }
   }, []);
 
@@ -143,14 +166,24 @@ export default function ContactPage() {
                 : `Welcome back, ${loggedInUser.fullName}!`}
             </span>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center space-x-1 text-rose-400 hover:text-rose-500 transition focus:outline-none"
-            title={locale === 'vi' ? 'Đăng xuất tài khoản' : 'Sign Out'}
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span className="font-bold">{locale === 'vi' ? 'Đăng xuất' : 'Logout'}</span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <Link
+              href="/profile"
+              className="text-cyan-custom hover:text-cyan-custom/80 hover:underline font-bold transition"
+              title={locale === 'vi' ? 'Xem hồ sơ cá nhân' : 'View account profile'}
+            >
+              {locale === 'vi' ? 'Hồ sơ' : 'Profile'}
+            </Link>
+            <span className="text-cyan-custom/30 select-none">|</span>
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-1 text-rose-400 hover:text-rose-500 transition focus:outline-none"
+              title={locale === 'vi' ? 'Đăng xuất tài khoản' : 'Sign Out'}
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="font-bold">{locale === 'vi' ? 'Đăng xuất' : 'Logout'}</span>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="p-3 bg-slate-950/30 border border-border-custom rounded-2xl flex items-start space-x-2 text-xs text-secondary font-mono">

@@ -17,7 +17,7 @@ const isClient = typeof window !== 'undefined';
 // Helper to get Auth token from localStorage
 const getAuthHeaders = (): HeadersInit => {
   if (isClient) {
-    const token = localStorage.getItem('admin-token');
+    const token = localStorage.getItem('admin-token') || localStorage.getItem('user-token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
   return {};
@@ -207,7 +207,7 @@ export const apiService = {
         } else if (typeof result.data === 'object') {
           token = result.data.token || result.data.accessToken || result.data.jwt || '';
           roles = result.data.roles || (result.data.user?.role ? ["ROLE_" + result.data.user.role] : roles);
-          fullName = result.data.fullName || result.data.user?.username || fullName;
+          fullName = result.data.fullName || result.data.user?.fullName || result.data.user?.username || fullName;
           email = result.data.email || result.data.user?.email || email;
         }
       }
@@ -247,6 +247,50 @@ export const apiService = {
       return result.data;
     }
     throw new Error(result.message || 'Registration failed');
+  },
+
+  // =============================================================
+  // 6.5. GUEST USER PROFILE APIS
+  // =============================================================
+  async getUserProfile(): Promise<any> {
+    if (DEBUG) console.log('Fetching user profile...');
+    const response = await fetchWithTimeout('/api/v1/users/profile', {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch user profile');
+    }
+    const result = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve profile');
+  },
+
+  async updateUserProfile(data: any): Promise<any> {
+    if (DEBUG) console.log('Updating user profile...');
+    const response = await fetchWithTimeout('/api/v1/users/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to update user profile');
+    }
+    const result = await response.json();
+    if (result.success && result.data) {
+      // Sync local storage profile cache
+      localStorage.setItem('user-profile', JSON.stringify({
+        fullName: result.data.fullName || result.data.username,
+        email: result.data.email || '',
+        username: result.data.username
+      }));
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to update profile');
   },
 
   // =============================================================
