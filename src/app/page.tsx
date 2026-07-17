@@ -41,10 +41,12 @@ export default function Home() {
   }
 
   const userProfile = profile || {
-    fullName: 'Đào Thế Khang',
-    title: locale === 'vi' ? 'Kỹ sư phần mềm Full-Stack' : 'Full-Stack Software Engineer',
-    avatarUrl: '',
-    aboutMe: ''
+    fullName: 'Phan Duy Khang',
+    title: locale === 'vi' ? 'Lập trình viên Backend / Full-Stack' : 'Backend / Full-Stack Developer',
+    avatarUrl: 'https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang',
+    aboutMe: locale === 'vi' 
+      ? 'Sinh viên ngành Kỹ thuật phần mềm với nền tảng tốt về Data Structures & Algorithms cùng khả năng tự học tốt. Mong muốn phát triển chuyên sâu trong lĩnh vực Backend Engineering, hướng đến việc xây dựng các hệ thống hiệu năng cao, đáp ứng các bài toán thực tế ở quy mô lớn.'
+      : 'Software Engineering student with a strong foundation in Data Structures & Algorithms and excellent self-learning abilities. Passionate about Backend Engineering, aiming to build high-performance, scalable systems to solve complex real-world problems.'
   };
 
   return (

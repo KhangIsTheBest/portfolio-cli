@@ -40,13 +40,13 @@ export default function AboutPage() {
   }
 
   const userProfile = profile || {
-    fullName: 'Đào Thế Khang',
+    fullName: 'Phan Duy Khang',
     aboutMe: locale === 'vi' 
-      ? 'Tôi là một kỹ sư phần mềm tâm huyết chuyên sâu về xây dựng các ứng dụng mạng có khả năng mở rộng. Với năng lực tốt về Java/Spring Boot cho hệ thống backend vững chãi và React/Next.js cho giao diện hiện đại, tối ưu, tôi mong muốn tạo ra những sản phẩm thực tế giải quyết các bài toán nghiệp vụ phức tạp.'
-      : 'I am a passionate software developer specializing in building scalable web applications. With expertise in Java/Spring Boot for robust backends and React/Next.js for modern, responsive frontends, I strive to write clean, maintainable code that solves real-world problems.',
-    email: 'khang@example.com',
-    githubUrl: 'https://github.com',
-    linkedinUrl: 'https://linkedin.com'
+      ? 'Sinh viên ngành Kỹ thuật phần mềm với nền tảng tốt về Data Structures & Algorithms cùng khả năng tự học tốt. Mong muốn phát triển chuyên sâu trong lĩnh vực Backend Engineering, hướng đến việc xây dựng các hệ thống hiệu năng cao, đáp ứng các bài toán thực tế ở quy mô lớn.'
+      : 'Software Engineering student with a strong foundation in Data Structures & Algorithms and excellent self-learning abilities. Passionate about Backend Engineering, aiming to build high-performance, scalable systems to solve complex real-world problems.',
+    email: 'pdkhang1304@gmail.com',
+    githubUrl: 'https://github.com/KhangIsTheBest',
+    linkedinUrl: 'https://linkedin.com/in/phanduykhang'
   };
 
   return (

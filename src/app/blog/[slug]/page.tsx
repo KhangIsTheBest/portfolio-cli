@@ -89,7 +89,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
           <div className="flex flex-wrap gap-4 font-mono text-[10px] text-secondary">
             <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
               <User className="w-3.5 h-3.5 text-cyan-custom" />
-              <span>{t('blog.authorLabel')} {blog.createdBy?.fullName || 'Đào Thế Khang'}</span>
+              <span>{t('blog.authorLabel')} {blog.createdBy?.fullName || 'Phan Duy Khang'}</span>
             </span>
             <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
               <Calendar className="w-3.5 h-3.5 text-purple-custom" />
