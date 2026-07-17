@@ -233,6 +233,66 @@ export const apiService = {
     throw new Error(result.message || 'Login failed');
   },
 
+  async loginWithGoogle(idToken: string): Promise<any> {
+    if (DEBUG) console.log('Logging in user via Google...');
+    const response = await fetchWithTimeout('/api/v1/auth/google', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ idToken })
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Google login failed');
+    }
+    const result = await response.json();
+    if (DEBUG) console.log('Google Login API result:', result);
+
+    let token = '';
+    let roles: string[] = [];
+    let fullName = '';
+    let email = '';
+    let username = '';
+
+    if (result) {
+      token = result.token || result.accessToken || result.jwt || '';
+      roles = result.roles || [];
+      fullName = result.fullName || '';
+      email = result.email || '';
+
+      if (!token && result.data) {
+        if (typeof result.data === 'string') {
+          token = result.data;
+        } else if (typeof result.data === 'object') {
+          token = result.data.token || result.data.accessToken || result.data.jwt || '';
+          roles = result.data.roles || (result.data.user?.role ? ["ROLE_" + result.data.user.role] : roles);
+          fullName = result.data.fullName || result.data.user?.fullName || result.data.user?.username || fullName;
+          email = result.data.email || result.data.user?.email || email;
+          username = result.data.user?.username || username;
+        }
+      }
+    }
+
+    if (token) {
+      const isAdmin = roles.includes('ROLE_ADMIN');
+      if (isAdmin) {
+        localStorage.removeItem('user-token');
+        localStorage.removeItem('user-profile');
+        localStorage.setItem('admin-token', token);
+      } else {
+        localStorage.removeItem('admin-token');
+        localStorage.setItem('user-token', token);
+        localStorage.setItem('user-profile', JSON.stringify({
+          fullName: fullName || username || email.split('@')[0],
+          email: email || '',
+          username: username || email
+        }));
+      }
+      return { token, roles, fullName, email };
+    }
+    throw new Error(result.message || 'Google login failed');
+  },
+
   async register(data: any): Promise<any> {
     if (DEBUG) console.log('Registering user...', data.username);
     const response = await fetchWithTimeout('/api/v1/auth/register', {

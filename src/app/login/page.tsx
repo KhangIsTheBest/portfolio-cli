@@ -6,6 +6,7 @@ import { Layers, ShieldAlert, KeyRound, UserRound, ArrowLeft, Mail, CheckCircle2
 import Link from 'next/link';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
+import { GoogleLoginButton } from '@/components/GoogleLoginButton';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -416,6 +417,31 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="relative my-4 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border-custom/50"></div>
+          </div>
+          <span className="relative bg-bg px-3 text-[10px] font-mono text-secondary uppercase">
+            {locale === 'vi' ? 'Hoặc' : 'Or'}
+          </span>
+        </div>
+
+        {/* Google Authentication Button */}
+        <GoogleLoginButton
+          onSuccess={(result) => {
+            const isAdmin = result.roles.includes('ROLE_ADMIN');
+            if (isAdmin) {
+              router.push('/admin');
+            } else {
+              router.push('/contact');
+            }
+          }}
+          onError={(err) => {
+            setErrorMsg(err);
+          }}
+        />
 
         {/* Register / Login Toggle */}
         <div className="text-center text-xs text-secondary font-sans mt-3">
