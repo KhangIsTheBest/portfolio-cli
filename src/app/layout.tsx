@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { ServerStatusProvider } from "@/context/ServerStatusContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ServerStatusBanner } from "@/components/ServerStatusBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,22 +35,27 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-mono relative p-4 md:p-8">
         <LanguageProvider>
-          <ThemeProvider>
-            {/* Background Decorative Ambient Pulsing Globs */}
-            <div className="fixed top-1/4 left-1/10 w-96 h-96 rounded-full bg-cyan-custom/10 blur-[120px] -z-20 pointer-events-none animate-pulse-slow" />
-            <div className="fixed bottom-1/3 right-1/10 w-[450px] h-[450px] rounded-full bg-purple-custom/10 blur-[130px] -z-20 pointer-events-none" />
+          <ServerStatusProvider>
+            <ThemeProvider>
+              {/* Background Decorative Ambient Pulsing Globs */}
+              <div className="fixed top-1/4 left-1/10 w-96 h-96 rounded-full bg-cyan-custom/10 blur-[120px] -z-20 pointer-events-none animate-pulse-slow" />
+              <div className="fixed bottom-1/3 right-1/10 w-[450px] h-[450px] rounded-full bg-purple-custom/10 blur-[130px] -z-20 pointer-events-none" />
 
-            {/* Sticky global navigation bar */}
-            <Header />
+              {/* Server connection status alert banner */}
+              <ServerStatusBanner />
 
-            {/* Content Viewport */}
-            <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto justify-center">
-              {children}
-            </div>
+              {/* Sticky global navigation bar */}
+              <Header />
 
-            {/* Global Footer */}
-            <Footer />
-          </ThemeProvider>
+              {/* Content Viewport */}
+              <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto justify-center">
+                {children}
+              </div>
+
+              {/* Global Footer */}
+              <Footer />
+            </ThemeProvider>
+          </ServerStatusProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -6,9 +6,12 @@ import { BookOpen, Calendar, ChevronRight } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Blog } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
+import { useServerStatus } from '@/context/ServerStatusContext';
+import { mockBlogs } from '@/data/mockData';
 
 export default function BlogPage() {
   const { locale, t } = useLanguage();
+  const { isOnline } = useServerStatus();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,13 +21,14 @@ export default function BlogPage() {
         const data = await apiService.getBlogs();
         setBlogs(data);
       } catch (err) {
-        console.error('Failed to load blog posts:', err);
+        console.error('Failed to load blog posts, falling back to mock blogs:', err);
+        setBlogs(mockBlogs);
       } finally {
         setLoading(false);
       }
     };
     fetchBlogs();
-  }, []);
+  }, [isOnline]);
 
   if (loading) {
     return (

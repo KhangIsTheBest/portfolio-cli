@@ -5,9 +5,12 @@ import { User, MapPin, Mail } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Profile } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
+import { useServerStatus } from '@/context/ServerStatusContext';
+import { mockProfile } from '@/data/mockData';
 
 export default function AboutPage() {
   const { locale, t } = useLanguage();
+  const { isOnline } = useServerStatus();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +26,7 @@ export default function AboutPage() {
       }
     };
     fetchProfile();
-  }, []);
+  }, [isOnline]);
 
   if (loading) {
     return (
@@ -40,13 +43,10 @@ export default function AboutPage() {
   }
 
   const userProfile = profile || {
-    fullName: 'Phan Duy Khang',
+    ...mockProfile,
     aboutMe: locale === 'vi' 
       ? 'Sinh viên ngành Kỹ thuật phần mềm với nền tảng tốt về Data Structures & Algorithms cùng khả năng tự học tốt. Mong muốn phát triển chuyên sâu trong lĩnh vực Backend Engineering, hướng đến việc xây dựng các hệ thống hiệu năng cao, đáp ứng các bài toán thực tế ở quy mô lớn.'
-      : 'Software Engineering student with a strong foundation in Data Structures & Algorithms and excellent self-learning abilities. Passionate about Backend Engineering, aiming to build high-performance, scalable systems to solve complex real-world problems.',
-    email: 'pdkhang1304@gmail.com',
-    githubUrl: 'https://github.com/KhangIsTheBest',
-    linkedinUrl: 'https://linkedin.com/in/phanduykhang'
+      : mockProfile.aboutMe
   };
 
   return (

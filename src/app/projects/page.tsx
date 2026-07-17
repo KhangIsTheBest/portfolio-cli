@@ -6,9 +6,12 @@ import { Code, ArrowRight, ExternalLink } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
+import { useServerStatus } from '@/context/ServerStatusContext';
+import { mockProjects } from '@/data/mockData';
 
 export default function ProjectsPage() {
   const { locale, t } = useLanguage();
+  const { isOnline } = useServerStatus();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,13 +21,14 @@ export default function ProjectsPage() {
         const data = await apiService.getProjects();
         setProjects(data);
       } catch (err) {
-        console.error('Failed to load projects stack:', err);
+        console.error('Failed to load projects stack, falling back to mock projects:', err);
+        setProjects(mockProjects);
       } finally {
         setLoading(false);
       }
     };
     fetchProjects();
-  }, []);
+  }, [isOnline]);
 
   if (loading) {
     return (

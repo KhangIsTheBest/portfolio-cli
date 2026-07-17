@@ -20,8 +20,12 @@ const PRESET_ICONS = [
   { value: 'Code', icon: Code }
 ];
 
+import { useServerStatus } from '@/context/ServerStatusContext';
+import { mockTechnologies } from '@/data/mockData';
+
 export default function SkillsPage() {
   const { locale, t } = useLanguage();
+  const { isOnline } = useServerStatus();
   const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,13 +35,14 @@ export default function SkillsPage() {
         const data = await apiService.getTechnologies();
         setTechnologies(data);
       } catch (err) {
-        console.error('Failed to load technologies stack:', err);
+        console.error('Failed to load technologies stack, falling back to mock technologies:', err);
+        setTechnologies(mockTechnologies);
       } finally {
         setLoading(false);
       }
     };
     fetchTechs();
-  }, []);
+  }, [isOnline]);
 
   // Map database string to Lucide component
   const getIconComponent = (key: string) => {
