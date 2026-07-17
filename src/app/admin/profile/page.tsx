@@ -246,7 +246,7 @@ export default function AdminProfilePage() {
                 </div>
 
                 {/* Upload action and state */}
-                <div className="flex flex-col space-y-1.5">
+                <div className="flex flex-col space-y-2 flex-1">
                   <div className="flex items-center gap-2">
                     <label className="px-3 py-1.5 rounded-xl border border-cyan-custom/30 bg-cyan-custom/5 hover:bg-cyan-custom/15 text-cyan-custom text-xs flex items-center justify-center cursor-pointer select-none font-bold transition">
                       <Upload className="w-3.5 h-3.5 mr-1.5" />
@@ -270,9 +270,18 @@ export default function AdminProfilePage() {
                       </button>
                     )}
                   </div>
+
+                  <input
+                    type="text"
+                    value={avatarUrl}
+                    onChange={(e) => setAvatarUrl(e.target.value)}
+                    placeholder={locale === 'vi' ? 'Hoặc dán URL ảnh trực tiếp...' : 'Or paste image URL directly...'}
+                    className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
+                  />
+
                   <p className="text-[9px] text-secondary font-sans leading-tight">
                     {avatarUrl ? (
-                      <span className="font-mono text-cyan-custom/75 break-all max-w-[200px] inline-block">{avatarUrl}</span>
+                      <span className="font-mono text-cyan-custom/75 break-all max-w-[250px] inline-block">{avatarUrl}</span>
                     ) : (
                       locale === 'vi' ? 'Chưa tải lên ảnh đại diện' : 'No avatar image uploaded'
                     )}

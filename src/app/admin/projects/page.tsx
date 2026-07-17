@@ -524,19 +524,36 @@ export default function AdminProjectsPage() {
                     {locale === 'vi' ? 'Ảnh minh họa dự án' : 'Project Illustrative Images'}
                   </span>
                   
-                  {/* Upload button triggers multi-file upload */}
-                  <label className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-cyan-custom/10 hover:bg-cyan-custom/25 border border-cyan-custom/30 text-cyan-custom text-[10px] uppercase font-bold transition select-none cursor-pointer">
-                    <Plus className="w-3 h-3" />
-                    <span>{locale === 'vi' ? 'Tải ảnh từ máy' : 'Upload Images'}</span>
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      multiple 
-                      onChange={handleMultipleGalleryUpload} 
-                      className="hidden" 
-                      disabled={uploadingGallery}
-                    />
-                  </label>
+                  <div className="flex items-center space-x-2">
+                    {/* Upload button triggers multi-file upload */}
+                    <label className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-cyan-custom/10 hover:bg-cyan-custom/25 border border-cyan-custom/30 text-cyan-custom text-[10px] uppercase font-bold transition select-none cursor-pointer">
+                      <Plus className="w-3 h-3" />
+                      <span>{locale === 'vi' ? 'Tải ảnh từ máy' : 'Upload Images'}</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        multiple 
+                        onChange={handleMultipleGalleryUpload} 
+                        className="hidden" 
+                        disabled={uploadingGallery}
+                      />
+                    </label>
+
+                    {/* Add URL button for manual link input */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProjectImages(prev => [
+                          ...prev,
+                          { imageUrl: '', displayOrder: prev.length }
+                        ]);
+                      }}
+                      className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-purple-custom/10 hover:bg-purple-custom/25 border border-purple-custom/30 text-purple-custom text-[10px] uppercase font-bold transition select-none cursor-pointer"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span>{locale === 'vi' ? 'Thêm URL ảnh' : 'Add URL'}</span>
+                    </button>
+                  </div>
                 </div>
 
                 {uploadingGallery && (
@@ -566,11 +583,15 @@ export default function AdminProjectsPage() {
                           />
                         </div>
 
-                        {/* Image Path (Read-only) */}
+                        {/* Image Path (Editable URL) */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-[10px] font-mono text-cyan-custom/80 truncate">
-                            {img.imageUrl}
-                          </p>
+                          <input
+                            type="text"
+                            value={img.imageUrl}
+                            onChange={(e) => handleUpdateImage(index, 'imageUrl', e.target.value)}
+                            placeholder={locale === 'vi' ? 'Dán URL ảnh minh họa...' : 'Paste image URL...'}
+                            className="w-full px-2.5 py-1 rounded-lg border border-border-custom bg-slate-950/40 text-cyan-custom text-[10px] font-mono focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
+                          />
                         </div>
 
                         {/* Order Input */}
@@ -669,11 +690,13 @@ export default function AdminProjectsPage() {
                     )}
                   </div>
 
-                  {thumbnailUrl && (
-                    <p className="text-[9px] text-secondary font-mono leading-tight break-all border border-border-custom/30 rounded-lg p-2 bg-slate-950/25">
-                      <span className="text-cyan-custom/75">{thumbnailUrl}</span>
-                    </p>
-                  )}
+                  <input
+                    type="text"
+                    value={thumbnailUrl}
+                    onChange={(e) => setThumbnailUrl(e.target.value)}
+                    placeholder={locale === 'vi' ? 'Hoặc dán URL ảnh trực tiếp...' : 'Or paste image URL directly...'}
+                    className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
+                  />
                 </div>
               </div>
 
