@@ -56,22 +56,32 @@ async function handleErrorResponse(response: Response, defaultMessage: string): 
   try {
     const text = await response.text();
     if (text) {
-      const json = JSON.parse(text);
-      if (json && json.message) {
-        if (json.data && typeof json.data === 'object') {
-          // If there are validation details in data, append them
-          const details = Object.entries(json.data)
-            .map(([field, msg]) => `${field}: ${msg}`)
-            .join(', ');
-          if (details) {
-            throw new Error(`${json.message} (${details})`);
+      try {
+        const json = JSON.parse(text);
+        if (json && json.message) {
+          if (json.data && typeof json.data === 'object') {
+            const details = Object.entries(json.data)
+              .map(([field, msg]) => `${field}: ${msg}`)
+              .join(', ');
+            if (details) {
+              throw new Error(`${json.message} (${details})`);
+            }
           }
+          throw new Error(json.message);
         }
-        throw new Error(json.message);
+      } catch (jsonErr: any) {
+        if (jsonErr.message && !jsonErr.message.includes('token') && !jsonErr.message.includes('JSON')) {
+          throw jsonErr;
+        }
+        // Extract clean text if non-JSON error
+        const cleanText = text.replace(/<[^>]*>/g, '').trim();
+        if (cleanText && cleanText.length < 150) {
+          throw new Error(cleanText);
+        }
       }
     }
   } catch (e: any) {
-    if (e.message && !e.message.includes('Unexpected token') && !e.message.includes('JSON')) {
+    if (e.message && !e.message.includes('token') && !e.message.includes('JSON')) {
       throw e;
     }
   }
