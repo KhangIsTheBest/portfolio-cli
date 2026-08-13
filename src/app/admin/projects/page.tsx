@@ -38,7 +38,7 @@ export default function AdminProjectsPage() {
     try {
       setLoading(true);
       const [projData, techData] = await Promise.all([
-        apiService.getProjects(),
+        apiService.getProjectsAdmin(),
         apiService.getTechnologies()
       ]);
       setProjects(projData);

@@ -19,8 +19,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "portfolio-cli | Developer Portfolio",
-  description: "An interactive developer portfolio featuring a retro terminal CLI and a modern glassmorphic GUI dashboard, built with Next.js & Spring Boot.",
+  title: {
+    default: "Phan Duy Khang — Backend & Full-Stack Developer",
+    template: "%s | Phan Duy Khang"
+  },
+  description: "Personal Portfolio of Phan Duy Khang — Full-Stack Developer specialized in Java Spring Boot, React, Next.js, PostgreSQL, and Cloud Architectures.",
+  keywords: ["Phan Duy Khang", "Backend Developer", "Full-Stack Developer", "Java Spring Boot", "Next.js", "React", "Portfolio", "Software Engineer"],
+  authors: [{ name: "Phan Duy Khang", url: "https://github.com/KhangIsTheBest" }],
+  creator: "Phan Duy Khang",
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    url: "https://portfolio-cli.vercel.app",
+    title: "Phan Duy Khang — Backend & Full-Stack Developer",
+    description: "Interactive portfolio featuring Java Spring Boot, React, Next.js, and Cloud services.",
+    siteName: "Phan Duy Khang Portfolio"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Phan Duy Khang — Backend & Full-Stack Developer",
+    description: "Personal Portfolio — Java Spring Boot, React, Next.js & PostgreSQL."
+  }
 };
 
 export default function RootLayout({

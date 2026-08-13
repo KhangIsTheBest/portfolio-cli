@@ -444,6 +444,22 @@ export const apiService = {
   // =============================================================
   // 9. ADMIN PROJECTS CRUD APIS
   // =============================================================
+  async getProjectsAdmin(status?: string): Promise<Project[]> {
+    if (DEBUG) console.log('Fetching admin projects...');
+    const url = status ? `/api/v1/admin/projects?size=100&status=${status}` : '/api/v1/admin/projects?size=100';
+    const response = await fetchWithTimeout(url, {
+      headers: {
+        ...getAuthHeaders()
+      }
+    });
+    if (!response.ok) throw new Error('Failed to fetch admin projects');
+    const result: ApiResponse<PagedResponse<Project>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
+    }
+    throw new Error(result.message || 'Failed to retrieve admin projects');
+  },
+
   async createProject(data: any): Promise<Project> {
     if (DEBUG) console.log('Creating project card...');
     const response = await fetchWithTimeout('/api/v1/admin/projects', {

@@ -227,3 +227,57 @@ body {
 .animate-lightbox-zoom {
   animation: lightboxZoom 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* Markdown Content Formatting */
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+  color: var(--text-color);
+  font-weight: 800;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+.markdown-body h1 { font-size: 1.5rem; }
+.markdown-body h2 { font-size: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
+.markdown-body h3 { font-size: 1.1rem; }
+.markdown-body h4 { font-size: 0.95rem; }
+.markdown-body p { margin-bottom: 1em; line-height: 1.7; }
+.markdown-body ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+.markdown-body ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+.markdown-body li { margin-bottom: 0.3em; }
+.markdown-body strong { color: var(--text-color); font-weight: 700; }
+.markdown-body a { color: var(--primary-color); text-decoration: underline; text-underline-offset: 3px; }
+.markdown-body a:hover { opacity: 0.8; }
+.markdown-body blockquote {
+  border-left: 3px solid var(--primary-color);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: var(--secondary-color);
+  font-style: italic;
+  background: var(--card-bg);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.markdown-body code {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-color);
+  padding: 0.15em 0.4em;
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--cyan-color);
+}
+.markdown-body pre {
+  background: #090d16;
+  border: 1px solid var(--border-color);
+  padding: 1em;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-color);
+}

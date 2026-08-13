@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, Briefcase, ArrowRight } from 'lucide-react';
+import { Sparkles, Briefcase, ArrowRight, Download } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Profile } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
@@ -105,6 +105,14 @@ export default function Home() {
             <span>{t('home.projectsBtn')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+          <a
+            href="/cv/PhanDuyKhang_CV.pdf"
+            download="PhanDuyKhang_CV.pdf"
+            className="w-full sm:w-auto text-center flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl text-xs font-bold border border-cyan-custom/40 bg-cyan-custom/10 text-cyan-custom hover:bg-cyan-custom/20 transition active:scale-95"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>{locale === 'vi' ? 'TẢI CV' : 'DOWNLOAD CV'}</span>
+          </a>
         </div>
       </div>
     </section>

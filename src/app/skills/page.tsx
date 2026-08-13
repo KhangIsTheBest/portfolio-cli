@@ -72,7 +72,9 @@ export default function SkillsPage() {
             <Cpu className="w-5 h-5 text-cyan-custom" />
             <h3 className="text-base font-bold text-text">{t('skills.title')}</h3>
           </div>
-          <span className="text-[10px] text-secondary font-mono">DATABASE_FETCH</span>
+          <span className="text-[10px] text-secondary font-mono bg-cyan-custom/10 border border-cyan-custom/30 text-cyan-custom px-2.5 py-1 rounded-full uppercase tracking-wider font-bold">
+            {locale === 'vi' ? 'DỮ LIỆU THỰC' : 'LIVE DATA'}
+          </span>
         </div>
 
         {technologies.length === 0 ? (

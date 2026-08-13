@@ -14,6 +14,7 @@ export default function ProjectsPage() {
   const { isOnline } = useServerStatus();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTech, setSelectedTech] = useState<string>('ALL');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -29,6 +30,15 @@ export default function ProjectsPage() {
     };
     fetchProjects();
   }, [isOnline]);
+
+  // Extract unique tech names across all projects
+  const availableTechs = Array.from(
+    new Set(projects.flatMap((p) => p.technologies.map((t) => t.name)))
+  ).sort();
+
+  const filteredProjects = selectedTech === 'ALL'
+    ? projects
+    : projects.filter((p) => p.technologies.some((t) => t.name === selectedTech));
 
   if (loading) {
     return (
@@ -46,16 +56,55 @@ export default function ProjectsPage() {
 
   return (
     <section className="space-y-6 my-8 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-custom/50 pb-4">
         <div className="flex items-center space-x-2">
           <Code className="w-5 h-5 text-cyan-custom" />
           <h3 className="text-lg font-bold text-text">{t('projects.title')}</h3>
         </div>
-        <span className="text-xs font-mono text-secondary">{t('projects.total')} {projects.length}</span>
+        <span className="text-xs font-mono text-secondary">
+          {t('projects.total')} {filteredProjects.length} / {projects.length}
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {projects.map((project) => (
+      {/* Technology Filter Bar */}
+      {availableTechs.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none font-mono text-[11px]">
+          <button
+            onClick={() => setSelectedTech('ALL')}
+            className={`px-3 py-1.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+              selectedTech === 'ALL'
+                ? 'border-cyan-custom bg-cyan-custom/20 text-cyan-custom font-bold shadow-glow'
+                : 'border-border-custom bg-slate-950/40 text-secondary hover:text-text hover:border-slate-600'
+            }`}
+          >
+            {locale === 'vi' ? 'TẤT CẢ' : 'ALL'} ({projects.length})
+          </button>
+          {availableTechs.map((tech) => {
+            const count = projects.filter((p) => p.technologies.some((t) => t.name === tech)).length;
+            return (
+              <button
+                key={tech}
+                onClick={() => setSelectedTech(tech)}
+                className={`px-3 py-1.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+                  selectedTech === tech
+                    ? 'border-cyan-custom bg-cyan-custom/20 text-cyan-custom font-bold shadow-glow'
+                    : 'border-border-custom bg-slate-950/40 text-secondary hover:text-text hover:border-slate-600'
+                }`}
+              >
+                {tech} ({count})
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {filteredProjects.length === 0 ? (
+        <div className="p-12 text-center text-secondary text-sm font-mono border border-dashed border-border-custom/50 rounded-2xl">
+          {locale === 'vi' ? 'Không tìm thấy dự án phù hợp.' : 'No projects matched the selected technology filter.'}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {filteredProjects.map((project) => (
           <div
             key={project.id}
             className="group flex flex-col border border-border-custom glass-panel rounded-2xl overflow-hidden hover:border-cyan-custom/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all duration-300"
@@ -143,6 +192,7 @@ export default function ProjectsPage() {
           </div>
         ))}
       </div>
+      )}
     </section>
   );
 }

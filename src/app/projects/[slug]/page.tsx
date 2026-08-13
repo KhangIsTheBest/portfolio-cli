@@ -6,6 +6,8 @@ import { ArrowLeft, ExternalLink, Calendar, Layers, X } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -137,8 +139,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Content body */}
-        <div className="border-t border-border-custom/50 pt-5 text-sm font-sans leading-relaxed text-secondary space-y-4 whitespace-pre-wrap select-text">
-          {project.content || project.shortDescription}
+        <div className="border-t border-border-custom/50 pt-5 text-sm font-sans leading-relaxed text-secondary select-text markdown-body">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {project.content || project.shortDescription}
+          </ReactMarkdown>
         </div>
 
         {/* Illustrative Images Gallery */}

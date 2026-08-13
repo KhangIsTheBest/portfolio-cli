@@ -7,6 +7,9 @@ import { apiService } from '@/services/api';
 import { Blog } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 export default function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
@@ -89,7 +92,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
           <div className="flex flex-wrap gap-4 font-mono text-[10px] text-secondary">
             <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
               <User className="w-3.5 h-3.5 text-cyan-custom" />
-              <span>{t('blog.authorLabel')} {blog.createdBy?.fullName || 'Phan Duy Khang'}</span>
+              <span>{t('blog.authorLabel')} {blog.createdBy?.fullName || (locale === 'vi' ? 'Tác giả' : 'Author')}</span>
             </span>
             <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
               <Calendar className="w-3.5 h-3.5 text-purple-custom" />
@@ -98,9 +101,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
           </div>
         </div>
 
-        {/* Content body */}
-        <div className="border-t border-border-custom/50 pt-6 text-sm font-sans leading-relaxed text-secondary space-y-4 whitespace-pre-wrap select-text">
-          {blog.content}
+        {/* Content body with Markdown support */}
+        <div className="border-t border-border-custom/50 pt-6 text-sm font-sans leading-relaxed text-secondary select-text markdown-body">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {blog.content}
+          </ReactMarkdown>
         </div>
       </div>
     </div>

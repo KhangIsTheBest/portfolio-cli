@@ -20,7 +20,7 @@ export default function AdminDashboardPage() {
     const fetchStats = async () => {
       try {
         const [projectsRes, techsRes, blogsRes, contactsRes] = await Promise.allSettled([
-          apiService.getProjects(),
+          apiService.getProjectsAdmin(),
           apiService.getTechnologies(),
           apiService.getBlogsAdmin(),
           apiService.getContactsAdmin()

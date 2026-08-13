@@ -15,6 +15,7 @@ export default function GuestProfilePage() {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,12 +73,22 @@ export default function GuestProfilePage() {
       return;
     }
 
+    if (password.trim() && !currentPassword.trim()) {
+      setErrorMsg(
+        locale === 'vi'
+          ? 'Vui lòng nhập mật khẩu hiện tại để đổi mật khẩu mới!'
+          : 'Please enter your current password to set a new password!'
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await apiService.updateUserProfile({
         fullName: fullName.trim(),
         email: email.trim(),
-        password: password.trim() || undefined
+        password: password.trim() || undefined,
+        currentPassword: currentPassword.trim() || undefined
       });
 
       setSuccessMsg(
@@ -86,6 +97,7 @@ export default function GuestProfilePage() {
           : 'Profile updated successfully!'
       );
       setPassword('');
+      setCurrentPassword('');
     } catch (err: any) {
       console.error('Failed to update profile:', err);
       let displayError = err.message || (
@@ -214,6 +226,25 @@ export default function GuestProfilePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@mail.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+                />
+              </div>
+            </div>
+
+            {/* Current Password (Required if setting new password) */}
+            <div className="space-y-1 relative">
+              <label className="text-[9px] font-mono font-bold uppercase text-secondary">
+                {locale === 'vi' ? 'Mật khẩu hiện tại (Cần khi đổi mật khẩu)' : 'Current Password (Required for password change)'}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-secondary">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="••••••••"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
                 />
               </div>

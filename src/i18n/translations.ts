@@ -21,17 +21,7 @@ export const translations = {
       secureChannels: 'Kênh liên lạc an toàn'
     },
     skills: {
-      title: 'Hồ sơ năng lực & Kỹ năng',
-      diagTitle: 'Chẩn đoán hệ thống',
-      diagRest: 'Link REST API:',
-      diagDb: 'Kết nối Database:',
-      diagWeb: 'Nền tảng Web:',
-      diagProtocol: 'Giao thức kết nối:',
-      diagFallback: 'Dữ liệu dự phòng:',
-      diagFallbackVal: 'Kích hoạt dữ liệu Hybrid',
-      diagConnected: 'ĐÃ KẾT NỐI',
-      databaseVal: 'PostgreSQL Server',
-      webVal: 'Next.js 15 AppRouter'
+      title: 'Hồ sơ năng lực & Kỹ năng'
     },
     projects: {
       title: 'Dự án nổi bật',
@@ -90,17 +80,7 @@ export const translations = {
       secureChannels: 'Secure Channels'
     },
     skills: {
-      title: 'Skills & Tech Stack',
-      diagTitle: 'System Diagnostics',
-      diagRest: 'REST API Link:',
-      diagDb: 'Database Connect:',
-      diagWeb: 'Web Platform:',
-      diagProtocol: 'API Protocol:',
-      diagFallback: 'Data Fallback:',
-      diagFallbackVal: 'Hybrid Mock Enabled',
-      diagConnected: 'CONNECTED',
-      databaseVal: 'PostgreSQL Server',
-      webVal: 'Next.js 15 AppRouter'
+      title: 'Skills & Tech Stack'
     },
     projects: {
       title: 'Featured Projects',
