@@ -8,7 +8,6 @@ import {
   ContactRequest, 
   ContactResponse 
 } from '@/types';
-import { mockProjects, mockBlogs } from '@/data/mockData';
 
 const DEBUG = process.env.NODE_ENV !== 'production';
 
@@ -119,22 +118,13 @@ export const apiService = {
 
   async getProjectBySlug(slug: string): Promise<Project> {
     if (DEBUG) console.log(`Fetching live project for slug: ${slug}...`);
-    try {
-      const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
-      if (response.ok) {
-        const result: ApiResponse<Project> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (err) {
-      console.warn(`Live fetch failed for project slug '${slug}', falling back to mock...`);
+    const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
+    if (!response.ok) throw new Error(`Failed to fetch project details for ${slug}`);
+    const result: ApiResponse<Project> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
     }
-
-    const fallback = mockProjects.find((p) => p.slug === slug);
-    if (fallback) return fallback;
-
-    throw new Error(`Failed to fetch project details for ${slug}`);
+    throw new Error(result.message || 'Failed to retrieve project detail');
   },
 
   // 4. PUBLIC BLOGS APIS
@@ -151,22 +141,13 @@ export const apiService = {
 
   async getBlogBySlug(slug: string): Promise<Blog> {
     if (DEBUG) console.log(`Fetching live blog for slug: ${slug}...`);
-    try {
-      const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
-      if (response.ok) {
-        const result: ApiResponse<Blog> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (err) {
-      console.warn(`Live fetch failed for blog slug '${slug}', falling back to mock...`);
+    const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
+    if (!response.ok) throw new Error(`Failed to fetch blog details for ${slug}`);
+    const result: ApiResponse<Blog> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
     }
-
-    const fallback = mockBlogs.find((b) => b.slug === slug);
-    if (fallback) return fallback;
-
-    throw new Error(`Failed to fetch blog details for ${slug}`);
+    throw new Error(result.message || 'Failed to retrieve blog detail');
   },
 
   // 5. PUBLIC VISITORS CONTACT API

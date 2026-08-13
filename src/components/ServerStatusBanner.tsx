@@ -54,8 +54,8 @@ export function ServerStatusBanner() {
                 : 'SERVER CONNECTED! Live database synchronized successfully.'
             ) : (
               locale === 'vi'
-                ? 'MÁY CHỦ ĐANG THỨC GIẤC... Đang kích hoạt Render Database (Mất 1-2 phút ở gói Free). Web đang chạy ở chế độ Offline Mockup.'
-                : 'SERVER IS WAKING UP... Spin up in progress on Render Free Tier (Takes 1-2 mins). Viewing offline backup data.'
+                ? 'MÁY CHỦ ĐANG THỨC GIẤC... Đang kích hoạt kết nối cơ sở dữ liệu.'
+                : 'SERVER IS WAKING UP... Activating database connection.'
             )}
           </span>
         </div>

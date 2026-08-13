@@ -7,8 +7,6 @@ import { apiService } from '@/services/api';
 import { Blog } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
-import { mockBlogs } from '@/data/mockData';
-
 export default function BlogPage() {
   const { locale, t } = useLanguage();
   const { isOnline } = useServerStatus();
@@ -21,8 +19,8 @@ export default function BlogPage() {
         const data = await apiService.getBlogs();
         setBlogs(data);
       } catch (err) {
-        console.error('Failed to load blog posts, falling back to mock blogs:', err);
-        setBlogs(mockBlogs);
+        console.error('Failed to load blog posts:', err);
+        setBlogs([]);
       } finally {
         setLoading(false);
       }

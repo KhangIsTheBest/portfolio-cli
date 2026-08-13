@@ -7,7 +7,6 @@ import { apiService } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
-import { mockProjects } from '@/data/mockData';
 
 export default function ProjectsPage() {
   const { locale, t } = useLanguage();
@@ -22,8 +21,8 @@ export default function ProjectsPage() {
         const data = await apiService.getProjects();
         setProjects(data);
       } catch (err) {
-        console.error('Failed to load projects stack, falling back to mock projects:', err);
-        setProjects(mockProjects);
+        console.error('Failed to load projects:', err);
+        setProjects([]);
       } finally {
         setLoading(false);
       }
