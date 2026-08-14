@@ -29,15 +29,14 @@ async function proxyRequest(
     }
   });
 
-  let body: string | FormData | null = null;
+  // Read body as raw bytes to preserve multipart boundaries
+  let body: ArrayBuffer | string | null = null;
   if (!['GET', 'HEAD'].includes(method)) {
     if (contentType.includes('multipart/form-data')) {
-      // For multipart/form-data (file uploads), pass FormData directly
-      // Remove content-type from forwardHeaders so fetch sets the correct boundary
-      delete forwardHeaders['content-type'];
-      body = await request.formData();
+      // Pass raw bytes so multipart boundary is preserved exactly
+      body = await request.arrayBuffer();
+      // Keep the original content-type including boundary parameter
     } else {
-      // For JSON and other text payloads, read as text
       body = await request.text();
     }
   }
@@ -46,10 +45,11 @@ async function proxyRequest(
     const backendResponse = await fetch(backendUrl, {
       method,
       headers: forwardHeaders,
-      body: body ?? null,
+      // @ts-ignore - Node.js supports ArrayBuffer as body
+      body: body,
     });
 
-    // Read response body as text
+    // Read response as text
     const responseText = await backendResponse.text();
 
     // Forward safe headers
