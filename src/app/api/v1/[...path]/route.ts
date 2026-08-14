@@ -17,7 +17,10 @@ async function proxyRequest(
   const searchParams = request.nextUrl.searchParams.toString();
   const backendUrl = `${BACKEND_URL}${backendPath}${searchParams ? `?${searchParams}` : ''}`;
 
-  // Build forwarded headers
+  const method = request.method;
+  const contentType = request.headers.get('content-type') || '';
+
+  // Build forwarded headers (exclude hop-by-hop headers)
   const forwardHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => {
     const lower = key.toLowerCase();
@@ -26,10 +29,17 @@ async function proxyRequest(
     }
   });
 
-  const method = request.method;
-  let body: string | undefined;
+  let body: string | FormData | null = null;
   if (!['GET', 'HEAD'].includes(method)) {
-    body = await request.text();
+    if (contentType.includes('multipart/form-data')) {
+      // For multipart/form-data (file uploads), pass FormData directly
+      // Remove content-type from forwardHeaders so fetch sets the correct boundary
+      delete forwardHeaders['content-type'];
+      body = await request.formData();
+    } else {
+      // For JSON and other text payloads, read as text
+      body = await request.text();
+    }
   }
 
   try {
@@ -39,7 +49,7 @@ async function proxyRequest(
       body: body ?? null,
     });
 
-    // Read response body as text (avoids streaming issues)
+    // Read response body as text
     const responseText = await backendResponse.text();
 
     // Forward safe headers
@@ -50,7 +60,6 @@ async function proxyRequest(
         responseHeaders.set(key, value);
       }
     });
-    // Ensure content-type is set
     if (!responseHeaders.has('content-type')) {
       responseHeaders.set('content-type', 'application/json');
     }
