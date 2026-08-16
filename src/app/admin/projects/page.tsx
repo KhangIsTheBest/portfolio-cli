@@ -285,14 +285,39 @@ export default function AdminProjectsPage() {
     }
 
     setSaving(true);
+
+    // Normalize slug to match backend regex ^[a-z0-9]+(?:-[a-z0-9]+)*$
+    let cleanSlug = slug
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    if (!cleanSlug) {
+      cleanSlug = 'project-' + Date.now();
+    }
+
+    const formatUrl = (url: string) => {
+      let trimmed = url.trim();
+      if (!trimmed) return '';
+      if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('/')) {
+        return 'https://' + trimmed;
+      }
+      return trimmed;
+    };
+
     const payload = {
-      title,
-      slug,
-      shortDescription,
-      content,
-      thumbnailUrl,
-      githubUrl,
-      demoUrl,
+      title: title.trim(),
+      slug: cleanSlug,
+      shortDescription: shortDescription.trim(),
+      content: content ? content.trim() : '',
+      thumbnailUrl: formatUrl(thumbnailUrl),
+      githubUrl: formatUrl(githubUrl),
+      demoUrl: formatUrl(demoUrl),
       featured,
       status,
       technologyIds: selectedTechIds,
@@ -315,11 +340,13 @@ export default function AdminProjectsPage() {
       }
       setViewMode('LIST');
       fetchData();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save project:', err);
       setMessage({
         type: 'error',
-        text: locale === 'vi' ? 'Lỗi khi lưu dự án. Vui lòng kiểm tra lại.' : 'Error saving project. Please try again.'
+        text: locale === 'vi' 
+          ? `Lỗi khi lưu dự án: ${err.message || 'Vui lòng kiểm tra lại thông tin.'}` 
+          : `Error saving project: ${err.message || 'Please check input fields.'}`
       });
     } finally {
       setSaving(false);

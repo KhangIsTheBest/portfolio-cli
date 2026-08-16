@@ -480,7 +480,16 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to create project');
+    if (!response.ok) {
+      let details = '';
+      try {
+        const errJson = await response.json();
+        details = errJson.message || (errJson.errors ? (Array.isArray(errJson.errors) ? errJson.errors.join(', ') : JSON.stringify(errJson.errors)) : JSON.stringify(errJson));
+      } catch (e) {
+        details = await response.text();
+      }
+      throw new Error(details || 'Failed to create project');
+    }
     const result: ApiResponse<Project> = await response.json();
     if (result.success && result.data) {
       return result.data;
@@ -498,7 +507,16 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to update project');
+    if (!response.ok) {
+      let details = '';
+      try {
+        const errJson = await response.json();
+        details = errJson.message || (errJson.errors ? (Array.isArray(errJson.errors) ? errJson.errors.join(', ') : JSON.stringify(errJson.errors)) : JSON.stringify(errJson));
+      } catch (e) {
+        details = await response.text();
+      }
+      throw new Error(details || 'Failed to update project');
+    }
     const result: ApiResponse<Project> = await response.json();
     if (result.success && result.data) {
       return result.data;
