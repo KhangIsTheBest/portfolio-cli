@@ -109,7 +109,10 @@ export default function ProjectsPage() {
             className="group flex flex-col border border-border-custom glass-panel rounded-2xl overflow-hidden hover:border-cyan-custom/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all duration-300"
           >
             {/* Thumbnail */}
-            <div className="relative h-44 overflow-hidden border-b border-border-custom/50 bg-slate-950">
+            <Link
+              href={`/projects/${project.slug}`}
+              className="relative h-44 overflow-hidden border-b border-border-custom/50 bg-slate-950 block cursor-pointer"
+            >
               <img
                 src={project.thumbnailUrl}
                 alt={project.title}
@@ -120,14 +123,16 @@ export default function ProjectsPage() {
                   {t('projects.featuredLabel')}
                 </span>
               )}
-            </div>
+            </Link>
 
             {/* Body */}
             <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
               <div className="space-y-2">
-                <h4 className="text-sm font-bold text-text group-hover:text-cyan-custom transition duration-200 line-clamp-1">
-                  {project.title}
-                </h4>
+                <Link href={`/projects/${project.slug}`} className="block group/title">
+                  <h4 className="text-sm font-bold text-text group-hover/title:text-cyan-custom group-hover:text-cyan-custom transition duration-200 line-clamp-1 cursor-pointer">
+                    {project.title}
+                  </h4>
+                </Link>
                 <p className="text-xs text-secondary font-sans line-clamp-3 leading-relaxed">
                   {project.shortDescription}
                 </p>

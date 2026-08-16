@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
@@ -33,6 +33,18 @@ export default function AdminProjectsPage() {
   const [projectImages, setProjectImages] = useState<Array<{ imageUrl: string; displayOrder: number }>>([]);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+
+  // Ref to snapshot current images before async upload to avoid stale state / triple-invoke
+  const projectImagesRef = useRef<Array<{ imageUrl: string; displayOrder: number }>>([]);
+  const isUploadingRef = useRef(false);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    projectImagesRef.current = projectImages;
+  }, [projectImages]);
+
+
 
   const fetchData = async () => {
     try {
@@ -200,35 +212,51 @@ export default function AdminProjectsPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const fileArray = Array.from(files);
+    e.target.value = '';
+
+    if (uploadingGallery) return;
     setUploadingGallery(true);
     setMessage(null);
-    const newImages = [...projectImages];
-    let successCount = 0;
-    let failCount = 0;
 
     try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+      const uploadedUrls: string[] = [];
+      let failCount = 0;
+
+      for (const file of fileArray) {
         try {
           const url = await apiService.uploadFile(file);
-          newImages.push({
-            imageUrl: url,
-            displayOrder: newImages.length
-          });
-          successCount++;
+          if (url) {
+            uploadedUrls.push(url);
+          }
         } catch (err) {
           console.error(`Failed to upload file ${file.name}:`, err);
           failCount++;
         }
       }
 
-      setProjectImages(newImages);
+      if (uploadedUrls.length > 0) {
+        setProjectImages(prev => {
+          const existingUrls = new Set(prev.map(img => img.imageUrl));
+          const newItems: Array<{ imageUrl: string; displayOrder: number }> = [];
 
+          for (const url of uploadedUrls) {
+            if (!existingUrls.has(url)) {
+              existingUrls.add(url);
+              newItems.push({ imageUrl: url, displayOrder: prev.length + newItems.length });
+            }
+          }
+
+          return [...prev, ...newItems];
+        });
+      }
+
+      const successCount = uploadedUrls.length;
       if (failCount === 0) {
         setMessage({
           type: 'success',
-          text: locale === 'vi' 
-            ? `Đã tải lên thành công ${successCount} ảnh minh họa!` 
+          text: locale === 'vi'
+            ? `Đã tải lên thành công ${successCount} ảnh minh họa!`
             : `Successfully uploaded ${successCount} illustrative images!`
         });
       } else {
@@ -243,7 +271,6 @@ export default function AdminProjectsPage() {
       console.error('Failed to run batch upload:', err);
     } finally {
       setUploadingGallery(false);
-      e.target.value = '';
     }
   };
 
@@ -525,19 +552,25 @@ export default function AdminProjectsPage() {
                   </span>
                   
                   <div className="flex items-center space-x-2">
-                    {/* Upload button triggers multi-file upload */}
-                    <label className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-cyan-custom/10 hover:bg-cyan-custom/25 border border-cyan-custom/30 text-cyan-custom text-[10px] uppercase font-bold transition select-none cursor-pointer">
+                    {/* Upload button triggers multi-file upload via native event listener */}
+                    <button
+                      type="button"
+                      onClick={() => galleryInputRef.current?.click()}
+                      disabled={uploadingGallery}
+                      className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-cyan-custom/10 hover:bg-cyan-custom/25 border border-cyan-custom/30 text-cyan-custom text-[10px] uppercase font-bold transition select-none cursor-pointer disabled:opacity-50"
+                    >
                       <Plus className="w-3 h-3" />
                       <span>{locale === 'vi' ? 'Tải ảnh từ máy' : 'Upload Images'}</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        multiple 
-                        onChange={handleMultipleGalleryUpload} 
-                        className="hidden" 
-                        disabled={uploadingGallery}
-                      />
-                    </label>
+                    </button>
+                    {/* Hidden native file input */}
+                    <input
+                      ref={galleryInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleMultipleGalleryUpload}
+                      className="hidden"
+                    />
 
                     {/* Add URL button for manual link input */}
                     <button
