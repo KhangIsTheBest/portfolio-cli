@@ -17,7 +17,7 @@ export function GoogleLoginButton({ onSuccess, onError }: GoogleLoginButtonProps
   const buttonRef = useRef<HTMLDivElement>(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '698168901753-34k3ie4eobqr5ucnidn7v34o07h4hdis.apps.googleusercontent.com';
 
   useEffect(() => {
     // 1. Check if script is already present in document
