@@ -190,7 +190,11 @@ export default function ProjectsPage() {
                         <span>{t('projects.solutionTitle')}</span>
                       </div>
                       <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
-                        Full-stack architecture using Java Spring Boot REST APIs, PostgreSQL, and decoupled React/Next.js frontend.
+                        {project.technologies && project.technologies.length > 0
+                          ? (locale === 'vi'
+                              ? `Hệ thống thiết kế theo kiến trúc chuẩn RESTful API dựa trên nền tảng ${project.technologies.map(t => t.name).join(', ')}, đảm bảo tính linh hoạt và mở rộng.`
+                              : `Full-stack modular architecture powered by ${project.technologies.map(t => t.name).join(', ')} with high-performance RESTful APIs.`)
+                          : project.shortDescription}
                       </p>
                     </div>
                   </div>
