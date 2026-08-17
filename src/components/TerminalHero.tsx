@@ -66,7 +66,6 @@ export const TerminalHero: React.FC = () => {
 
   const terminalBodyRef = useRef<HTMLDivElement>(null);
 
-  // Scroll ONLY the internal terminal box, never auto-scroll the main window viewport!
   useEffect(() => {
     if (terminalBodyRef.current) {
       terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
@@ -155,9 +154,9 @@ export const TerminalHero: React.FC = () => {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-2xl overflow-hidden font-mono select-text flex flex-col h-[340px] transition-colors duration-300">
+    <div className="w-full rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl overflow-hidden font-mono select-text flex flex-col h-full min-h-[380px] transition-colors duration-300">
       {/* Header bar */}
-      <div className="px-4 py-2.5 bg-[var(--terminal-header-bg)] border-b border-[var(--border-color)] flex items-center justify-between shrink-0">
+      <div className="px-4 py-3 bg-[var(--terminal-header-bg)] border-b border-[var(--border-color)] flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-2">
           <div className="flex space-x-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
@@ -184,7 +183,7 @@ export const TerminalHero: React.FC = () => {
         </div>
       </div>
 
-      {/* Terminal Body */}
+      {/* Terminal Body - Expands to fill available vertical space */}
       <div ref={terminalBodyRef} className="p-4 flex-1 overflow-y-auto space-y-3 text-xs scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-white/10">
         {history.map((item, idx) => (
           <div key={idx} className="space-y-1.5">
@@ -213,7 +212,7 @@ export const TerminalHero: React.FC = () => {
       </div>
 
       {/* Quick Command Chips */}
-      <div className="px-4 py-2 bg-[var(--terminal-header-bg)] border-t border-[var(--border-color)] flex items-center gap-1.5 overflow-x-auto shrink-0 text-[10px]">
+      <div className="px-4 py-2.5 bg-[var(--terminal-header-bg)] border-t border-[var(--border-color)] flex items-center gap-1.5 overflow-x-auto shrink-0 text-[10px]">
         <span className="text-[var(--secondary-color)] uppercase text-[9px] tracking-wider shrink-0 font-bold">Quick CLI:</span>
         {['help', 'stack', 'projects', 'contact', 'cv'].map((cmd) => (
           <button

@@ -186,7 +186,7 @@ export default function Home() {
         </div>
 
         {/* Right Column: Interactive CLI Terminal (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col justify-between">
+        <div className="lg:col-span-7 flex flex-col h-full">
           <TerminalHero />
         </div>
       </section>
