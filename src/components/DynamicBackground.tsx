@@ -3,6 +3,14 @@
 import React, { useEffect, useRef } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  phase: number;
+  speed: number;
+}
+
 interface Particle {
   x: number;
   y: number;
@@ -11,14 +19,6 @@ interface Particle {
   radius: number;
   colorIndex: number;
   baseAlpha: number;
-}
-
-interface EnergyPulse {
-  p1Index: number;
-  p2Index: number;
-  progress: number;
-  speed: number;
-  color: string;
 }
 
 export const DynamicBackground: React.FC = () => {
@@ -42,34 +42,32 @@ export const DynamicBackground: React.FC = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Particle Colors per mode
-    const isDarkMode = theme === 'dark' || document.documentElement.classList.contains('dark');
-    
+    // Deep Space Stars Setup (Dark mode)
+    const numStars = 60;
+    const stars: Star[] = Array.from({ length: numStars }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.5 + 0.5,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.02 + 0.01
+    }));
+
+    // Interactive Tech Constellation Nodes
+    const numParticles = Math.min(Math.floor(width / 24), 45);
     const darkColors = ['#10b981', '#06b6d4', '#6366f1', '#8b5cf6', '#f59e0b'];
     const lightColors = ['#0d9488', '#0284c7', '#4f46e5', '#7c3aed', '#d97706'];
-
-    const numParticles = Math.min(Math.floor(width / 22), 60);
 
     const particles: Particle[] = Array.from({ length: numParticles }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
       radius: Math.random() * 2 + 1,
       colorIndex: Math.floor(Math.random() * 5),
       baseAlpha: Math.random() * 0.4 + 0.4
     }));
 
-    // Energy pulses traveling along network paths
-    const pulses: EnergyPulse[] = Array.from({ length: 8 }, () => ({
-      p1Index: Math.floor(Math.random() * numParticles),
-      p2Index: Math.floor(Math.random() * numParticles),
-      progress: Math.random(),
-      speed: Math.random() * 0.015 + 0.008,
-      color: darkColors[Math.floor(Math.random() * darkColors.length)]
-    }));
-
-    // Mouse coordinates
+    // Mouse listener
     let mouse = { x: -1000, y: -1000, active: false };
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
@@ -82,34 +80,99 @@ export const DynamicBackground: React.FC = () => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
 
-    // Time counter for background gradient aura movement
     let time = 0;
 
     const render = () => {
-      time += 0.005;
+      time += 0.008;
       ctx.clearRect(0, 0, width, height);
 
       const isDark = document.documentElement.classList.contains('dark') || theme === 'dark';
       const activeColors = isDark ? darkColors : lightColors;
 
-      // 1. Futuristic Ambient Glow Orbs in Background
-      const orb1X = width * 0.25 + Math.sin(time * 0.8) * 120;
-      const orb1Y = height * 0.3 + Math.cos(time * 0.6) * 100;
-      const grad1 = ctx.createRadialGradient(orb1X, orb1Y, 10, orb1X, orb1Y, width * 0.35);
-      grad1.addColorStop(0, isDark ? 'rgba(16, 185, 129, 0.08)' : 'rgba(13, 148, 136, 0.06)');
-      grad1.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad1;
-      ctx.fillRect(0, 0, width, height);
+      // =========================================================================
+      // 1. BASE COSMIC / DAYLIGHT GRADIENT BACKGROUND
+      // =========================================================================
+      if (isDark) {
+        // Deep Space Cosmic Void Gradient
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#03050d');
+        bgGrad.addColorStop(0.5, '#070b1a');
+        bgGrad.addColorStop(1, '#0c081c');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
 
-      const orb2X = width * 0.75 + Math.cos(time * 0.7) * 140;
-      const orb2Y = height * 0.65 + Math.sin(time * 0.9) * 110;
-      const grad2 = ctx.createRadialGradient(orb2X, orb2Y, 10, orb2X, orb2Y, width * 0.4);
-      grad2.addColorStop(0, isDark ? 'rgba(99, 102, 241, 0.08)' : 'rgba(79, 70, 229, 0.05)');
-      grad2.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad2;
-      ctx.fillRect(0, 0, width, height);
+        // Twinkling Space Stars
+        for (let star of stars) {
+          star.phase += star.speed;
+          const alpha = 0.2 + Math.abs(Math.sin(star.phase)) * 0.7;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.fill();
+        }
+      } else {
+        // Prismatic Daylight Pastel Gradient
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#f8fafc');
+        bgGrad.addColorStop(0.4, '#f0fdf4');
+        bgGrad.addColorStop(0.8, '#eff6ff');
+        bgGrad.addColorStop(1, '#f5f3ff');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
+      }
 
-      // 2. Update & Draw Particles & Mesh Triangles
+      // =========================================================================
+      // 2. DYNAMIC AURORA BOREALIS / SILK LIGHT WAVE CURTAINS
+      // =========================================================================
+      const drawAuroraWave = (
+        color1: string,
+        color2: string,
+        yOffset: number,
+        amplitude: number,
+        speedMultiplier: number,
+        opacity: number
+      ) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, height);
+
+        // Wave curve points
+        for (let x = 0; x <= width; x += 30) {
+          const wave1 = Math.sin(x * 0.003 + time * speedMultiplier) * amplitude;
+          const wave2 = Math.cos(x * 0.002 - time * 0.8 * speedMultiplier) * (amplitude * 0.6);
+          const y = yOffset + wave1 + wave2;
+          ctx.lineTo(x, y);
+        }
+
+        ctx.lineTo(width, height);
+        ctx.closePath();
+
+        const auroraGrad = ctx.createLinearGradient(0, yOffset - 150, width, height);
+        auroraGrad.addColorStop(0, color1);
+        auroraGrad.addColorStop(0.6, color2);
+        auroraGrad.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = auroraGrad;
+        ctx.globalAlpha = opacity;
+        ctx.fill();
+        ctx.restore();
+      };
+
+      if (isDark) {
+        // Dark Mode Space Aurora (Emerald Green, Radiant Cyan, Deep Violet)
+        drawAuroraWave('rgba(16, 185, 129, 0.28)', 'rgba(6, 182, 212, 0.18)', height * 0.2, 90, 1.0, 0.85);
+        drawAuroraWave('rgba(99, 102, 241, 0.25)', 'rgba(139, 92, 246, 0.15)', height * 0.45, 110, 0.7, 0.8);
+        drawAuroraWave('rgba(244, 63, 94, 0.18)', 'rgba(236, 72, 153, 0.12)', height * 0.7, 80, 1.2, 0.75);
+      } else {
+        // Light Mode Prism Aurora (Soft Teal, Sky Blue, Sunset Lavender)
+        drawAuroraWave('rgba(13, 148, 136, 0.18)', 'rgba(20, 184, 166, 0.12)', height * 0.25, 80, 0.9, 0.9);
+        drawAuroraWave('rgba(2, 132, 199, 0.16)', 'rgba(56, 189, 248, 0.10)', height * 0.5, 100, 0.7, 0.85);
+        drawAuroraWave('rgba(124, 58, 237, 0.12)', 'rgba(244, 114, 182, 0.08)', height * 0.75, 70, 1.1, 0.8);
+      }
+
+      // =========================================================================
+      // 3. INTERACTIVE CONSTELLATION MESH OVERLAY
+      // =========================================================================
       for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         p1.x += p1.vx;
@@ -118,50 +181,32 @@ export const DynamicBackground: React.FC = () => {
         if (p1.x < 0 || p1.x > width) p1.vx *= -1;
         if (p1.y < 0 || p1.y > height) p1.vy *= -1;
 
-        // Draw node
+        // Draw particle dot
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
         ctx.fillStyle = activeColors[p1.colorIndex];
         ctx.globalAlpha = p1.baseAlpha;
         ctx.fill();
 
-        // Connect nearby nodes & draw semi-transparent mesh triangles
+        // Connect nearby nodes
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p1.x - p2.x;
           const dy = p1.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 140) {
+          if (dist < 130) {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.strokeStyle = activeColors[p1.colorIndex];
-            ctx.globalAlpha = (1 - dist / 140) * (isDark ? 0.18 : 0.12);
+            ctx.globalAlpha = (1 - dist / 130) * (isDark ? 0.22 : 0.15);
             ctx.lineWidth = 0.8;
             ctx.stroke();
-
-            // Form dynamic triangles with third nearby node for futuristic geometric mesh!
-            for (let k = j + 1; k < particles.length; k++) {
-              const p3 = particles[k];
-              const dist2 = Math.hypot(p2.x - p3.x, p2.y - p3.y);
-              const dist3 = Math.hypot(p1.x - p3.x, p1.y - p3.y);
-
-              if (dist2 < 110 && dist3 < 110) {
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.lineTo(p3.x, p3.y);
-                ctx.closePath();
-                ctx.fillStyle = activeColors[p1.colorIndex];
-                ctx.globalAlpha = isDark ? 0.025 : 0.015;
-                ctx.fill();
-              }
-            }
           }
         }
 
-        // Connect to mouse cursor with dynamic energy highlight
+        // Connect to mouse cursor
         if (mouse.active) {
           const mdx = p1.x - mouse.x;
           const mdy = p1.y - mouse.y;
@@ -171,49 +216,20 @@ export const DynamicBackground: React.FC = () => {
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(mouse.x, mouse.y);
             ctx.strokeStyle = activeColors[p1.colorIndex];
-            ctx.globalAlpha = (1 - mdist / 160) * 0.35;
+            ctx.globalAlpha = (1 - mdist / 160) * 0.4;
             ctx.lineWidth = 1.2;
             ctx.stroke();
           }
         }
       }
 
-      // 3. Draw Traveling Energy Pulses along Connections
-      ctx.globalAlpha = 1;
-      for (let p of pulses) {
-        p.progress += p.speed;
-        if (p.progress >= 1) {
-          p.p1Index = Math.floor(Math.random() * particles.length);
-          p.p2Index = Math.floor(Math.random() * particles.length);
-          p.progress = 0;
-          p.color = activeColors[Math.floor(Math.random() * activeColors.length)];
-        }
-
-        const p1 = particles[p.p1Index];
-        const p2 = particles[p.p2Index];
-        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-
-        if (dist < 180) {
-          const px = p1.x + (p2.x - p1.x) * p.progress;
-          const py = p1.y + (p2.y - p1.y) * p.progress;
-
-          ctx.beginPath();
-          ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.shadowColor = p.color;
-          ctx.shadowBlur = 8;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-      }
-
-      // 4. Mouse Glow Ring
+      // Mouse Glow Pulse Ring
       if (mouse.active) {
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 40, 0, Math.PI * 2);
-        ctx.strokeStyle = isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(13, 148, 136, 0.2)';
-        ctx.lineWidth = 1;
-        ctx.globalAlpha = 0.5;
+        ctx.arc(mouse.x, mouse.y, 45, 0, Math.PI * 2);
+        ctx.strokeStyle = isDark ? 'rgba(16, 185, 129, 0.3)' : 'rgba(13, 148, 136, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
         ctx.stroke();
       }
 
