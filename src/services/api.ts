@@ -14,6 +14,26 @@ const DEBUG = process.env.NODE_ENV !== 'production';
 // Helper to check for client-side window object
 const isClient = typeof window !== 'undefined';
 
+// Helper to format and validate image URLs with fallback for relative paths and broken links
+export const formatImageUrl = (
+  url?: string | null, 
+  fallback = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop'
+): string => {
+  if (!url || typeof url !== 'string' || !url.trim()) return fallback;
+  const trimmed = url.trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+    return trimmed;
+  }
+  if (trimmed.startsWith('/uploads/') || trimmed.startsWith('uploads/')) {
+    const cleanPath = trimmed.startsWith('/') ? trimmed : '/' + trimmed;
+    return `/api/v1${cleanPath}`;
+  }
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+  return fallback;
+};
+
 // Helper to get Auth token from localStorage
 const getAuthHeaders = (): HeadersInit => {
   if (isClient) {
@@ -116,7 +136,6 @@ export const apiService = {
       console.warn('Admin profile route failed:', e);
     }
 
-    // Default fallback object
     return {
       id: 1,
       fullName: "Phan Duy Khang",
@@ -210,7 +229,6 @@ export const apiService = {
       console.warn(`Public getProjectBySlug failed for ${slug}, checking catalog list:`, e);
     }
 
-    // Try finding in project list
     const allProjects = await this.getProjects();
     const found = allProjects.find(p => p.slug === slug);
     if (found) return found;
@@ -589,7 +607,6 @@ export const apiService = {
       console.warn('Admin projects fetch failed, falling back to public getProjects():', e);
     }
 
-    // Seamless fallback to public projects list
     return this.getProjects();
   },
 
@@ -675,7 +692,6 @@ export const apiService = {
       console.warn('Admin blogs fetch failed, falling back to public getBlogs():', e);
     }
 
-    // Seamless fallback to public blogs list
     return this.getBlogs();
   },
 

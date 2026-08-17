@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload } from 'lucide-react';
-import { apiService } from '@/services/api';
+import { apiService, formatImageUrl } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { Project, Technology } from '@/types';
 
@@ -444,7 +444,7 @@ export default function AdminProjectsPage() {
                       <td className="p-4">
                         <div className="flex items-center space-x-3">
                           <img 
-                            src={project.thumbnailUrl || 'https://images.unsplash.com/photo-1542831371-29b0f74f9713'} 
+                            src={formatImageUrl(project.thumbnailUrl)} 
                             alt={project.title}
                             className="w-10 h-7 rounded border border-border-custom object-cover shrink-0"
                             onError={(e) => {
@@ -636,7 +636,7 @@ export default function AdminProjectsPage() {
                         {/* Thumbnail */}
                         <div className="w-16 h-10 rounded border border-border-custom overflow-hidden bg-bg shrink-0">
                           <img 
-                            src={img.imageUrl} 
+                            src={formatImageUrl(img.imageUrl)} 
                             alt="preview" 
                             className="w-full h-full object-cover"
                             onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=80'; }}
@@ -695,7 +695,7 @@ export default function AdminProjectsPage() {
                     {thumbnailUrl ? (
                       <>
                         <img 
-                          src={thumbnailUrl} 
+                          src={formatImageUrl(thumbnailUrl)} 
                           alt="Thumbnail Preview" 
                           className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                           onError={(e) => {

@@ -18,11 +18,13 @@ import {
   FolderGit2,
   Sparkles
 } from 'lucide-react';
-import { apiService } from '@/services/api';
+import { apiService, formatImageUrl } from '@/services/api';
 import { Profile, Project, Technology } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
 import { TerminalHero } from '@/components/TerminalHero';
+
+const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
 export default function Home() {
   const { locale, t } = useLanguage();
@@ -271,9 +273,12 @@ export default function Home() {
                   {/* Thumbnail / Preview */}
                   <Link href={`/projects/${project.slug}`} className="block rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] h-48 sm:h-56 relative cursor-pointer">
                     <img
-                      src={project.thumbnailUrl}
+                      src={formatImageUrl(project.thumbnailUrl)}
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
+                      }}
                     />
                   </Link>
 

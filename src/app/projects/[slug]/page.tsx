@@ -3,11 +3,13 @@
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Calendar, Layers, X } from 'lucide-react';
-import { apiService } from '@/services/api';
+import { apiService, formatImageUrl } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
+const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -100,9 +102,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         {/* Main image banner */}
         <div className="h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] shadow-lg relative">
           <img
-            src={project.thumbnailUrl}
+            src={formatImageUrl(project.thumbnailUrl)}
             alt={project.title}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
+            }}
           />
           {project.featured && (
             <span className="absolute top-4 right-4 px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-[9px] font-mono text-emerald-600 dark:text-emerald-400 font-extrabold shadow-lg">
@@ -149,19 +154,25 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                 {locale === 'vi' ? 'Hình ảnh minh họa' : 'Illustrative Screenshots'}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {project.images.map((img) => (
-                  <div 
-                    key={img.id} 
-                    className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer"
-                  >
-                    <img 
-                      src={img.imageUrl} 
-                      alt={`Screenshot of ${project.title}`}
-                      className="w-full h-auto object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                      onClick={() => setActiveImageUrl(img.imageUrl)}
-                    />
-                  </div>
-                ))}
+                {project.images.map((img) => {
+                  const imgUrl = formatImageUrl(img.imageUrl);
+                  return (
+                    <div 
+                      key={img.id} 
+                      className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer h-48"
+                      onClick={() => setActiveImageUrl(imgUrl)}
+                    >
+                      <img 
+                        src={imgUrl} 
+                        alt={`Screenshot of ${project.title}`}
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -213,9 +224,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
             onClick={(e) => e.stopPropagation()}
           >
             <img 
-              src={activeImageUrl} 
+              src={formatImageUrl(activeImageUrl)} 
               alt="Screenshot Large Preview" 
               className="w-auto h-auto max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl border border-white/20"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
+              }}
             />
           </div>
         </div>
