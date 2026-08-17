@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Mail, Send, CheckCircle, UserCheck, LogOut, Info } from 'lucide-react';
+import { Mail, Send, CheckCircle2, UserCheck, Info, Terminal, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 
-// Import confetti dynamically to prevent SSR issues
 let confetti: any = null;
 if (typeof window !== 'undefined') {
   import('canvas-confetti').then((module) => {
@@ -29,14 +28,11 @@ export default function ContactPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Check login state on mount and sync latest profile from backend
   useEffect(() => {
     const profileStr = localStorage.getItem('user-profile');
-    let cachedProfile: any = null;
-    
     if (profileStr) {
       try {
-        cachedProfile = JSON.parse(profileStr);
+        const cachedProfile = JSON.parse(profileStr);
         setLoggedInUser(cachedProfile);
         setFormData((prev) => ({
           ...prev,
@@ -44,13 +40,12 @@ export default function ContactPage() {
           email: cachedProfile.email || '',
         }));
       } catch (e) {
-        console.error('Failed to parse user profile:', e);
+        console.error('Failed to parse cached user profile:', e);
       }
     }
 
     const userToken = localStorage.getItem('user-token');
     if (userToken) {
-      // Fetch latest profile from backend in background to sync
       apiService.getUserProfile().then((data) => {
         const updatedProfile = {
           fullName: data.fullName || data.username,
@@ -65,7 +60,7 @@ export default function ContactPage() {
           email: updatedProfile.email,
         }));
       }).catch((err) => {
-        console.error('Failed to sync user profile with backend:', err);
+        console.error('Failed to sync profile with backend:', err);
       });
     }
   }, []);
@@ -75,19 +70,6 @@ export default function ContactPage() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('admin-token');
-    localStorage.removeItem('user-token');
-    localStorage.removeItem('user-profile');
-    setLoggedInUser(null);
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,13 +85,12 @@ export default function ContactPage() {
         message: formData.message,
       });
 
-      // Confetti celebration
       if (confetti) {
         confetti({
-          particleCount: 120,
-          spread: 80,
+          particleCount: 100,
+          spread: 70,
           origin: { y: 0.6 },
-          colors: ['#06b6d4', '#a855f7', '#38bdf8', '#c084fc', '#0284c7']
+          colors: ['#10b981', '#f59e0b', '#38bdf8', '#6366f1']
         });
       }
 
@@ -123,80 +104,48 @@ export default function ContactPage() {
         message: '',
       });
       
-      setTimeout(() => setSubmitSuccess(false), 5000);
+      setTimeout(() => setSubmitSuccess(false), 6000);
     } catch (err: any) {
-      console.error('Contact submission failed:', err);
-      let displayError = err.message || (
-        locale === 'vi' 
-          ? 'Gửi tin nhắn thất bại. Vui lòng thử lại!' 
-          : 'Failed to send message. Please try again.'
-      );
-      if (locale === 'vi') {
-        if (displayError.includes('Validation failed')) {
-          displayError = 'Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại!';
-        }
-      }
-      setErrorMsg(displayError);
-      setTimeout(() => setErrorMsg(null), 5000);
+      console.error('Contact submission error:', err);
+      setErrorMsg(err.message || (locale === 'vi' ? 'Gửi tin nhắn thất bại' : 'Failed to transmit packet'));
+      setTimeout(() => setErrorMsg(null), 6000);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section className="border border-border-custom glass-panel rounded-3xl p-8 space-y-6 my-8 animate-fade-in relative overflow-hidden max-w-2xl mx-auto w-full">
-      {/* Accent bottom glow */}
-      <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-purple-custom/10 blur-3xl -z-10 pointer-events-none" />
-
+    <section className="border border-white/[0.08] bg-[#0d0f17] rounded-3xl p-6 sm:p-8 space-y-6 my-6 max-w-2xl mx-auto w-full font-mono shadow-2xl animate-fade-in select-text">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border-custom/50 pb-3">
+      <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
         <div className="flex items-center space-x-2">
-          <Mail className="w-5 h-5 text-cyan-custom" />
-          <h3 className="text-base font-bold text-text">{t('contact.title')}</h3>
+          <Mail className="w-5 h-5 text-emerald-400" />
+          <h3 className="text-base font-bold text-slate-100 uppercase tracking-wider">{t('contact.title')}</h3>
         </div>
+        <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold">
+          SPRING BOOT REST
+        </span>
       </div>
 
-      {/* Login / Session Greeting Bar */}
+      {/* Session indicator */}
       {loggedInUser ? (
-        <div className="p-3 bg-cyan-custom/10 border border-cyan-custom/25 rounded-2xl flex items-center justify-between text-xs font-mono select-none">
-          <div className="flex items-center space-x-2 text-cyan-custom">
-            <UserCheck className="w-4 h-4 shrink-0" />
-            <span>
-              {locale === 'vi' 
-                ? `Chào mừng, ${loggedInUser.fullName}!` 
-                : `Welcome back, ${loggedInUser.fullName}!`}
-            </span>
+        <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-between text-xs text-emerald-400 font-mono">
+          <div className="flex items-center space-x-2">
+            <UserCheck className="w-4 h-4" />
+            <span>{locale === 'vi' ? `Chào mừng ${loggedInUser.fullName}` : `Authenticated: ${loggedInUser.fullName}`}</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <Link
-              href="/profile"
-              className="text-cyan-custom hover:text-cyan-custom/85 hover:underline font-black font-mono transition"
-              title={locale === 'vi' ? 'Xem hồ sơ cá nhân' : 'View account profile'}
-            >
-              {locale === 'vi' ? 'Hồ sơ cá nhân' : 'Account Profile'}
-            </Link>
-          </div>
+          <Link href="/profile" className="underline hover:text-white font-bold">
+            {locale === 'vi' ? 'Hồ sơ' : 'Profile'}
+          </Link>
         </div>
       ) : (
-        <div className="p-3 bg-slate-950/30 border border-border-custom rounded-2xl flex items-start space-x-2 text-xs text-secondary font-mono">
-          <Info className="w-4 h-4 shrink-0 text-purple-custom mt-0.5" />
-          <p className="leading-relaxed">
+        <div className="p-3 bg-white/[0.02] border border-white/[0.06] rounded-xl flex items-center space-x-2 text-xs text-slate-400 font-mono">
+          <Info className="w-4 h-4 text-amber-400 shrink-0" />
+          <p>
             {locale === 'vi' ? (
-              <>
-                Bạn có thể{' '}
-                <Link href="/login" className="text-purple-custom hover:underline font-bold">
-                  Đăng nhập / Đăng ký tài khoản
-                </Link>{' '}
-                để tự động điền thông tin liên hệ của mình.
-              </>
+              <>Bạn có thể <Link href="/login" className="text-emerald-400 underline font-bold">Đăng nhập</Link> để điền tự động.</>
             ) : (
-              <>
-                You can{' '}
-                <Link href="/login" className="text-purple-custom hover:underline font-bold">
-                  Sign In / Sign Up
-                </Link>{' '}
-                to automatically pre-fill your details.
-              </>
+              <>You can <Link href="/login" className="text-emerald-400 underline font-bold">Sign In</Link> to pre-fill your details.</>
             )}
           </p>
         </div>
@@ -204,10 +153,10 @@ export default function ContactPage() {
 
       {submitSuccess ? (
         <div className="flex flex-col items-center justify-center py-10 text-center space-y-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl animate-fade-in font-mono">
-          <CheckCircle className="w-12 h-12 text-emerald-500 animate-bounce" />
+          <CheckCircle2 className="w-12 h-12 text-emerald-400 animate-bounce" />
           <div>
-            <h4 className="text-emerald-500 font-bold">{t('contact.successTitle')}</h4>
-            <p className="text-xs text-secondary max-w-xs mt-1">
+            <h4 className="text-emerald-400 font-bold text-sm">{t('contact.successTitle')}</h4>
+            <p className="text-xs text-slate-300 max-w-xs mt-1 leading-relaxed">
               {t('contact.successDesc')}
             </p>
           </div>
@@ -215,16 +164,14 @@ export default function ContactPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {errorMsg && (
-            <div className="flex items-center space-x-2.5 p-3 bg-rose-500/10 border border-rose-500/30 text-rose-500 rounded-xl text-xs font-mono select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
-              <span>{errorMsg}</span>
+            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl text-xs font-mono">
+              ⚠️ {errorMsg}
             </div>
           )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            {/* Name input */}
             <div className="space-y-1">
-              <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.nameLabel')}</label>
+              <label className="text-[10px] font-mono font-bold uppercase text-slate-400">{t('contact.nameLabel')}</label>
               <input
                 type="text"
                 name="name"
@@ -233,17 +180,12 @@ export default function ContactPage() {
                 required
                 readOnly={!!loggedInUser}
                 placeholder={t('contact.namePlaceholder')}
-                className={`w-full px-4 py-2.5 rounded-xl border border-border-custom text-text text-sm focus:outline-none focus:border-cyan-custom transition ${
-                  loggedInUser 
-                    ? 'bg-slate-950/20 text-secondary cursor-not-allowed opacity-75 focus:border-border-custom' 
-                    : 'bg-slate-950/45'
-                }`}
+                className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-[#141722] text-slate-100 text-xs focus:outline-none focus:border-emerald-400 transition"
               />
             </div>
 
-            {/* Email input */}
             <div className="space-y-1">
-              <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.emailLabel')}</label>
+              <label className="text-[10px] font-mono font-bold uppercase text-slate-400">{t('contact.emailLabel')}</label>
               <input
                 type="email"
                 name="email"
@@ -252,31 +194,25 @@ export default function ContactPage() {
                 required
                 readOnly={!!loggedInUser}
                 placeholder={t('contact.emailPlaceholder')}
-                className={`w-full px-4 py-2.5 rounded-xl border border-border-custom text-text text-sm focus:outline-none focus:border-cyan-custom transition ${
-                  loggedInUser 
-                    ? 'bg-slate-950/20 text-secondary cursor-not-allowed opacity-75 focus:border-border-custom' 
-                    : 'bg-slate-950/45'
-                }`}
+                className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-[#141722] text-slate-100 text-xs focus:outline-none focus:border-emerald-400 transition"
               />
             </div>
           </div>
 
-          {/* Subject input */}
           <div className="space-y-1">
-            <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.subjectLabel')}</label>
+            <label className="text-[10px] font-mono font-bold uppercase text-slate-400">{t('contact.subjectLabel')}</label>
             <input
               type="text"
               name="subject"
               value={formData.subject}
               onChange={handleInputChange}
               placeholder={t('contact.subjectPlaceholder')}
-              className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-[#141722] text-slate-100 text-xs focus:outline-none focus:border-emerald-400 transition"
             />
           </div>
 
-          {/* Message input */}
           <div className="space-y-1">
-            <label className="text-[9px] font-mono font-bold uppercase text-secondary">{t('contact.msgLabel')}</label>
+            <label className="text-[10px] font-mono font-bold uppercase text-slate-400">{t('contact.msgLabel')}</label>
             <textarea
               name="message"
               rows={5}
@@ -284,21 +220,17 @@ export default function ContactPage() {
               onChange={handleInputChange}
               required
               placeholder={t('contact.msgPlaceholder')}
-              className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/45 text-text text-sm focus:outline-none focus:border-cyan-custom transition resize-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-[#141722] text-slate-100 text-xs focus:outline-none focus:border-emerald-400 transition resize-none"
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-custom to-purple-custom text-bg font-bold text-xs hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 hover:shadow-glow cursor-pointer"
+            className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-[#090a0f] font-bold text-xs transition cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 rounded-full border-2 border-bg border-t-transparent animate-spin" />
-                <span>{t('contact.submittingBtn')}</span>
-              </>
+              <span>{t('contact.submittingBtn')}</span>
             ) : (
               <>
                 <Send className="w-4 h-4" />

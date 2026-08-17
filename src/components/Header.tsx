@@ -3,19 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Layers, Menu, X, Globe, LogIn, User } from 'lucide-react';
+import { Terminal, Menu, X, Globe, LogIn, User, Activity, Shield } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { useLanguage } from '@/context/LanguageContext';
+import { useServerStatus } from '@/context/ServerStatusContext';
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { locale, setLanguage, t } = useLanguage();
+  const { isOnline } = useServerStatus();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Sync login state on mount and path changes
   useEffect(() => {
     const adminToken = localStorage.getItem('admin-token');
     const userToken = localStorage.getItem('user-token');
@@ -33,9 +34,7 @@ export const Header: React.FC = () => {
   ];
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
-    }
+    if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   };
 
@@ -48,80 +47,88 @@ export const Header: React.FC = () => {
   }
 
   return (
-    <nav className="sticky top-4 z-40 w-full max-w-7xl mx-auto border border-border-custom bg-card-custom/80 backdrop-blur-md rounded-2xl mb-8 select-text">
-      <div className="w-full px-4 md:px-6 py-3 flex items-center justify-between">
+    <header className="sticky top-4 z-40 w-full max-w-7xl mx-auto mb-8 font-mono select-text">
+      <nav className="w-full border border-white/[0.08] bg-[#0d0f17]/90 backdrop-blur-xl rounded-2xl px-4 md:px-6 py-3 flex items-center justify-between shadow-2xl">
         
-        {/* Logo & Brand */}
-        <Link href="/" className="flex items-center space-x-2.5 group select-none">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-custom to-purple-custom p-0.5 shadow-glow flex items-center justify-center text-bg">
-            <div className="w-full h-full rounded-[10px] bg-bg flex items-center justify-center text-cyan-custom group-hover:text-purple-custom transition-all">
-              <Layers className="w-4.5 h-4.5" />
-            </div>
+        {/* Brand & System Status */}
+        <Link href="/" className="flex items-center space-x-3 group select-none cursor-pointer">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.1] flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/50 group-hover:text-white transition duration-300">
+            <Terminal className="w-4.5 h-4.5" />
           </div>
           <div>
-            <h1 className="text-sm font-black tracking-widest text-text">
-              PhanDuyKhang<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-custom to-purple-custom">.CLI</span>
-            </h1>
-            <p className="text-[8px] text-secondary font-mono">SYS_OK: HTTP_REST</p>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-bold text-slate-100 tracking-tight">
+                PhanDuyKhang<span className="text-emerald-400 font-mono">.dev</span>
+              </span>
+              <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                v2.4
+              </span>
+            </div>
+            <div className="flex items-center space-x-1.5 text-[9px] text-slate-400 font-mono">
+              <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`} />
+              <span>{isOnline ? 'REST API 200 OK (24ms)' : 'OFFLINE MODE'}</span>
+            </div>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center space-x-1">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide transition-all duration-200 ${
-                isActive(item.href)
-                  ? 'text-cyan-custom bg-cyan-custom/10 border border-cyan-custom/20'
-                  : 'text-secondary border border-transparent hover:text-text hover:bg-slate-800/40'
-              }`}
-            >
-              {t(item.labelKey)}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition duration-200 cursor-pointer ${
+                  active
+                    ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm'
+                    : 'text-slate-400 border border-transparent hover:text-slate-100 hover:bg-white/[0.03]'
+                }`}
+              >
+                {t(item.labelKey)}
+              </Link>
+            );
+          })}
         </div>
 
-        {/* Theme, Language, and Login button */}
+        {/* Actions (Language, Theme, Auth Portal) */}
         <div className="hidden lg:flex items-center space-x-2 select-none">
-          {/* Language Toggle Button */}
+          {/* Language toggle */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center space-x-1 px-2.5 py-1.5 bg-slate-900/60 border border-border-custom hover:border-primary/50 text-secondary hover:text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer"
-            title={locale === 'vi' ? 'Switch to English' : 'Chuyển sang Tiếng Việt'}
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/40 text-slate-300 hover:text-white rounded-xl text-xs font-mono font-semibold transition cursor-pointer"
+            title={locale === 'vi' ? 'Chuyển sang Tiếng Việt / English' : 'Switch Language'}
           >
-            <Globe className="w-3.5 h-3.5 text-primary" />
+            <Globe className="w-3.5 h-3.5 text-emerald-400" />
             <span>{locale === 'vi' ? 'VN' : 'EN'}</span>
           </button>
           
           <ThemeSelector />
 
-          {/* Account Portal / Login Link */}
+          {/* User Auth / Portal button */}
           <Link
             href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-gradient-to-r from-cyan-custom/15 to-purple-custom/15 hover:from-cyan-custom/20 hover:to-purple-custom/20 border border-cyan-custom/25 hover:border-cyan-custom/60 text-text rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer shadow-sm"
+            className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-xl text-xs font-mono font-bold transition duration-200 cursor-pointer"
           >
             {isLoggedIn ? (
               <>
-                <User className="w-3.5 h-3.5 text-cyan-custom" />
+                <User className="w-3.5 h-3.5" />
                 <span>{locale === 'vi' ? 'Tài khoản' : 'Portal'}</span>
               </>
             ) : (
               <>
-                <LogIn className="w-3.5 h-3.5 text-cyan-custom" />
+                <LogIn className="w-3.5 h-3.5" />
                 <span>{locale === 'vi' ? 'Đăng nhập' : 'Sign In'}</span>
               </>
             )}
           </Link>
         </div>
 
-        {/* Hamburger Mobile Toggle Button */}
+        {/* Mobile controls */}
         <div className="flex items-center space-x-2 lg:hidden select-none">
-          {/* Mobile Language Button */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center space-x-1 px-2.5 py-1.5 bg-slate-900/60 border border-border-custom text-secondary hover:text-text rounded-xl text-xs font-mono font-bold"
+            className="px-2.5 py-1.5 bg-white/[0.03] border border-white/[0.08] text-slate-300 rounded-xl text-xs font-mono font-bold"
           >
             <span>{locale === 'vi' ? 'VN' : 'EN'}</span>
           </button>
@@ -130,52 +137,41 @@ export const Header: React.FC = () => {
           
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 rounded-lg border border-border-custom text-secondary hover:text-text bg-slate-800/30"
+            className="p-2 rounded-xl border border-white/[0.08] text-slate-300 bg-white/[0.03] hover:text-white"
             title="Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Navigation Dropdown Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden px-4 pb-4 border-t border-border-custom bg-card-custom/95 rounded-b-2xl backdrop-blur-lg flex flex-col space-y-2.5 pt-3.5 animate-fade-in select-none">
+        <div className="lg:hidden mt-2 p-4 border border-white/[0.08] bg-[#0d0f17]/95 backdrop-blur-2xl rounded-2xl space-y-2 animate-fade-in select-none shadow-2xl">
           {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wide transition-all ${
+              className={`w-full block px-3 py-2 rounded-xl text-xs font-mono font-bold transition ${
                 isActive(item.href)
-                  ? 'text-cyan-custom bg-cyan-custom/10 border border-cyan-custom/25'
-                  : 'text-secondary hover:text-text hover:bg-slate-800/30'
+                  ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/25'
+                  : 'text-slate-300 hover:bg-white/[0.04]'
               }`}
             >
               {t(item.labelKey)}
             </Link>
           ))}
           
-          {/* Mobile Login / Account Button */}
           <Link
             href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
             onClick={() => setMobileMenuOpen(false)}
-            className="w-full text-center py-2.5 rounded-xl text-xs font-mono font-bold tracking-wide transition-all bg-gradient-to-r from-cyan-custom/10 to-purple-custom/10 border border-cyan-custom/25 hover:border-cyan-custom/50 text-cyan-custom block mt-2"
+            className="w-full text-center py-2.5 rounded-xl text-xs font-mono font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 block mt-3"
           >
-            {isLoggedIn ? (
-              <span className="flex items-center justify-center space-x-1.5">
-                <User className="w-4 h-4" />
-                <span>{locale === 'vi' ? 'Hồ sơ tài khoản' : 'Account Profile'}</span>
-              </span>
-            ) : (
-              <span className="flex items-center justify-center space-x-1.5">
-                <LogIn className="w-4 h-4" />
-                <span>{locale === 'vi' ? 'Đăng nhập / Đăng ký' : 'Sign In / Sign Up'}</span>
-              </span>
-            )}
+            {isLoggedIn ? (locale === 'vi' ? 'Quản lý tài khoản' : 'Account Portal') : (locale === 'vi' ? 'Đăng nhập / Đăng ký' : 'Sign In / Register')}
           </Link>
         </div>
       )}
-    </nav>
+    </header>
   );
 };

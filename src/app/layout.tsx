@@ -20,25 +20,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Phan Duy Khang — Backend & Full-Stack Developer",
+    default: "Phan Duy Khang — Backend & Full-Stack Engineer",
     template: "%s | Phan Duy Khang"
   },
-  description: "Personal Portfolio of Phan Duy Khang — Full-Stack Developer specialized in Java Spring Boot, React, Next.js, PostgreSQL, and Cloud Architectures.",
-  keywords: ["Phan Duy Khang", "Backend Developer", "Full-Stack Developer", "Java Spring Boot", "Next.js", "React", "Portfolio", "Software Engineer"],
+  description: "Engineering Portfolio of Phan Duy Khang — Full-Stack Developer specializing in Java Spring Boot, PostgreSQL, React, Next.js, and Cloud Architectures.",
+  keywords: ["Phan Duy Khang", "Backend Developer", "Full-Stack Developer", "Java Spring Boot", "Next.js", "React", "Software Engineer", "PostgreSQL"],
   authors: [{ name: "Phan Duy Khang", url: "https://github.com/KhangIsTheBest" }],
   creator: "Phan Duy Khang",
   openGraph: {
     type: "website",
     locale: "vi_VN",
     url: "https://portfolio-cli.vercel.app",
-    title: "Phan Duy Khang — Backend & Full-Stack Developer",
-    description: "Interactive portfolio featuring Java Spring Boot, React, Next.js, and Cloud services.",
+    title: "Phan Duy Khang — Backend & Full-Stack Engineer",
+    description: "Engineering portfolio featuring Java Spring Boot, PostgreSQL, React, Next.js, and REST APIs.",
     siteName: "Phan Duy Khang Portfolio"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phan Duy Khang — Backend & Full-Stack Developer",
-    description: "Personal Portfolio — Java Spring Boot, React, Next.js & PostgreSQL."
+    title: "Phan Duy Khang — Backend & Full-Stack Engineer",
+    description: "Engineering Portfolio — Java Spring Boot, React, Next.js & PostgreSQL."
   }
 };
 
@@ -56,10 +56,6 @@ export default function RootLayout({
         <LanguageProvider>
           <ServerStatusProvider>
             <ThemeProvider>
-              {/* Background Decorative Ambient Pulsing Globs */}
-              <div className="fixed top-1/4 left-1/10 w-96 h-96 rounded-full bg-cyan-custom/10 blur-[120px] -z-20 pointer-events-none animate-pulse-slow" />
-              <div className="fixed bottom-1/3 right-1/10 w-[450px] h-[450px] rounded-full bg-purple-custom/10 blur-[130px] -z-20 pointer-events-none" />
-
               {/* Server connection status alert banner */}
               <ServerStatusBanner />
 
@@ -67,9 +63,9 @@ export default function RootLayout({
               <Header />
 
               {/* Content Viewport */}
-              <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto justify-center">
+              <main className="flex-1 flex flex-col w-full max-w-7xl mx-auto justify-center">
                 {children}
-              </div>
+              </main>
 
               {/* Global Footer */}
               <Footer />

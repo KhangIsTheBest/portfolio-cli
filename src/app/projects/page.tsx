@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Code, ArrowRight, ExternalLink } from 'lucide-react';
+import { Code2, ArrowRight, ExternalLink, GitBranch, Cpu, ShieldCheck, Filter } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
@@ -21,7 +21,7 @@ export default function ProjectsPage() {
         const data = await apiService.getProjects();
         setProjects(data);
       } catch (err) {
-        console.error('Failed to load projects:', err);
+        console.error('Failed to load projects catalog:', err);
         setProjects([]);
       } finally {
         setLoading(false);
@@ -30,7 +30,6 @@ export default function ProjectsPage() {
     fetchProjects();
   }, [isOnline]);
 
-  // Extract unique tech names across all projects
   const availableTechs = Array.from(
     new Set(projects.flatMap((p) => p.technologies.map((t) => t.name)))
   ).sort();
@@ -41,39 +40,40 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[350px] text-cyan-custom space-y-4">
-        <div className="relative w-10 h-10">
-          <div className="absolute inset-0 rounded-full border-4 border-cyan-custom/20 animate-pulse" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-custom animate-spin" />
-        </div>
-        <p className="font-mono text-xs tracking-wider animate-pulse">
-          {locale === 'vi' ? 'ĐANG ĐỌC HỒ SƠ DỰ ÁN...' : 'QUERYING PROJECT FILES...'}
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-emerald-400 font-mono space-y-4">
+        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin" />
+        <p className="text-xs tracking-wider animate-pulse">RETRIEVING PROJECT ARCHITECTURES...</p>
       </div>
     );
   }
 
   return (
-    <section className="space-y-6 my-8 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-custom/50 pb-4">
+    <div className="space-y-6 my-6 font-mono animate-fade-in select-text">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
         <div className="flex items-center space-x-2">
-          <Code className="w-5 h-5 text-cyan-custom" />
-          <h3 className="text-lg font-bold text-text">{t('projects.title')}</h3>
+          <Code2 className="w-5 h-5 text-emerald-400" />
+          <h3 className="text-base font-bold text-slate-100 uppercase tracking-wider">{t('projects.title')}</h3>
         </div>
-        <span className="text-xs font-mono text-secondary">
+        <span className="text-xs font-mono text-slate-400 bg-white/[0.03] border border-white/[0.08] px-3 py-1 rounded-full">
           {t('projects.total')} {filteredProjects.length} / {projects.length}
         </span>
       </div>
 
-      {/* Technology Filter Bar */}
+      {/* Filter Bar */}
       {availableTechs.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none font-mono text-[11px]">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-[11px]">
+          <div className="flex items-center space-x-1.5 text-slate-400 pr-2 border-r border-white/[0.08]">
+            <Filter className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="uppercase text-[10px] tracking-wider font-bold">Filter:</span>
+          </div>
+
           <button
             onClick={() => setSelectedTech('ALL')}
-            className={`px-3 py-1.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl border transition shrink-0 cursor-pointer ${
               selectedTech === 'ALL'
-                ? 'border-cyan-custom bg-cyan-custom/20 text-cyan-custom font-bold shadow-glow'
-                : 'border-border-custom bg-slate-950/40 text-secondary hover:text-text hover:border-slate-600'
+                ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400 font-bold'
+                : 'border-white/[0.08] bg-[#0d0f17] text-slate-400 hover:text-slate-200'
             }`}
           >
             {locale === 'vi' ? 'TẤT CẢ' : 'ALL'} ({projects.length})
@@ -84,10 +84,10 @@ export default function ProjectsPage() {
               <button
                 key={tech}
                 onClick={() => setSelectedTech(tech)}
-                className={`px-3 py-1.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl border transition shrink-0 cursor-pointer ${
                   selectedTech === tech
-                    ? 'border-cyan-custom bg-cyan-custom/20 text-cyan-custom font-bold shadow-glow'
-                    : 'border-border-custom bg-slate-950/40 text-secondary hover:text-text hover:border-slate-600'
+                    ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400 font-bold'
+                    : 'border-white/[0.08] bg-[#0d0f17] text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {tech} ({count})
@@ -97,106 +97,127 @@ export default function ProjectsPage() {
         </div>
       )}
 
+      {/* Projects Bento Grid */}
       {filteredProjects.length === 0 ? (
-        <div className="p-12 text-center text-secondary text-sm font-mono border border-dashed border-border-custom/50 rounded-2xl">
-          {locale === 'vi' ? 'Không tìm thấy dự án phù hợp.' : 'No projects matched the selected technology filter.'}
+        <div className="p-12 text-center text-slate-400 text-xs font-mono border border-dashed border-white/[0.08] rounded-2xl bg-[#0d0f17]">
+          {locale === 'vi' ? 'Không tìm thấy dự án phù hợp.' : 'No engineering projects match the selected technology filter.'}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {filteredProjects.map((project) => (
-          <div
-            key={project.id}
-            className="group flex flex-col border border-border-custom glass-panel rounded-2xl overflow-hidden hover:border-cyan-custom/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all duration-300"
-          >
-            {/* Thumbnail */}
-            <Link
-              href={`/projects/${project.slug}`}
-              className="relative h-44 overflow-hidden border-b border-border-custom/50 bg-slate-950 block cursor-pointer"
-            >
-              <img
-                src={project.thumbnailUrl}
-                alt={project.title}
-                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-500"
-              />
-              {project.featured && (
-                <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-custom/20 to-purple-custom/20 border border-cyan-custom/40 text-[9px] font-mono text-cyan-custom font-extrabold animate-pulse-slow">
-                  {t('projects.featuredLabel')}
-                </span>
-              )}
-            </Link>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {filteredProjects.map((project, idx) => {
+            // Asymmetrical grid spans (7-5-12 rhythm)
+            const spanPattern = idx % 3 === 0 ? 'md:col-span-7' : idx % 3 === 1 ? 'md:col-span-5' : 'md:col-span-12';
+            
+            return (
+              <div
+                key={project.id}
+                className={`${spanPattern} border border-white/[0.08] bg-[#0d0f17] rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-emerald-500/40 transition duration-300 shadow-xl group`}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                          PROJ-{project.id}
+                        </span>
+                        {project.featured && (
+                          <span className="text-[9px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                            {t('projects.featuredLabel')}
+                          </span>
+                        )}
+                      </div>
+                      <Link href={`/projects/${project.slug}`} className="block">
+                        <h4 className="text-base font-bold text-slate-100 font-sans group-hover:text-emerald-400 transition cursor-pointer">
+                          {project.title}
+                        </h4>
+                      </Link>
+                    </div>
 
-            {/* Body */}
-            <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <Link href={`/projects/${project.slug}`} className="block group/title">
-                  <h4 className="text-sm font-bold text-text group-hover/title:text-cyan-custom group-hover:text-cyan-custom transition duration-200 line-clamp-1 cursor-pointer">
-                    {project.title}
-                  </h4>
-                </Link>
-                <p className="text-xs text-secondary font-sans line-clamp-3 leading-relaxed">
-                  {project.shortDescription}
-                </p>
-              </div>
+                    <div className="flex space-x-1.5 shrink-0">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-emerald-400 transition"
+                          title="Source Code"
+                        >
+                          <GitBranch className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      {project.demoUrl && (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-emerald-400 transition"
+                          title="Live Demo"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
 
-              <div className="space-y-3 pt-2">
-                {/* Tech stack badges */}
-                <div className="flex flex-wrap gap-1">
-                  {project.technologies.slice(0, 3).map((t) => (
-                    <span
-                      key={t.id}
-                      className="px-2 py-0.5 rounded text-[9px] font-mono bg-slate-950 border border-border-custom text-secondary"
-                    >
-                      {t.name}
-                    </span>
-                  ))}
-                  {project.technologies.length > 3 && (
-                    <span className="text-[9px] text-secondary font-mono self-center">
-                      +{project.technologies.length - 3}
-                    </span>
-                  )}
-                </div>
-
-                {/* Card actions */}
-                <div className="flex items-center justify-between border-t border-border-custom/50 pt-3">
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="flex items-center text-[10px] font-bold text-cyan-custom hover:text-text transition-colors"
-                  >
-                    <span>{t('projects.detailsBtn')}</span>
-                    <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
+                  {/* Thumbnail */}
+                  <Link href={`/projects/${project.slug}`} className="block rounded-xl overflow-hidden border border-white/[0.06] bg-[#141722] h-48 sm:h-52 relative cursor-pointer">
+                    <img
+                      src={project.thumbnailUrl}
+                      alt={project.title}
+                      className="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-102 transition duration-500"
+                    />
                   </Link>
-                  
-                  <div className="flex space-x-1.5">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded bg-slate-900 border border-slate-700/60 text-secondary hover:text-cyan-custom transition-all"
-                        title="Source Code"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
-                      </a>
-                    )}
-                    {project.demoUrl && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded bg-slate-900 border border-slate-700/60 text-secondary hover:text-purple-custom transition-all"
-                        title="Live Demo"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
+
+                  {/* Problem & Solution Card */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                        <Cpu className="w-3 h-3" />
+                        <span>{t('projects.problemTitle')}</span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] line-clamp-2 leading-relaxed">
+                        {project.shortDescription}
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>{t('projects.solutionTitle')}</span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] line-clamp-2 leading-relaxed">
+                        Full-stack REST architecture built with Java Spring Boot, JPA persistence, PostgreSQL & Next.js.
+                      </p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Card Footer */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/[0.06]">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.technologies.map((t) => (
+                      <span
+                        key={t.id}
+                        className="px-2 py-0.5 rounded text-[10px] bg-white/[0.03] border border-white/[0.08] text-slate-300"
+                      >
+                        {t.name}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="text-xs font-bold text-emerald-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>{t('projects.detailsBtn')}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
       )}
-    </section>
+    </div>
   );
 }
