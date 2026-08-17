@@ -2,49 +2,60 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = 'cosmic' | 'matrix' | 'dracula' | 'cyberpunk' | 'amber' | 'snow';
+type ThemeMode = 'dark' | 'light';
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  theme: ThemeMode;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('cosmic');
+  const [theme, setThemeState] = useState<ThemeMode>('dark');
 
-  // Load theme from localStorage on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('portfolio-theme') as Theme;
-    if (savedTheme) {
+    const savedTheme = localStorage.getItem('portfolio-theme') as ThemeMode;
+    if (savedTheme === 'light' || savedTheme === 'dark') {
       setThemeState(savedTheme);
+    } else {
+      // Default to dark mode for high-tech engineering look
+      setThemeState('dark');
     }
   }, []);
 
-  // Update body class when theme changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const root = document.documentElement;
       const body = document.body;
+
+      body.classList.remove('theme-[#090a0f]', 'theme-light', 'theme-dark', 'theme-matrix', 'theme-dracula', 'theme-amber', 'theme-snow');
       
-      // Remove all theme classes
-      const themeClasses = ['theme-matrix', 'theme-dracula', 'theme-cyberpunk', 'theme-amber', 'theme-snow'];
-      themeClasses.forEach(cls => body.classList.remove(cls));
-      
-      // Add new theme class if it's not the default cosmic
-      if (theme !== 'cosmic') {
-        body.classList.add(`theme-${theme}`);
+      if (theme === 'light') {
+        root.classList.add('light');
+        root.classList.remove('dark');
+        body.classList.add('theme-light');
+      } else {
+        root.classList.add('dark');
+        root.classList.remove('light');
+        body.classList.add('theme-dark');
       }
     }
   }, [theme]);
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme);
     localStorage.setItem('portfolio-theme', newTheme);
   };
 
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

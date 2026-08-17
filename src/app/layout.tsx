@@ -7,6 +7,7 @@ import { ServerStatusProvider } from "@/context/ServerStatusContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ServerStatusBanner } from "@/components/ServerStatusBanner";
+import { DynamicBackground } from "@/components/DynamicBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,6 +57,9 @@ export default function RootLayout({
         <LanguageProvider>
           <ServerStatusProvider>
             <ThemeProvider>
+              {/* Dynamic Particle Canvas Background */}
+              <DynamicBackground />
+
               {/* Server connection status alert banner */}
               <ServerStatusBanner />
 

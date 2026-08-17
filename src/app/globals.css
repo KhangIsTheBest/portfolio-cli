@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 :root {
-  /* High-Tech Engineering Dark Theme (Anti-AI Slop) */
+  /* Default Engineering Dark Theme */
   --bg-color: #090a0f;
   --text-color: #f8fafc;
   --primary-color: #10b981;
@@ -16,56 +16,34 @@
   --purple-color: #6366f1;
 }
 
-/* Theme matrix (Green Hacker) */
-.theme-matrix {
-  --bg-color: #030712;
-  --text-color: #22c55e;
-  --primary-color: #22c55e;
-  --secondary-color: #15803d;
-  --cursor-color: #22c55e;
-  --glow-color: rgba(34, 197, 94, 0.2);
-  --border-color: rgba(34, 197, 94, 0.3);
-  --card-bg: rgba(3, 7, 18, 0.9);
-  --terminal-header-bg: #052e16;
-}
-
-/* Theme dracula */
-.theme-dracula {
-  --bg-color: #1e1f29;
-  --text-color: #f8f8f2;
-  --primary-color: #bd93f9;
-  --secondary-color: #6272a4;
-  --cursor-color: #50fa7b;
-  --glow-color: rgba(189, 147, 249, 0.2);
-  --border-color: rgba(189, 147, 249, 0.25);
-  --card-bg: rgba(40, 42, 54, 0.85);
-  --terminal-header-bg: #282a36;
-}
-
-/* Theme amber (Retro Engineering CRT) */
-.theme-amber {
-  --bg-color: #0c0802;
-  --text-color: #f59e0b;
-  --primary-color: #f59e0b;
-  --secondary-color: #b45309;
-  --cursor-color: #f59e0b;
-  --glow-color: rgba(245, 158, 11, 0.2);
-  --border-color: rgba(245, 158, 11, 0.25);
-  --card-bg: rgba(18, 12, 4, 0.9);
-  --terminal-header-bg: #291500;
-}
-
-/* Theme snow (Minimal Light Mode) */
-.theme-snow {
+/* Light Theme Mode */
+.light, body.theme-light {
   --bg-color: #f8fafc;
   --text-color: #0f172a;
-  --primary-color: #059669;
+  --primary-color: #0d9488;
   --secondary-color: #475569;
   --cursor-color: #0f172a;
-  --glow-color: rgba(5, 150, 105, 0.08);
-  --border-color: rgba(203, 213, 225, 0.8);
+  --glow-color: rgba(13, 148, 136, 0.08);
+  --border-color: rgba(226, 232, 240, 0.9);
   --card-bg: #ffffff;
   --terminal-header-bg: #f1f5f9;
+  --cyan-color: #0d9488;
+  --purple-color: #4f46e5;
+}
+
+/* Dark Theme Mode explicit */
+.dark, body.theme-dark {
+  --bg-color: #090a0f;
+  --text-color: #f8fafc;
+  --primary-color: #10b981;
+  --secondary-color: #94a3b8;
+  --cursor-color: #10b981;
+  --glow-color: rgba(16, 185, 129, 0.15);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --card-bg: #0d0f17;
+  --terminal-header-bg: #141722;
+  --cyan-color: #10b981;
+  --purple-color: #6366f1;
 }
 
 @theme inline {
@@ -95,22 +73,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle Technical Grid Background */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: -30;
-}
-
 /* Glassmorphism custom classes */
 .glass-panel {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Custom scrollbar */
@@ -122,7 +89,7 @@ body::before {
   background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(150, 150, 150, 0.2);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -132,7 +99,7 @@ body::before {
 /* Selection style */
 ::selection {
   background-color: var(--primary-color);
-  color: #090a0f;
+  color: #ffffff;
 }
 
 /* Fade In Animation */
@@ -182,7 +149,7 @@ body::before {
   border-radius: 0 0.5rem 0.5rem 0;
 }
 .markdown-body code {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(150, 150, 150, 0.1);
   border: 1px solid var(--border-color);
   padding: 0.15em 0.4em;
   border-radius: 0.375rem;
@@ -191,7 +158,7 @@ body::before {
   color: var(--cyan-color);
 }
 .markdown-body pre {
-  background: #090d16;
+  background: var(--terminal-header-bg);
   border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 0.75rem;

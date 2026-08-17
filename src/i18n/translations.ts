@@ -2,11 +2,11 @@ export const translations = {
   vi: {
     nav: {
       home: 'Trang chủ',
-      about: 'Hồ sơ kỹ thuật',
-      skills: 'Kỹ năng & Kiến trúc',
-      projects: 'Dự án thực chiến',
-      blog: 'Bài viết kỹ thuật',
-      contact: 'Kết nối'
+      about: 'Giới thiệu',
+      skills: 'Kỹ năng',
+      projects: 'Dự án',
+      blog: 'Bài viết',
+      contact: 'Liên hệ'
     },
     system: {
       statusOnline: 'MÁY CHỦ: ĐÃ KẾT NỐI',
