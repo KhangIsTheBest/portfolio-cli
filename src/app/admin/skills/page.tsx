@@ -40,11 +40,6 @@ export default function AdminSkillsPage() {
       setLoading(true);
       const data = await apiService.getTechnologies();
       setSkills(data);
-
-      const token = localStorage.getItem('admin-token');
-      if (token === 'mock-jwt-token-string') {
-        setIsOfflineMode(true);
-      }
     } catch (err) {
       console.error('Failed to load technologies:', err);
       setMessage({

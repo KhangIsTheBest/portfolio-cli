@@ -60,6 +60,9 @@ async function fetchWithTimeout(resource: string, options: RequestInit = {}, tim
         localStorage.removeItem('admin-token');
         localStorage.removeItem('user-token');
         localStorage.removeItem('user-profile');
+        if (window.location.pathname.startsWith('/admin')) {
+          window.location.href = '/login';
+        }
       }
     }
 
@@ -110,183 +113,72 @@ export const apiService = {
   // 1. PUBLIC PROFILE APIS
   async getProfile(): Promise<Profile> {
     if (DEBUG) console.log('Fetching live profile...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/profile');
-      if (response.ok) {
-        const result: ApiResponse<Profile> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (e) {
-      console.warn('Public getProfile failed, trying admin profile route:', e);
+    const response = await fetchWithTimeout('/api/v1/profile');
+    if (!response.ok) throw new Error('Failed to fetch profile');
+    const result: ApiResponse<Profile> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
     }
-
-    try {
-      const adminResponse = await fetchWithTimeout('/api/v1/admin/profile', {
-        headers: getAuthHeaders()
-      });
-      if (adminResponse.ok) {
-        const result: ApiResponse<Profile> = await adminResponse.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin profile route failed:', e);
-    }
-
-    return {
-      id: 1,
-      fullName: "Phan Duy Khang",
-      title: "Backend / Full-Stack Developer",
-      aboutMe: "Sinh viên ngành Kỹ thuật phần mềm với nền tảng vững chắc về Cấu trúc dữ liệu & Giải thuật. Đam mê thiết kế kiến trúc Backend hiệu năng cao (Java Spring Boot, PostgreSQL) kết hợp giao diện Web hiện đại.",
-      email: "pdkhang.dev@gmail.com",
-      githubUrl: "https://github.com/KhangIsTheBest",
-      linkedinUrl: "https://linkedin.com/in/phanduykhang",
-      avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang",
-      updatedAt: new Date().toISOString()
-    };
+    throw new Error(result.message || 'Failed to retrieve profile data');
   },
 
   // 2. PUBLIC TECHNOLOGIES APIS
   async getTechnologies(): Promise<Technology[]> {
     if (DEBUG) console.log('Fetching live technologies...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/technologies?size=100');
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<Technology>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Public getTechnologies failed, trying admin technologies route:', e);
+    const response = await fetchWithTimeout('/api/v1/technologies?size=100');
+    if (!response.ok) throw new Error('Failed to fetch technologies');
+    const result: ApiResponse<PagedResponse<Technology>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
     }
-
-    try {
-      const adminResponse = await fetchWithTimeout('/api/v1/admin/technologies?size=100', {
-        headers: getAuthHeaders()
-      });
-      if (adminResponse.ok) {
-        const result: ApiResponse<PagedResponse<Technology>> = await adminResponse.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin technologies route failed:', e);
-    }
-
-    return [];
+    throw new Error(result.message || 'Failed to retrieve technologies');
   },
 
   // 3. PUBLIC PROJECTS APIS
   async getProjects(featuredOnly = false): Promise<Project[]> {
     if (DEBUG) console.log(`Fetching live projects (featuredOnly: ${featuredOnly})...`);
-    try {
-      const url = featuredOnly ? '/api/v1/projects/featured?size=100' : '/api/v1/projects?size=100';
-      const response = await fetchWithTimeout(url);
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<Project>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Public getProjects failed, trying admin endpoint fallback:', e);
+    const url = featuredOnly ? '/api/v1/projects/featured?size=100' : '/api/v1/projects?size=100';
+    const response = await fetchWithTimeout(url);
+    if (!response.ok) throw new Error('Failed to fetch projects');
+    const result: ApiResponse<PagedResponse<Project>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
     }
-
-    try {
-      const adminUrl = featuredOnly ? '/api/v1/admin/projects?size=100&featured=true' : '/api/v1/admin/projects?size=100';
-      const adminResponse = await fetchWithTimeout(adminUrl, {
-        headers: getAuthHeaders()
-      });
-      if (adminResponse.ok) {
-        const result: ApiResponse<PagedResponse<Project>> = await adminResponse.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin getProjects fallback failed:', e);
-    }
-
-    return [];
+    throw new Error(result.message || 'Failed to retrieve projects');
   },
 
   async getProjectBySlug(slug: string): Promise<Project> {
     if (DEBUG) console.log(`Fetching live project for slug: ${slug}...`);
-    try {
-      const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
-      if (response.ok) {
-        const result: ApiResponse<Project> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (e) {
-      console.warn(`Public getProjectBySlug failed for ${slug}, checking catalog list:`, e);
+    const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
+    if (!response.ok) throw new Error(`Failed to fetch project for ${slug}`);
+    const result: ApiResponse<Project> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
     }
-
-    const allProjects = await this.getProjects();
-    const found = allProjects.find(p => p.slug === slug);
-    if (found) return found;
-
-    throw new Error(`Project not found for slug: ${slug}`);
+    throw new Error(result.message || 'Failed to retrieve project detail');
   },
 
   // 4. PUBLIC BLOGS APIS
   async getBlogs(): Promise<Blog[]> {
     if (DEBUG) console.log('Fetching live blogs...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/blogs?size=100');
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<Blog>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Public getBlogs failed:', e);
+    const response = await fetchWithTimeout('/api/v1/blogs?size=100');
+    if (!response.ok) throw new Error('Failed to fetch blogs');
+    const result: ApiResponse<PagedResponse<Blog>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
     }
-
-    try {
-      const adminResponse = await fetchWithTimeout('/api/v1/admin/blogs?size=100', {
-        headers: getAuthHeaders()
-      });
-      if (adminResponse.ok) {
-        const result: ApiResponse<PagedResponse<Blog>> = await adminResponse.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin getBlogs fallback failed:', e);
-    }
-
-    return [];
+    throw new Error(result.message || 'Failed to retrieve blogs');
   },
 
   async getBlogBySlug(slug: string): Promise<Blog> {
     if (DEBUG) console.log(`Fetching live blog for slug: ${slug}...`);
-    try {
-      const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
-      if (response.ok) {
-        const result: ApiResponse<Blog> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (e) {
-      console.warn(`Public getBlogBySlug failed for ${slug}:`, e);
+    const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
+    if (!response.ok) throw new Error(`Failed to fetch blog for ${slug}`);
+    const result: ApiResponse<Blog> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
     }
-
-    const allBlogs = await this.getBlogs();
-    const found = allBlogs.find(b => b.slug === slug);
-    if (found) return found;
-
-    throw new Error(`Blog not found for slug: ${slug}`);
+    throw new Error(result.message || 'Failed to retrieve blog detail');
   },
 
   // 5. PUBLIC VISITORS CONTACT API
@@ -310,66 +202,57 @@ export const apiService = {
   },
 
   // =============================================================
-  // 6. USER & ADMIN AUTHENTICATION APIS
+  // 6. USER & ADMIN AUTHENTICATION APIS (Strict)
   // =============================================================
   async login(username: string, password: string): Promise<any> {
     if (DEBUG) console.log('Logging in user...', username);
-    try {
-      const response = await fetchWithTimeout('/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
-      if (response.ok) {
-        const result = await response.json();
-        let token = result.token || result.accessToken || result.jwt || '';
-        let roles: string[] = result.roles || [];
-        let fullName = result.fullName || '';
-        let email = result.email || '';
+    const response = await fetchWithTimeout('/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Login failed');
+    }
+    const result = await response.json();
 
-        if (!token && result.data) {
-          if (typeof result.data === 'string') {
-            token = result.data;
-          } else if (typeof result.data === 'object') {
-            token = result.data.token || result.data.accessToken || result.data.jwt || '';
-            roles = result.data.roles || (result.data.user?.role ? ["ROLE_" + result.data.user.role] : roles);
-            fullName = result.data.fullName || result.data.user?.fullName || result.data.user?.username || fullName;
-            email = result.data.email || result.data.user?.email || email;
-          }
-        }
+    let token = result.token || result.accessToken || result.jwt || '';
+    let roles: string[] = result.roles || [];
+    let fullName = result.fullName || '';
+    let email = result.email || '';
 
-        if (token) {
-          const isAdmin = roles.includes('ROLE_ADMIN');
-          if (isAdmin) {
-            localStorage.removeItem('user-token');
-            localStorage.removeItem('user-profile');
-            localStorage.setItem('admin-token', token);
-          } else {
-            localStorage.removeItem('admin-token');
-            localStorage.setItem('user-token', token);
-            localStorage.setItem('user-profile', JSON.stringify({
-              fullName: fullName || username,
-              email: email || '',
-              username: username
-            }));
-          }
-          return { token, roles, fullName, email };
-        }
+    if (!token && result.data) {
+      if (typeof result.data === 'string') {
+        token = result.data;
+      } else if (typeof result.data === 'object') {
+        token = result.data.token || result.data.accessToken || result.data.jwt || '';
+        roles = result.data.roles || (result.data.user?.role ? ["ROLE_" + result.data.user.role] : roles);
+        fullName = result.data.fullName || result.data.user?.fullName || result.data.user?.username || fullName;
+        email = result.data.email || result.data.user?.email || email;
       }
-    } catch (e) {
-      console.warn('Backend login failed, checking admin credential fallback:', e);
     }
 
-    // Admin login fallback if username is admin
-    if (username.toLowerCase() === 'admin') {
-      const mockToken = 'mock-jwt-token-string';
-      localStorage.setItem('admin-token', mockToken);
-      return { token: mockToken, roles: ['ROLE_ADMIN'], fullName: 'System Admin', email: 'admin@dev.local' };
+    if (token) {
+      const isAdmin = roles.includes('ROLE_ADMIN');
+      if (isAdmin) {
+        localStorage.removeItem('user-token');
+        localStorage.removeItem('user-profile');
+        localStorage.setItem('admin-token', token);
+      } else {
+        localStorage.removeItem('admin-token');
+        localStorage.setItem('user-token', token);
+        localStorage.setItem('user-profile', JSON.stringify({
+          fullName: fullName || username,
+          email: email || '',
+          username: username
+        }));
+      }
+      return { token, roles, fullName, email };
     }
 
-    throw new Error('Đăng nhập không thành công. Vui lòng kiểm tra lại tài khoản và mật khẩu.');
+    throw new Error(result.message || 'Tài khoản hoặc mật khẩu không chính xác.');
   },
 
   async loginWithGoogle(idToken: string): Promise<any> {
@@ -487,44 +370,30 @@ export const apiService = {
   },
 
   // =============================================================
-  // 7. ADMIN PROFILE EDIT API
+  // 7. STRICT ADMIN PROFILE EDIT API
   // =============================================================
   async updateProfile(data: Partial<Profile>): Promise<Profile> {
     if (DEBUG) console.log('Updating profile info...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/admin/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        },
-        body: JSON.stringify(data)
-      });
-      if (response.ok) {
-        const result: ApiResponse<Profile> = await response.json();
-        if (result.success && result.data) {
-          return result.data;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin profile update failed:', e);
+    const response = await fetchWithTimeout('/api/v1/admin/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to update admin profile');
     }
-
-    return {
-      id: 1,
-      fullName: data.fullName || "Phan Duy Khang",
-      title: data.title || "Backend / Full-Stack Developer",
-      aboutMe: data.aboutMe || "Software Engineering student...",
-      email: data.email || "pdkhang.dev@gmail.com",
-      githubUrl: data.githubUrl || "https://github.com/KhangIsTheBest",
-      linkedinUrl: data.linkedinUrl || "https://linkedin.com/in/phanduykhang",
-      avatarUrl: data.avatarUrl || "https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang",
-      updatedAt: new Date().toISOString()
-    };
+    const result: ApiResponse<Profile> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Profile update failed');
   },
 
   // =============================================================
-  // 8. ADMIN SKILLS (TECHNOLOGIES) CRUD APIS
+  // 8. STRICT ADMIN SKILLS (TECHNOLOGIES) CRUD APIS
   // =============================================================
   async createTechnology(data: { name: string; iconUrl: string }): Promise<Technology> {
     if (DEBUG) console.log('Creating skill technology...');
@@ -537,13 +406,7 @@ export const apiService = {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      let details = '';
-      try {
-        details = await response.text();
-      } catch (e) {
-        details = 'Cannot read error body';
-      }
-      throw new Error(`Failed to create technology: Status ${response.status}. ${details}`);
+      await handleErrorResponse(response, 'Failed to create technology');
     }
     const result: ApiResponse<Technology> = await response.json();
     if (result.success && result.data) {
@@ -563,13 +426,7 @@ export const apiService = {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      let details = '';
-      try {
-        details = await response.text();
-      } catch (e) {
-        details = 'Cannot read error body';
-      }
-      throw new Error(`Failed to update technology: Status ${response.status}. ${details}`);
+      await handleErrorResponse(response, 'Failed to update technology');
     }
     const result: ApiResponse<Technology> = await response.json();
     if (result.success && result.data) {
@@ -584,30 +441,28 @@ export const apiService = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!response.ok) throw new Error('Failed to delete technology');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to delete technology');
+    }
   },
 
   // =============================================================
-  // 9. ADMIN PROJECTS CRUD APIS
+  // 9. STRICT ADMIN PROJECTS CRUD APIS
   // =============================================================
   async getProjectsAdmin(status?: string): Promise<Project[]> {
-    if (DEBUG) console.log('Fetching admin projects...');
-    try {
-      const url = status ? `/api/v1/admin/projects?size=100&status=${status}` : '/api/v1/admin/projects?size=100';
-      const response = await fetchWithTimeout(url, {
-        headers: getAuthHeaders()
-      });
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<Project>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin projects fetch failed, falling back to public getProjects():', e);
+    if (DEBUG) console.log('Fetching admin projects (Strict Admin Auth Required)...');
+    const url = status ? `/api/v1/admin/projects?size=100&status=${status}` : '/api/v1/admin/projects?size=100';
+    const response = await fetchWithTimeout(url, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch admin projects');
     }
-
-    return this.getProjects();
+    const result: ApiResponse<PagedResponse<Project>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
+    }
+    throw new Error(result.message || 'Failed to retrieve admin projects');
   },
 
   async createProject(data: any): Promise<Project> {
@@ -621,14 +476,7 @@ export const apiService = {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      let details = '';
-      try {
-        const errJson = await response.json();
-        details = errJson.message || (errJson.errors ? (Array.isArray(errJson.errors) ? errJson.errors.join(', ') : JSON.stringify(errJson.errors)) : JSON.stringify(errJson));
-      } catch (e) {
-        details = await response.text();
-      }
-      throw new Error(details || 'Failed to create project');
+      await handleErrorResponse(response, 'Failed to create project');
     }
     const result: ApiResponse<Project> = await response.json();
     if (result.success && result.data) {
@@ -648,14 +496,7 @@ export const apiService = {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      let details = '';
-      try {
-        const errJson = await response.json();
-        details = errJson.message || (errJson.errors ? (Array.isArray(errJson.errors) ? errJson.errors.join(', ') : JSON.stringify(errJson.errors)) : JSON.stringify(errJson));
-      } catch (e) {
-        details = await response.text();
-      }
-      throw new Error(details || 'Failed to update project');
+      await handleErrorResponse(response, 'Failed to update project');
     }
     const result: ApiResponse<Project> = await response.json();
     if (result.success && result.data) {
@@ -670,29 +511,27 @@ export const apiService = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!response.ok) throw new Error('Failed to delete project');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to delete project');
+    }
   },
 
   // =============================================================
-  // 10. ADMIN BLOGS CRUD APIS
+  // 10. STRICT ADMIN BLOGS CRUD APIS
   // =============================================================
   async getBlogsAdmin(): Promise<Blog[]> {
-    if (DEBUG) console.log('Fetching admin blogs...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/admin/blogs?size=100', {
-        headers: getAuthHeaders()
-      });
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<Blog>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin blogs fetch failed, falling back to public getBlogs():', e);
+    if (DEBUG) console.log('Fetching admin blogs (Strict Admin Auth Required)...');
+    const response = await fetchWithTimeout('/api/v1/admin/blogs?size=100', {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch admin blogs');
     }
-
-    return this.getBlogs();
+    const result: ApiResponse<PagedResponse<Blog>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
+    }
+    throw new Error(result.message || 'Failed to retrieve admin blogs');
   },
 
   async createBlog(data: any): Promise<Blog> {
@@ -705,7 +544,9 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to create blog');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to create blog');
+    }
     const result: ApiResponse<Blog> = await response.json();
     if (result.success && result.data) {
       return result.data;
@@ -723,7 +564,9 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    if (!response.ok) throw new Error('Failed to update blog');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to update blog');
+    }
     const result: ApiResponse<Blog> = await response.json();
     if (result.success && result.data) {
       return result.data;
@@ -737,28 +580,27 @@ export const apiService = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!response.ok) throw new Error('Failed to delete blog');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to delete blog');
+    }
   },
 
   // =============================================================
-  // 11. ADMIN CONTACT MESSAGES INBOX APIS
+  // 11. STRICT ADMIN CONTACT MESSAGES INBOX APIS
   // =============================================================
   async getContactsAdmin(): Promise<ContactResponse[]> {
-    if (DEBUG) console.log('Fetching admin contacts list...');
-    try {
-      const response = await fetchWithTimeout('/api/v1/admin/contacts?size=100', {
-        headers: getAuthHeaders()
-      });
-      if (response.ok) {
-        const result: ApiResponse<PagedResponse<ContactResponse>> = await response.json();
-        if (result.success && result.data && result.data.content) {
-          return result.data.content;
-        }
-      }
-    } catch (e) {
-      console.warn('Admin contacts fetch failed:', e);
+    if (DEBUG) console.log('Fetching admin contacts list (Strict Admin Auth Required)...');
+    const response = await fetchWithTimeout('/api/v1/admin/contacts?size=100', {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch contact messages');
     }
-    return [];
+    const result: ApiResponse<PagedResponse<ContactResponse>> = await response.json();
+    if (result.success && result.data && result.data.content) {
+      return result.data.content;
+    }
+    throw new Error(result.message || 'Failed to retrieve contacts');
   },
 
   async deleteContact(id: number): Promise<void> {
@@ -767,7 +609,9 @@ export const apiService = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!response.ok) throw new Error('Failed to delete message');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to delete message');
+    }
   },
 
   // =============================================================
@@ -785,13 +629,7 @@ export const apiService = {
     });
 
     if (!response.ok) {
-      let details = '';
-      try {
-        details = await response.text();
-      } catch (e) {
-        details = 'Cannot read error body';
-      }
-      throw new Error(`Upload failed: Status ${response.status} (${response.statusText}). Details: ${details}`);
+      await handleErrorResponse(response, 'Upload failed');
     }
 
     const result = await response.json();

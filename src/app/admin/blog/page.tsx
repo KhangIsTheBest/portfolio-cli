@@ -32,11 +32,6 @@ export default function AdminBlogsPage() {
       setLoading(true);
       const data = await apiService.getBlogsAdmin();
       setBlogs(data);
-
-      const token = localStorage.getItem('admin-token');
-      if (token === 'mock-jwt-token-string') {
-        setIsOfflineMode(true);
-      }
     } catch (err) {
       console.error('Failed to load admin blogs:', err);
       setMessage({

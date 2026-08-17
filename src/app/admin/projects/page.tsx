@@ -55,11 +55,6 @@ export default function AdminProjectsPage() {
       ]);
       setProjects(projData);
       setTechnologies(techData);
-
-      const token = localStorage.getItem('admin-token');
-      if (token === 'mock-jwt-token-string') {
-        setIsOfflineMode(true);
-      }
     } catch (err) {
       console.error('Failed to load projects/techs:', err);
       setMessage({

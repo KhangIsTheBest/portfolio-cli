@@ -61,12 +61,6 @@ export default function AdminProfilePage() {
         setAvatarUrl(data.avatarUrl || '');
         setGithubUrl(data.githubUrl || '');
         setLinkedinUrl(data.linkedinUrl || '');
-
-        // Check if we are running in offline/mock fallback mode
-        const token = localStorage.getItem('admin-token');
-        if (token === 'mock-jwt-token-string') {
-          setIsOfflineMode(true);
-        }
       } catch (err) {
         console.error('Failed to load profile data:', err);
         setMessage({
