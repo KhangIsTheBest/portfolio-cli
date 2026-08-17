@@ -46,6 +46,18 @@ export default function SkillsPage() {
     return found ? found.icon : Code2;
   };
 
+  const getCardStyle = (idx: number) => {
+    const styles = [
+      'border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5',
+      'border-sky-500/30 text-sky-600 dark:text-sky-400 bg-sky-500/5',
+      'border-indigo-500/30 text-indigo-600 dark:text-indigo-400 bg-indigo-500/5',
+      'border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-500/5',
+      'border-purple-500/30 text-purple-600 dark:text-purple-400 bg-purple-500/5',
+      'border-rose-500/30 text-rose-600 dark:text-rose-400 bg-rose-500/5'
+    ];
+    return styles[idx % styles.length];
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
@@ -65,15 +77,15 @@ export default function SkillsPage() {
             <Cpu className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('skills.title')}</h3>
           </div>
-          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded font-bold uppercase tracking-wider">
+          <span className="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded font-bold uppercase tracking-wider font-mono">
             DATABASE SYNCHRONIZED
           </span>
         </div>
 
-        {/* System Architecture Domain Overview Cards */}
+        {/* System Architecture Domain Overview Cards with Rich Colors */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans text-xs">
           
-          <div className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
+          <div className="p-4.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-[var(--terminal-header-bg)] to-teal-500/10 border border-emerald-500/25 space-y-2">
             <div className="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold">
               <Server className="w-4 h-4" />
               <span>{t('skills.backend')}</span>
@@ -83,7 +95,7 @@ export default function SkillsPage() {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
+          <div className="p-4.5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-[var(--terminal-header-bg)] to-indigo-500/10 border border-sky-500/25 space-y-2">
             <div className="flex items-center space-x-2 text-sky-600 dark:text-sky-400 font-mono font-bold">
               <Code2 className="w-4 h-4" />
               <span>{t('skills.frontend')}</span>
@@ -108,17 +120,18 @@ export default function SkillsPage() {
             </h4>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {technologies.map((tech) => {
+              {technologies.map((tech, idx) => {
                 const Icon = getIconComponent(tech.iconUrl || 'Code');
+                const cardStyle = getCardStyle(idx);
                 return (
                   <div
                     key={tech.id}
-                    className="group flex flex-col items-center justify-center p-5 rounded-2xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:border-emerald-500/50 transition duration-300 shadow-md"
+                    className={`group flex flex-col items-center justify-center p-5 rounded-2xl border ${cardStyle} hover:scale-105 transition duration-300 shadow-md cursor-pointer`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[var(--card-bg)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-color)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition duration-300">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--card-bg)] border border-[var(--border-color)] flex items-center justify-center text-current transition duration-300">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs text-[var(--text-color)] font-bold mt-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition text-center font-mono">
+                    <span className="text-xs font-bold mt-3 text-[var(--text-color)] font-mono text-center">
                       {tech.name}
                     </span>
                   </div>

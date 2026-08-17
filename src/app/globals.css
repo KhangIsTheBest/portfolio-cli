@@ -2,46 +2,64 @@
 @import "tailwindcss";
 
 :root {
-  /* Default Engineering Dark Theme */
-  --bg-color: #090a0f;
+  /* Default Multi-Accent Dark Theme */
+  --bg-color: #080a10;
   --text-color: #f8fafc;
   --primary-color: #10b981;
   --secondary-color: #94a3b8;
+  --indigo-accent: #6366f1;
+  --cyan-accent: #06b6d4;
+  --amber-accent: #f59e0b;
+  --rose-accent: #f43f5e;
+  --purple-accent: #8b5cf6;
+
   --cursor-color: #10b981;
   --glow-color: rgba(16, 185, 129, 0.15);
   --border-color: rgba(255, 255, 255, 0.08);
-  --card-bg: #0d0f17;
-  --terminal-header-bg: #141722;
+  --card-bg: #0d101a;
+  --terminal-header-bg: #131726;
   --cyan-color: #10b981;
   --purple-color: #6366f1;
 }
 
-/* Light Theme Mode */
+/* Vibrant Engineering Light Mode */
 .light, body.theme-light {
   --bg-color: #f8fafc;
   --text-color: #0f172a;
   --primary-color: #0d9488;
   --secondary-color: #475569;
+  --indigo-accent: #4f46e5;
+  --cyan-accent: #0284c7;
+  --amber-accent: #d97706;
+  --rose-accent: #e11d48;
+  --purple-accent: #7c3aed;
+
   --cursor-color: #0f172a;
   --glow-color: rgba(13, 148, 136, 0.08);
-  --border-color: rgba(226, 232, 240, 0.9);
+  --border-color: rgba(226, 232, 240, 0.95);
   --card-bg: #ffffff;
   --terminal-header-bg: #f1f5f9;
   --cyan-color: #0d9488;
   --purple-color: #4f46e5;
 }
 
-/* Dark Theme Mode explicit */
+/* Explicit Dark Theme Mode */
 .dark, body.theme-dark {
-  --bg-color: #090a0f;
+  --bg-color: #080a10;
   --text-color: #f8fafc;
   --primary-color: #10b981;
   --secondary-color: #94a3b8;
+  --indigo-accent: #6366f1;
+  --cyan-accent: #06b6d4;
+  --amber-accent: #f59e0b;
+  --rose-accent: #f43f5e;
+  --purple-accent: #8b5cf6;
+
   --cursor-color: #10b981;
   --glow-color: rgba(16, 185, 129, 0.15);
   --border-color: rgba(255, 255, 255, 0.08);
-  --card-bg: #0d0f17;
-  --terminal-header-bg: #141722;
+  --card-bg: #0d101a;
+  --terminal-header-bg: #131726;
   --cyan-color: #10b981;
   --purple-color: #6366f1;
 }
@@ -77,7 +95,7 @@ body {
 .glass-panel {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
 }
 
 /* Custom scrollbar */
