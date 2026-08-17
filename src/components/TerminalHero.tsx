@@ -64,10 +64,13 @@ export const TerminalHero: React.FC = () => {
     ]);
   }, [profile, techCount, projectCount, locale, name, title]);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const terminalBodyRef = useRef<HTMLDivElement>(null);
 
+  // Scroll ONLY the internal terminal box, never auto-scroll the main window viewport!
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
   }, [history]);
 
   const handleCommand = (cmdStr: string) => {
@@ -182,7 +185,7 @@ export const TerminalHero: React.FC = () => {
       </div>
 
       {/* Terminal Body */}
-      <div className="p-4 flex-1 overflow-y-auto space-y-3 text-xs scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-white/10">
+      <div ref={terminalBodyRef} className="p-4 flex-1 overflow-y-auto space-y-3 text-xs scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-white/10">
         {history.map((item, idx) => (
           <div key={idx} className="space-y-1.5">
             <div className="flex items-center space-x-2 text-[var(--secondary-color)]">
@@ -207,7 +210,6 @@ export const TerminalHero: React.FC = () => {
             <CornerDownLeft className="w-3.5 h-3.5" />
           </button>
         </form>
-        <div ref={bottomRef} />
       </div>
 
       {/* Quick Command Chips */}
