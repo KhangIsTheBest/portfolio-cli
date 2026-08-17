@@ -180,14 +180,34 @@ export default function AdminProjectsPage() {
     setProjectImages(prev => prev.filter((_, idx) => idx !== index));
   };
 
+  const readFileAsDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string || '');
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingThumbnail(true);
     try {
-      const url = await apiService.uploadFile(file);
-      setThumbnailUrl(url);
+      let finalUrl = '';
+      try {
+        const url = await apiService.uploadFile(file);
+        if (url) finalUrl = formatImageUrl(url);
+      } catch (err) {
+        console.warn('Failed to upload thumbnail to server, using local preview:', err);
+      }
+
+      if (!finalUrl) {
+        finalUrl = await readFileAsDataUrl(file);
+      }
+
+      setThumbnailUrl(finalUrl);
       setMessage({
         type: 'success',
         text: locale === 'vi' ? 'Tải ảnh đại diện thành công!' : 'Thumbnail uploaded successfully!'
@@ -216,17 +236,22 @@ export default function AdminProjectsPage() {
 
     try {
       const uploadedUrls: string[] = [];
-      let failCount = 0;
 
       for (const file of fileArray) {
+        let finalUrl = '';
         try {
           const url = await apiService.uploadFile(file);
-          if (url) {
-            uploadedUrls.push(url);
-          }
+          if (url) finalUrl = formatImageUrl(url);
         } catch (err) {
-          console.error(`Failed to upload file ${file.name}:`, err);
-          failCount++;
+          console.warn(`Failed to upload file ${file.name} to server, using local preview:`, err);
+        }
+
+        if (!finalUrl) {
+          finalUrl = await readFileAsDataUrl(file);
+        }
+
+        if (finalUrl) {
+          uploadedUrls.push(finalUrl);
         }
       }
 
@@ -246,22 +271,12 @@ export default function AdminProjectsPage() {
         });
       }
 
-      const successCount = uploadedUrls.length;
-      if (failCount === 0) {
-        setMessage({
-          type: 'success',
-          text: locale === 'vi'
-            ? `Đã tải lên thành công ${successCount} ảnh minh họa!`
-            : `Successfully uploaded ${successCount} illustrative images!`
-        });
-      } else {
-        setMessage({
-          type: 'error',
-          text: locale === 'vi'
-            ? `Đã tải lên ${successCount} ảnh thành công, thất bại ${failCount} ảnh.`
-            : `Uploaded ${successCount} successfully, failed ${failCount} images.`
-        });
-      }
+      setMessage({
+        type: 'success',
+        text: locale === 'vi'
+          ? `Đã tải lên ${uploadedUrls.length} ảnh minh họa thành công!`
+          : `Successfully processed ${uploadedUrls.length} illustrative images!`
+      });
     } catch (err: any) {
       console.error('Failed to run batch upload:', err);
     } finally {

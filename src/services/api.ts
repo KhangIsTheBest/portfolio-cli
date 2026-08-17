@@ -20,18 +20,35 @@ export const formatImageUrl = (
   fallback = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop'
 ): string => {
   if (!url || typeof url !== 'string' || !url.trim()) return fallback;
-  const trimmed = url.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+  let trimmed = url.trim();
+
+  // Data URLs or Blob URLs (local file upload previews)
+  if (trimmed.startsWith('data:') || trimmed.startsWith('blob:')) {
     return trimmed;
   }
+
+  // Rewrite localhost:8080 backend uploads path to Next.js API proxy
+  if (trimmed.includes('localhost:8080/uploads/')) {
+    const relativePath = trimmed.split('localhost:8080')[1];
+    return `/api/v1${relativePath}`;
+  }
+
+  // External HTTP/HTTPS URLs (Cloudinary, Unsplash, Imgur, etc.)
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+
+  // Relative uploads path
   if (trimmed.startsWith('/uploads/') || trimmed.startsWith('uploads/')) {
     const cleanPath = trimmed.startsWith('/') ? trimmed : '/' + trimmed;
     return `/api/v1${cleanPath}`;
   }
+
   if (trimmed.startsWith('/')) {
     return trimmed;
   }
-  return fallback;
+
+  return trimmed;
 };
 
 // Helper to get Auth token from localStorage

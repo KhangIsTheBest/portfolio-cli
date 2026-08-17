@@ -13,9 +13,15 @@ async function proxyRequest(
 ): Promise<NextResponse> {
   const BACKEND_URL = getBackendUrl();
   const pathSegments = params.path || [];
-  const backendPath = '/api/v1/' + pathSegments.join('/');
+
+  // Determine backend path (support static /uploads/ and /api/v1/* routes)
+  const isUploadPath = pathSegments[0] === 'uploads' || pathSegments[0] === 'files';
+  const primaryBackendPath = isUploadPath ? '/' + pathSegments.join('/') : '/api/v1/' + pathSegments.join('/');
+  const fallbackBackendPath = isUploadPath ? '/api/v1/' + pathSegments.join('/') : '/' + pathSegments.join('/');
+
   const searchParams = request.nextUrl.searchParams.toString();
-  const backendUrl = `${BACKEND_URL}${backendPath}${searchParams ? `?${searchParams}` : ''}`;
+  const primaryBackendUrl = `${BACKEND_URL}${primaryBackendPath}${searchParams ? `?${searchParams}` : ''}`;
+  const fallbackBackendUrl = `${BACKEND_URL}${fallbackBackendPath}${searchParams ? `?${searchParams}` : ''}`;
 
   const method = request.method;
   const contentType = request.headers.get('content-type') || '';
@@ -33,26 +39,32 @@ async function proxyRequest(
   let body: ArrayBuffer | string | null = null;
   if (!['GET', 'HEAD'].includes(method)) {
     if (contentType.includes('multipart/form-data')) {
-      // Pass raw bytes so multipart boundary is preserved exactly
       body = await request.arrayBuffer();
-      // Keep the original content-type including boundary parameter
     } else {
       body = await request.text();
     }
   }
 
   try {
-    const backendResponse = await fetch(backendUrl, {
+    let backendResponse = await fetch(primaryBackendUrl, {
       method,
       headers: forwardHeaders,
       // @ts-ignore - Node.js supports ArrayBuffer as body
       body: body,
     });
 
-    // Read response as text
+    // If 404 on upload path, try fallback path
+    if (backendResponse.status === 404 && isUploadPath) {
+      backendResponse = await fetch(fallbackBackendUrl, {
+        method,
+        headers: forwardHeaders,
+        // @ts-ignore
+        body: body,
+      });
+    }
+
     const responseText = await backendResponse.text();
 
-    // Forward safe headers
     const responseHeaders = new Headers();
     backendResponse.headers.forEach((value, key) => {
       const lower = key.toLowerCase();
@@ -70,7 +82,7 @@ async function proxyRequest(
       headers: responseHeaders,
     });
   } catch (error: any) {
-    console.error(`[Proxy Error] ${method} ${backendUrl}:`, error.message);
+    console.error(`[Proxy Error] ${method} ${primaryBackendUrl}:`, error.message);
     return NextResponse.json(
       { success: false, message: `Backend unreachable: ${error.message}` },
       { status: 502 }
