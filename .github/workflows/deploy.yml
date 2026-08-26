@@ -1,0 +1,17 @@
+name: Deploy Frontend to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Deploy Frontend Container
+        run: |
+          cd ~/portfolio-app/portfolio-cli
+          git pull
+          cd ~/portfolio-app
+          docker compose up -d --build frontend
