@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
 import { StarterKit } from '@tiptap/starter-kit';
 import { Link } from '@tiptap/extension-link';
@@ -26,7 +27,6 @@ import {
   AlignLeft, 
   AlignCenter, 
   AlignRight, 
-  AlignJustify, 
   Link as LinkIcon, 
   Image as ImageIcon, 
   Table as TableIcon, 
@@ -186,6 +186,417 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
     }
   };
 
+  // Common Toolbar JSX
+  const renderToolbar = () => (
+    <div className="flex flex-wrap items-center justify-between gap-1.5 px-3 py-2 border-b border-border-custom/60 bg-slate-900/90 select-none shrink-0">
+      
+      {/* Group 1: Text Styles */}
+      <div className="flex flex-wrap items-center gap-1">
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('bold') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Bold (Ctrl+B)"
+        >
+          <Bold className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('italic') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Italic (Ctrl+I)"
+        >
+          <Italic className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('strike') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Strikethrough"
+        >
+          <Strikethrough className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('code') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Inline Code"
+        >
+          <Code className="w-3.5 h-3.5" />
+        </button>
+
+        {/* Color Palette Menu */}
+        <div className="relative">
+          <button
+            type="button"
+            onMouseDown={preventScrollJump}
+            onClick={() => setShowColorPicker(!showColorPicker)}
+            className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-cyan-custom transition cursor-pointer flex items-center gap-1"
+            title={locale === 'vi' ? 'Đổi màu chữ' : 'Text Color'}
+          >
+            <Palette className="w-3.5 h-3.5" />
+          </button>
+
+          {showColorPicker && (
+            <div className="absolute top-full left-0 mt-1 p-2 bg-slate-900 border border-border-custom rounded-xl shadow-2xl z-50 flex items-center gap-1.5 animate-fade-in">
+              {PRESET_COLORS.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  onMouseDown={preventScrollJump}
+                  onClick={() => {
+                    editor.chain().focus().setColor(color).run();
+                    setShowColorPicker(false);
+                  }}
+                  className="w-5 h-5 rounded-full border border-white/20 hover:scale-125 transition cursor-pointer"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().unsetColor().run();
+                  setShowColorPicker(false);
+                }}
+                className="text-[9px] font-mono text-rose-400 hover:underline ml-1"
+              >
+                Reset
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="h-4 w-px bg-border-custom/60 mx-1" />
+
+        {/* Group 2: Headings */}
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('heading', { level: 1 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Heading 1"
+        >
+          <Heading1 className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('heading', { level: 2 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Heading 2"
+        >
+          <Heading2 className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('heading', { level: 3 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Heading 3"
+        >
+          <Heading3 className="w-3.5 h-3.5" />
+        </button>
+
+        <div className="h-4 w-px bg-border-custom/60 mx-1" />
+
+        {/* Group 3: Lists & Blocks */}
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('bulletList') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Bullet List"
+        >
+          <List className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('orderedList') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Numbered List"
+        >
+          <ListOrdered className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('blockquote') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Blockquote"
+        >
+          <Quote className="w-3.5 h-3.5" />
+        </button>
+
+        <div className="h-4 w-px bg-border-custom/60 mx-1" />
+
+        {/* Group 4: Alignment */}
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive({ textAlign: 'left' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Align Left"
+        >
+          <AlignLeft className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive({ textAlign: 'center' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Align Center"
+        >
+          <AlignCenter className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive({ textAlign: 'right' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Align Right"
+        >
+          <AlignRight className="w-3.5 h-3.5" />
+        </button>
+
+        <div className="h-4 w-px bg-border-custom/60 mx-1" />
+
+        {/* Group 5: Media & Link */}
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={setLink}
+          className={`p-1.5 rounded-lg transition cursor-pointer ${
+            editor.isActive('link') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
+          }`}
+          title="Insert Link"
+        >
+          <LinkIcon className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={addImage}
+          className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-cyan-custom transition cursor-pointer"
+          title="Insert Image URL"
+        >
+          <ImageIcon className="w-3.5 h-3.5" />
+        </button>
+
+        {/* Table Dropdown Menu */}
+        <div className="relative">
+          <button
+            type="button"
+            onMouseDown={preventScrollJump}
+            onClick={() => setShowTableMenu(!showTableMenu)}
+            className={`p-1.5 rounded-lg transition cursor-pointer ${
+              editor.isActive('table') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
+            }`}
+            title="Table Tools"
+          >
+            <TableIcon className="w-3.5 h-3.5" />
+          </button>
+
+          {showTableMenu && (
+            <div className="absolute top-full left-0 mt-1 p-2 bg-slate-900 border border-border-custom rounded-xl shadow-2xl z-50 space-y-1 font-mono text-[10px] min-w-[170px] animate-fade-in">
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text flex items-center justify-between"
+              >
+                <span>{locale === 'vi' ? 'Chèn bảng (3x3)' : 'Insert Table (3x3)'}</span>
+                <Plus className="w-3 h-3 text-cyan-custom" />
+              </button>
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().addRowAfter().run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text"
+              >
+                {locale === 'vi' ? '+ Thêm dòng' : '+ Add Row'}
+              </button>
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().addColumnAfter().run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text"
+              >
+                {locale === 'vi' ? '+ Thêm cột' : '+ Add Column'}
+              </button>
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().deleteRow().run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-rose-400"
+              >
+                {locale === 'vi' ? '- Xóa dòng' : '- Delete Row'}
+              </button>
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().deleteColumn().run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-rose-400"
+              >
+                {locale === 'vi' ? '- Xóa cột' : '- Delete Column'}
+              </button>
+              <button
+                type="button"
+                onMouseDown={preventScrollJump}
+                onClick={() => {
+                  editor.chain().focus().deleteTable().run();
+                  setShowTableMenu(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded hover:bg-rose-500/20 text-rose-400 font-bold border-t border-border-custom/50 pt-1"
+              >
+                {locale === 'vi' ? '🗑️ Xóa toàn bộ bảng' : '🗑️ Delete Table'}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="h-4 w-px bg-border-custom/60 mx-1" />
+
+        {/* Group 6: History */}
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().undo().run()}
+          disabled={!editor.can().undo()}
+          className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-text disabled:opacity-30 transition cursor-pointer"
+          title="Undo (Ctrl+Z)"
+        >
+          <Undo className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={!editor.can().redo()}
+          className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-text disabled:opacity-30 transition cursor-pointer"
+          title="Redo (Ctrl+Y)"
+        >
+          <Redo className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      {/* Fullscreen Action */}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onMouseDown={preventScrollJump}
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          className="p-1.5 rounded-lg border border-border-custom bg-slate-950 text-secondary hover:text-cyan-custom hover:border-cyan-custom/40 transition cursor-pointer"
+          title={isFullscreen ? (locale === 'vi' ? 'Thu nhỏ (Esc)' : 'Exit Fullscreen') : (locale === 'vi' ? 'Phóng to toàn màn hình' : 'Expand Fullscreen')}
+        >
+          {isFullscreen ? <Minimize2 className="w-4 h-4 text-cyan-custom" /> : <Maximize2 className="w-4 h-4" />}
+        </button>
+      </div>
+    </div>
+  );
+
+  // Render Fullscreen Portal if activated
+  if (isFullscreen && typeof window !== 'undefined') {
+    return createPortal(
+      <div 
+        className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md p-4 sm:p-6 flex flex-col items-center justify-center h-screen w-screen overflow-hidden animate-fade-in font-mono"
+        onClick={() => setIsFullscreen(false)}
+      >
+        <div 
+          className="flex flex-col h-full max-w-6xl w-full border border-cyan-custom/60 bg-slate-950 rounded-2xl shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Fullscreen Top Header */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border-custom bg-slate-900/90 select-none shrink-0">
+            <div className="flex items-center space-x-2 text-cyan-custom">
+              <Sparkles className="w-4 h-4" />
+              <span className="font-bold text-xs uppercase tracking-wider font-mono">
+                {label || (locale === 'vi' ? 'CỬA SỔ SOẠN THẢO TIPTAP PRO' : 'TIPTAP FULLSCREEN EDITOR')}
+              </span>
+            </div>
+            <button
+              type="button"
+              onMouseDown={preventScrollJump}
+              onClick={() => setIsFullscreen(false)}
+              className="p-1.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition cursor-pointer flex items-center space-x-1 text-xs"
+              title="Exit Fullscreen (Esc)"
+            >
+              <X className="w-4 h-4" />
+              <span>{locale === 'vi' ? 'Thoát (Esc)' : 'Close (Esc)'}</span>
+            </button>
+          </div>
+
+          {/* Main Toolbar Header */}
+          {renderToolbar()}
+
+          {/* Editor Viewport Content */}
+          <div className="flex-1 overflow-y-auto p-6 bg-slate-950">
+            <EditorContent editor={editor} />
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
+  // Normal Inline Render
   return (
     <div className="space-y-1.5 font-mono">
       {label && (
@@ -206,7 +617,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
         </div>
       )}
 
-      {/* Formatting Guide Modal */}
+      {/* Guide Box */}
       {showGuide && (
         <div className="p-3.5 rounded-xl border border-cyan-custom/30 bg-cyan-custom/5 text-xs text-text space-y-2 animate-fade-in font-sans">
           <p className="font-bold text-cyan-custom font-mono text-[11px] uppercase">
@@ -221,409 +632,12 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
         </div>
       )}
 
-      {/* Editor Main Render Container (Normal vs Fullscreen Overlay) */}
-      <div className={`
-        ${isFullscreen 
-          ? 'fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md p-4 sm:p-6 flex flex-col justify-between h-screen w-screen overflow-hidden animate-fade-in' 
-          : 'relative border border-border-custom bg-slate-950/70 rounded-xl overflow-hidden shadow-inner focus-within:border-cyan-custom/60 focus-within:ring-1 focus-within:ring-cyan-custom/30 transition-all duration-300'
-        }
-      `}>
-        <div className={`
-          flex flex-col h-full overflow-hidden
-          ${isFullscreen ? 'max-w-6xl mx-auto w-full border border-cyan-custom/50 bg-slate-950 rounded-2xl shadow-2xl overflow-hidden' : ''}
-        `}>
+      {/* Normal Editor Box */}
+      <div className="relative border border-border-custom bg-slate-950/70 rounded-xl overflow-hidden shadow-inner focus-within:border-cyan-custom/60 focus-within:ring-1 focus-within:ring-cyan-custom/30 transition-all duration-300">
+        {renderToolbar()}
 
-          {/* Fullscreen Header Info Bar */}
-          {isFullscreen && (
-            <div className="flex items-center justify-between px-5 py-3 border-b border-border-custom bg-slate-900/90 select-none">
-              <div className="flex items-center space-x-2 text-cyan-custom">
-                <Sparkles className="w-4 h-4" />
-                <span className="font-bold text-xs uppercase tracking-wider font-mono">
-                  {label || (locale === 'vi' ? 'CỬA SỔ SOẠN THẢO TIPTAP PRO' : 'TIPTAP FULLSCREEN EDITOR')}
-                </span>
-              </div>
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => setIsFullscreen(false)}
-                className="p-1.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition cursor-pointer flex items-center space-x-1 text-xs"
-                title="Exit Fullscreen (Esc)"
-              >
-                <X className="w-4 h-4" />
-                <span>{locale === 'vi' ? 'Thoát' : 'Close'}</span>
-              </button>
-            </div>
-          )}
-
-          {/* Main Toolbar Header */}
-          <div className="flex flex-wrap items-center justify-between gap-1.5 px-3 py-2 border-b border-border-custom/60 bg-slate-900/90 select-none shrink-0">
-            
-            {/* Group 1: Text Styles */}
-            <div className="flex flex-wrap items-center gap-1">
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('bold') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Bold (Ctrl+B)"
-              >
-                <Bold className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('italic') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Italic (Ctrl+I)"
-              >
-                <Italic className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleStrike().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('strike') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Strikethrough"
-              >
-                <Strikethrough className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('code') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Inline Code"
-              >
-                <Code className="w-3.5 h-3.5" />
-              </button>
-
-              {/* Color Palette Menu */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onMouseDown={preventScrollJump}
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-cyan-custom transition cursor-pointer flex items-center gap-1"
-                  title={locale === 'vi' ? 'Đổi màu chữ' : 'Text Color'}
-                >
-                  <Palette className="w-3.5 h-3.5" />
-                </button>
-
-                {showColorPicker && (
-                  <div className="absolute top-full left-0 mt-1 p-2 bg-slate-900 border border-border-custom rounded-xl shadow-2xl z-50 flex items-center gap-1.5 animate-fade-in">
-                    {PRESET_COLORS.map((color) => (
-                      <button
-                        key={color}
-                        type="button"
-                        onMouseDown={preventScrollJump}
-                        onClick={() => {
-                          editor.chain().focus().setColor(color).run();
-                          setShowColorPicker(false);
-                        }}
-                        className="w-5 h-5 rounded-full border border-white/20 hover:scale-125 transition cursor-pointer"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().unsetColor().run();
-                        setShowColorPicker(false);
-                      }}
-                      className="text-[9px] font-mono text-rose-400 hover:underline ml-1"
-                    >
-                      Reset
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="h-4 w-px bg-border-custom/60 mx-1" />
-
-              {/* Group 2: Headings */}
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('heading', { level: 1 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Heading 1"
-              >
-                <Heading1 className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('heading', { level: 2 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Heading 2"
-              >
-                <Heading2 className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('heading', { level: 3 }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Heading 3"
-              >
-                <Heading3 className="w-3.5 h-3.5" />
-              </button>
-
-              <div className="h-4 w-px bg-border-custom/60 mx-1" />
-
-              {/* Group 3: Lists & Blocks */}
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('bulletList') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Bullet List"
-              >
-                <List className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('orderedList') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Numbered List"
-              >
-                <ListOrdered className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('blockquote') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Blockquote"
-              >
-                <Quote className="w-3.5 h-3.5" />
-              </button>
-
-              <div className="h-4 w-px bg-border-custom/60 mx-1" />
-
-              {/* Group 4: Alignment */}
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive({ textAlign: 'left' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Align Left"
-              >
-                <AlignLeft className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive({ textAlign: 'center' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Align Center"
-              >
-                <AlignCenter className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive({ textAlign: 'right' }) ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Align Right"
-              >
-                <AlignRight className="w-3.5 h-3.5" />
-              </button>
-
-              <div className="h-4 w-px bg-border-custom/60 mx-1" />
-
-              {/* Group 5: Media & Link */}
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={setLink}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  editor.isActive('link') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40 font-bold' : 'text-secondary hover:text-text hover:bg-slate-800'
-                }`}
-                title="Insert Link"
-              >
-                <LinkIcon className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={addImage}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-cyan-custom transition cursor-pointer"
-                title="Insert Image URL"
-              >
-                <ImageIcon className="w-3.5 h-3.5" />
-              </button>
-
-              {/* Table Dropdown Menu */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onMouseDown={preventScrollJump}
-                  onClick={() => setShowTableMenu(!showTableMenu)}
-                  className={`p-1.5 rounded-lg transition cursor-pointer ${
-                    editor.isActive('table') ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/40' : 'text-secondary hover:text-text hover:bg-slate-800'
-                  }`}
-                  title="Table Tools"
-                >
-                  <TableIcon className="w-3.5 h-3.5" />
-                </button>
-
-                {showTableMenu && (
-                  <div className="absolute top-full left-0 mt-1 p-2 bg-slate-900 border border-border-custom rounded-xl shadow-2xl z-50 space-y-1 font-mono text-[10px] min-w-[170px] animate-fade-in">
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text flex items-center justify-between"
-                    >
-                      <span>{locale === 'vi' ? 'Chèn bảng (3x3)' : 'Insert Table (3x3)'}</span>
-                      <Plus className="w-3 h-3 text-cyan-custom" />
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().addRowAfter().run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text"
-                    >
-                      {locale === 'vi' ? '+ Thêm dòng' : '+ Add Row'}
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().addColumnAfter().run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-text"
-                    >
-                      {locale === 'vi' ? '+ Thêm cột' : '+ Add Column'}
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().deleteRow().run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-rose-400"
-                    >
-                      {locale === 'vi' ? '- Xóa dòng' : '- Delete Row'}
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().deleteColumn().run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-slate-800 text-rose-400"
-                    >
-                      {locale === 'vi' ? '- Xóa cột' : '- Delete Column'}
-                    </button>
-                    <button
-                      type="button"
-                      onMouseDown={preventScrollJump}
-                      onClick={() => {
-                        editor.chain().focus().deleteTable().run();
-                        setShowTableMenu(false);
-                      }}
-                      className="w-full text-left px-2 py-1 rounded hover:bg-rose-500/20 text-rose-400 font-bold border-t border-border-custom/50 pt-1"
-                    >
-                      {locale === 'vi' ? '🗑️ Xóa toàn bộ bảng' : '🗑️ Delete Table'}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="h-4 w-px bg-border-custom/60 mx-1" />
-
-              {/* Group 6: History */}
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().undo().run()}
-                disabled={!editor.can().undo()}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-text disabled:opacity-30 transition cursor-pointer"
-                title="Undo (Ctrl+Z)"
-              >
-                <Undo className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => editor.chain().focus().redo().run()}
-                disabled={!editor.can().redo()}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-secondary hover:text-text disabled:opacity-30 transition cursor-pointer"
-                title="Redo (Ctrl+Y)"
-              >
-                <Redo className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Fullscreen Action */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onMouseDown={preventScrollJump}
-                onClick={() => setIsFullscreen(!isFullscreen)}
-                className="p-1.5 rounded-lg border border-border-custom bg-slate-950 text-secondary hover:text-cyan-custom hover:border-cyan-custom/40 transition cursor-pointer"
-                title={isFullscreen ? (locale === 'vi' ? 'Thu nhỏ (Esc)' : 'Exit Fullscreen') : (locale === 'vi' ? 'Phóng to toàn màn hình' : 'Expand Fullscreen')}
-              >
-                {isFullscreen ? <Minimize2 className="w-4 h-4 text-cyan-custom" /> : <Maximize2 className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Editor Viewport Content */}
-          <div className={`overflow-y-auto ${isFullscreen ? 'flex-1 p-6' : ''}`}>
-            <EditorContent editor={editor} />
-          </div>
-
+        <div className="overflow-y-auto">
+          <EditorContent editor={editor} />
         </div>
       </div>
     </div>
