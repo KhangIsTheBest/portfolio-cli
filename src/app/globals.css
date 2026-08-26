@@ -191,3 +191,82 @@ body {
   padding: 0;
   color: var(--text-color);
 }
+
+/* TipTap ProseMirror WYSIWYG Editor Styles */
+.ProseMirror {
+  outline: none !important;
+  min-height: inherit;
+}
+.ProseMirror p {
+  margin-bottom: 0.75em;
+  line-height: 1.6;
+}
+.ProseMirror ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.ProseMirror ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.ProseMirror li {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+.ProseMirror h1 {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.5rem !important;
+  color: var(--text-color) !important;
+}
+.ProseMirror h2 {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.4rem !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding-bottom: 0.3rem !important;
+}
+.ProseMirror h3 {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  margin-top: 0.85rem !important;
+  margin-bottom: 0.35rem !important;
+  color: var(--text-color) !important;
+}
+.ProseMirror blockquote {
+  border-left: 3px solid var(--cyan-color) !important;
+  padding-left: 1rem !important;
+  margin: 0.75rem 0 !important;
+  color: var(--secondary-color) !important;
+  font-style: italic !important;
+  background: var(--card-bg) !important;
+  padding-top: 0.4rem !important;
+  padding-bottom: 0.4rem !important;
+  border-radius: 0 0.5rem 0.5rem 0 !important;
+}
+.ProseMirror table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1rem 0 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.8rem !important;
+}
+.ProseMirror th, .ProseMirror td {
+  border: 1px solid var(--border-color) !important;
+  padding: 0.5rem !important;
+}
+.ProseMirror th {
+  background-color: var(--terminal-header-bg) !important;
+  color: var(--cyan-color) !important;
+  font-weight: 700 !important;
+}
+.ProseMirror-selectednode {
+  outline: 2px solid var(--cyan-color) !important;
+}
