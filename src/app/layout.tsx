@@ -28,10 +28,18 @@ export const metadata: Metadata = {
   keywords: ["Phan Duy Khang", "Backend Developer", "Full-Stack Developer", "Java Spring Boot", "Next.js", "React", "Software Engineer", "PostgreSQL"],
   authors: [{ name: "Phan Duy Khang", url: "https://github.com/KhangIsTheBest" }],
   creator: "Phan Duy Khang",
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" }
+    ],
+    shortcut: "/logo.png",
+    apple: "/logo.png"
+  },
   openGraph: {
     type: "website",
     locale: "vi_VN",
-    url: "https://portfolio-cli.vercel.app",
+    url: "https://khang.kamy.space",
     title: "Phan Duy Khang — Backend & Full-Stack Engineer",
     description: "Engineering portfolio featuring Java Spring Boot, PostgreSQL, React, Next.js, and REST APIs.",
     siteName: "Phan Duy Khang Portfolio"
