@@ -12,6 +12,7 @@ import remarkGfm from 'remark-gfm';
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
 import { ImageLightboxModal } from '@/components/ImageLightboxModal';
+import { FormattedContent } from '@/components/FormattedContent';
 import { Maximize2 } from 'lucide-react';
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -151,9 +152,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
           {/* Content body */}
           <div className="border-t border-[var(--border-color)] pt-5 text-sm font-sans leading-relaxed text-[var(--text-color)] select-text markdown-body">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {project.content || project.shortDescription}
-            </ReactMarkdown>
+            <FormattedContent content={project.content || project.shortDescription} />
           </div>
 
           {/* Illustrative Images Gallery */}

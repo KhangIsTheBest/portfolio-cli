@@ -22,8 +22,7 @@ import { apiService, formatImageUrl } from '@/services/api';
 import { Profile, Project, Technology } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { FormattedContent } from '@/components/FormattedContent';
 import { TerminalHero } from '@/components/TerminalHero';
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
@@ -139,11 +138,7 @@ export default function Home() {
             </div>
 
             {/* Bio text */}
-            <div className="text-xs text-[var(--secondary-color)] font-sans leading-relaxed select-text markdown-body">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {userProfile.aboutMe}
-              </ReactMarkdown>
-            </div>
+            <FormattedContent content={userProfile.aboutMe} className="text-xs text-[var(--secondary-color)] font-sans leading-relaxed select-text markdown-body" />
 
             {/* Real Data Metrics Bar */}
             <div className="grid grid-cols-2 gap-3 pt-2">
