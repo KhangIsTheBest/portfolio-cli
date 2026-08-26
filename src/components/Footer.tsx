@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left info */}
         <div className="flex items-center space-x-2">
-          <Terminal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
           <span className="font-bold text-[var(--text-color)]">Phan Duy Khang</span>
           <span className="opacity-40">•</span>
           <span>Backend & Full-Stack Developer</span>

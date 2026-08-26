@@ -52,8 +52,8 @@ export const Header: React.FC = () => {
         
         {/* Brand & Online Indicator */}
         <Link href="/" className="flex items-center space-x-2.5 group shrink-0 cursor-pointer">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-105 transition duration-300">
-            <Terminal className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 group-hover:bg-emerald-500/20 group-hover:scale-105 transition duration-300">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-extrabold tracking-tight text-slate-100 dark:text-slate-100 light:text-slate-900 group-hover:text-emerald-400 transition font-sans">

@@ -163,10 +163,12 @@ export const TerminalHero: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
           </div>
-          <span className="text-[11px] font-bold text-[var(--secondary-color)] flex items-center gap-1.5 ml-2 font-mono">
-            <TerminalIcon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>khang@dev-workstation: ~</span>
-          </span>
+          <div className="flex items-center space-x-2">
+            <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
+            <span className="font-bold text-slate-300 dark:text-slate-300 font-mono text-[11px]">
+              khang@dev-workstation: ~
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center space-x-2 text-[10px]">

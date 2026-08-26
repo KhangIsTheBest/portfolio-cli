@@ -17,6 +17,7 @@ import {
   X 
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import { ThemeSelector } from '@/components/ThemeSelector';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -79,15 +80,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Top Header */}
       <div className="md:hidden flex items-center justify-between p-4 border border-border-custom bg-card-custom rounded-xl select-none">
         <div className="flex items-center space-x-2">
-          <Layers className="w-5 h-5 text-cyan-custom" />
-          <span className="font-bold text-xs uppercase tracking-wider font-mono">Admin Portal</span>
+          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
+          <span className="font-bold text-xs uppercase tracking-wider font-mono text-text">Admin Portal</span>
         </div>
-        <button
-          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="p-1.5 rounded-lg border border-border-custom text-secondary hover:text-text bg-slate-900"
-        >
-          {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center space-x-2">
+          <ThemeSelector />
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="p-1.5 rounded-lg border border-border-custom text-secondary hover:text-text bg-card-custom"
+          >
+            {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Navigation Panel */}
@@ -98,8 +104,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="space-y-6">
           {/* Brand header */}
           <div className="hidden md:flex items-center space-x-2.5 pb-4 border-b border-border-custom/50 select-none">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-custom to-purple-custom flex items-center justify-center text-bg shadow-glow">
-              <Layers className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 shadow-glow">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="text-xs font-black tracking-widest text-text">
@@ -134,6 +140,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Action Panel Footer */}
         <div className="space-y-2 border-t border-border-custom/50 pt-4">
+          <div className="flex items-center justify-between px-3.5 py-2 rounded-xl border border-border-custom/40 bg-card-custom/50">
+            <span className="text-[11px] font-mono text-secondary font-semibold">
+              {locale === 'vi' ? 'Giao diện' : 'Theme'}
+            </span>
+            <ThemeSelector />
+          </div>
+
           <Link
             href="/"
             className="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold text-secondary hover:text-cyan-custom transition"
