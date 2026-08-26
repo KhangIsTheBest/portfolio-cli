@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Bold, 
   Italic, 
@@ -15,7 +15,9 @@ import {
   Table as TableIcon, 
   Eye, 
   Edit3,
-  HelpCircle
+  HelpCircle,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -39,7 +41,20 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const { locale } = useLanguage();
   const [activeTab, setActiveTab] = useState<'EDIT' | 'PREVIEW'>('EDIT');
   const [showGuide, setShowGuide] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Lock body scroll when in fullscreen editor mode
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFullscreen]);
 
   const insertFormatting = (prefix: string, suffix: string = '', defaultText: string = '') => {
     const textarea = textareaRef.current;
@@ -121,10 +136,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         </div>
       )}
 
+      {/* Backdrop overlay for Fullscreen Mode */}
+      {isFullscreen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/85 backdrop-blur-md animate-fade-in"
+          onClick={() => setIsFullscreen(false)}
+        />
+      )}
+
       {/* Editor Container */}
-      <div className="border border-border-custom bg-slate-950/60 rounded-xl overflow-hidden shadow-inner focus-within:border-cyan-custom/50 focus-within:ring-1 focus-within:ring-cyan-custom/25 transition">
+      <div className={`
+        border border-border-custom bg-slate-950/60 rounded-xl overflow-hidden shadow-inner focus-within:border-cyan-custom/50 focus-within:ring-1 focus-within:ring-cyan-custom/25 transition-all duration-300
+        ${isFullscreen ? 'fixed inset-3 md:inset-6 z-50 bg-slate-950 border-cyan-custom/60 shadow-2xl rounded-2xl flex flex-col' : 'relative'}
+      `}>
         {/* Toolbar Header */}
-        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-border-custom/60 bg-slate-900/60 select-none">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-border-custom/60 bg-slate-900/80 select-none shrink-0">
           {/* Format Action Buttons */}
           <div className="flex flex-wrap items-center gap-1">
             <button
@@ -226,31 +252,43 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             </button>
           </div>
 
-          {/* Mode Switcher Tabs */}
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-border-custom/50">
+          {/* Mode Switcher & Fullscreen Action */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-border-custom/50">
+              <button
+                type="button"
+                onClick={() => setActiveTab('EDIT')}
+                className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
+                  activeTab === 'EDIT'
+                    ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/30'
+                    : 'text-secondary hover:text-text'
+                }`}
+              >
+                <Edit3 className="w-3 h-3" />
+                <span>{locale === 'vi' ? 'Soạn thảo' : 'Edit'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('PREVIEW')}
+                className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
+                  activeTab === 'PREVIEW'
+                    ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/30'
+                    : 'text-secondary hover:text-text'
+                }`}
+              >
+                <Eye className="w-3 h-3" />
+                <span>{locale === 'vi' ? 'Xem trước' : 'Preview'}</span>
+              </button>
+            </div>
+
+            {/* Fullscreen Expand/Collapse Button */}
             <button
               type="button"
-              onClick={() => setActiveTab('EDIT')}
-              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
-                activeTab === 'EDIT'
-                  ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/30'
-                  : 'text-secondary hover:text-text'
-              }`}
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="p-1.5 rounded-lg border border-border-custom bg-slate-950 text-secondary hover:text-cyan-custom hover:border-cyan-custom/40 transition cursor-pointer"
+              title={isFullscreen ? (locale === 'vi' ? 'Thu nhỏ cửa sổ (Esc)' : 'Exit Fullscreen') : (locale === 'vi' ? 'Phóng to toàn màn hình' : 'Expand Fullscreen')}
             >
-              <Edit3 className="w-3 h-3" />
-              <span>{locale === 'vi' ? 'Soạn thảo' : 'Edit'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('PREVIEW')}
-              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
-                activeTab === 'PREVIEW'
-                  ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/30'
-                  : 'text-secondary hover:text-text'
-              }`}
-            >
-              <Eye className="w-3 h-3" />
-              <span>{locale === 'vi' ? 'Xem trước' : 'Preview'}</span>
+              {isFullscreen ? <Minimize2 className="w-4 h-4 text-cyan-custom" /> : <Maximize2 className="w-4 h-4" />}
             </button>
           </div>
         </div>
@@ -262,10 +300,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className={`w-full p-4 bg-transparent text-text font-mono text-xs focus:outline-none resize-y ${minHeight}`}
+            className={`w-full p-4 bg-transparent text-text font-mono text-xs focus:outline-none resize-y ${
+              isFullscreen ? 'flex-1 p-6 text-sm resize-none overflow-y-auto' : minHeight
+            }`}
           />
         ) : (
-          <div className={`p-4 font-sans text-xs text-text select-text overflow-y-auto space-y-3 leading-relaxed ${minHeight}`}>
+          <div className={`p-4 font-sans text-xs text-text select-text overflow-y-auto space-y-3 leading-relaxed ${
+            isFullscreen ? 'flex-1 p-6 text-sm overflow-y-auto' : minHeight
+          }`}>
             {value.trim() ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {value}
