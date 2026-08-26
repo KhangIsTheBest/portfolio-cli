@@ -5,6 +5,7 @@ import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, Refres
 import { apiService, formatImageUrl } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { Project, Technology } from '@/types';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 export default function AdminProjectsPage() {
   const { locale } = useLanguage();
@@ -568,16 +569,13 @@ export default function AdminProjectsPage() {
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
-                  {locale === 'vi' ? 'Nội dung chi tiết (Markdown / Text)' : 'Detailed Description (Markdown)'}
-                </label>
-                <textarea
+              <div>
+                <RichTextEditor
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={10}
-                  placeholder="Describe your implementation details, challenges, architecture..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200 resize-y"
+                  onChange={setContent}
+                  label={locale === 'vi' ? 'Nội dung chi tiết dự án (Markdown / Rich Text)' : 'Detailed Description (Markdown / Rich Text)'}
+                  placeholder={locale === 'vi' ? 'Mô tả chi tiết giải pháp, kiến trúc hệ thống, thách thức và kết quả (Hỗ trợ định dạng Rich Text / Markdown)...' : 'Describe your implementation details, challenges, architecture (Rich Text / Markdown supported)...'}
+                  minHeight="min-h-[280px]"
                 />
               </div>
 

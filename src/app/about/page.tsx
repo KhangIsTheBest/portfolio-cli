@@ -6,6 +6,8 @@ import { apiService } from '@/services/api';
 import { Profile } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function AboutPage() {
   const { locale, t } = useLanguage();
@@ -89,7 +91,11 @@ export default function AboutPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start text-sm">
           <div className="md:col-span-3 space-y-6 font-sans text-[var(--text-color)]">
-            <p className="leading-relaxed whitespace-pre-wrap text-sm">{userProfile.aboutMe}</p>
+            <div className="leading-relaxed text-sm select-text markdown-body">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {userProfile.aboutMe}
+              </ReactMarkdown>
+            </div>
             
             {/* Technical Philosophy Box */}
             <div className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">

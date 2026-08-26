@@ -11,6 +11,9 @@ import remarkGfm from 'remark-gfm';
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
+import { ImageLightboxModal } from '@/components/ImageLightboxModal';
+import { Maximize2 } from 'lucide-react';
+
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
@@ -19,25 +22,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setActiveImageUrl(null);
-      }
-    };
-    if (activeImageUrl) {
-      window.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [activeImageUrl]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -54,6 +39,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
     };
     fetchProject();
   }, [slug, locale]);
+
+  // Combine thumbnail and gallery images into single list for carousel
+  const allProjectImages = React.useMemo(() => {
+    if (!project) return [];
+    const list: string[] = [];
+    if (project.thumbnailUrl) list.push(project.thumbnailUrl);
+    if (project.images && project.images.length > 0) {
+      project.images.forEach(img => {
+        if (img.imageUrl && !list.includes(img.imageUrl)) {
+          list.push(img.imageUrl);
+        }
+      });
+    }
+    return list;
+  }, [project]);
 
   if (loading) {
     return (
@@ -100,11 +100,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Main image banner */}
-        <div className="h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] shadow-lg relative">
+        <div 
+          className="h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] shadow-lg relative group cursor-pointer"
+          onClick={() => setLightboxIndex(0)}
+        >
           <img
             src={formatImageUrl(project.thumbnailUrl)}
             alt={project.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500"
             onError={(e) => {
               (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
             }}
@@ -114,6 +117,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
               {t('projects.featuredLabel')}
             </span>
           )}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+            <span className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/70 border border-white/20 text-white font-mono text-xs font-bold backdrop-blur-md">
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>{locale === 'vi' ? 'Phóng to ảnh' : 'Click to Zoom'}</span>
+            </span>
+          </div>
         </div>
 
         {/* Info card */}
@@ -148,28 +157,38 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {/* Illustrative Images Gallery */}
-          {project.images && project.images.length > 0 && (
+          {allProjectImages.length > 0 && (
             <div className="border-t border-[var(--border-color)] pt-5 space-y-4">
-              <h3 className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                {locale === 'vi' ? 'Hình ảnh minh họa' : 'Illustrative Screenshots'}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                  {locale === 'vi' ? 'Bộ sưu tập hình ảnh' : 'Project Image Gallery'} ({allProjectImages.length})
+                </h3>
+                <span className="text-[10px] font-mono text-[var(--secondary-color)]">
+                  {locale === 'vi' ? 'Nhấp vào ảnh để xem slide' : 'Click image for fullscreen viewer'}
+                </span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {project.images.map((img) => {
-                  const imgUrl = formatImageUrl(img.imageUrl);
+                {allProjectImages.map((imgUrl, idx) => {
                   return (
                     <div 
-                      key={img.id} 
-                      className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer h-48"
-                      onClick={() => setActiveImageUrl(imgUrl)}
+                      key={idx} 
+                      className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer h-48 shadow-md"
+                      onClick={() => setLightboxIndex(idx)}
                     >
                       <img 
-                        src={imgUrl} 
-                        alt={`Screenshot of ${project.title}`}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                        src={formatImageUrl(imgUrl)} 
+                        alt={`Screenshot ${idx + 1} of ${project.title}`}
+                        className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
                         }}
                       />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+                        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/70 border border-white/20 text-white font-mono text-[11px] font-bold backdrop-blur-md">
+                          <Maximize2 className="w-3.5 h-3.5" />
+                          <span>{locale === 'vi' ? 'Xem ảnh' : 'View'} #{idx + 1}</span>
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
@@ -205,34 +224,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {activeImageUrl && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-lightbox-fade"
-          onClick={() => setActiveImageUrl(null)}
-        >
-          <button 
-            className="absolute top-5 right-5 z-50 p-2.5 rounded-full border border-white/20 bg-black/60 text-white hover:scale-110 active:scale-95 transition cursor-pointer"
-            onClick={() => setActiveImageUrl(null)}
-            title={locale === 'vi' ? 'Đóng' : 'Close'}
-          >
-            <X className="w-5 h-5" />
-          </button>
-          
-          <div 
-            className="relative w-full max-w-[95vw] md:max-w-[92vw] max-h-[92vh] flex items-center justify-center select-none animate-lightbox-zoom"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img 
-              src={formatImageUrl(activeImageUrl)} 
-              alt="Screenshot Large Preview" 
-              className="w-auto h-auto max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl border border-white/20"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
-              }}
-            />
-          </div>
-        </div>
+      {/* Lightbox Carousel Modal */}
+      {lightboxIndex !== null && (
+        <ImageLightboxModal
+          images={allProjectImages}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onSelectIndex={(index) => setLightboxIndex(index)}
+        />
       )}
     </>
   );

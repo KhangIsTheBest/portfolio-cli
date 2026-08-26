@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2 } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 
 export default function AdminProfilePage() {
@@ -313,16 +314,13 @@ export default function AdminProfilePage() {
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
-                {locale === 'vi' ? 'Giới thiệu bản thân *' : 'About Me Bio *'}
-              </label>
-              <textarea
+            <div>
+              <RichTextEditor
                 value={aboutMe}
-                onChange={(e) => setAboutMe(e.target.value)}
-                rows={6}
-                placeholder="Describe your skillset, backend experience..."
-                className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200 resize-none"
+                onChange={setAboutMe}
+                label={locale === 'vi' ? 'Giới thiệu bản thân *' : 'About Me Bio *'}
+                placeholder={locale === 'vi' ? 'Mô tả chi tiết kỹ năng, kinh nghiệm của bạn (Hỗ trợ định dạng Rich Text / Markdown)...' : 'Describe your skillset, backend experience (Rich Text / Markdown supported)...'}
+                minHeight="min-h-[220px]"
               />
             </div>
           </div>

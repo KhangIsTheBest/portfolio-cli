@@ -5,6 +5,7 @@ import { BookOpen, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshC
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { Blog } from '@/types';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 export default function AdminBlogsPage() {
   const { locale } = useLanguage();
@@ -354,16 +355,13 @@ export default function AdminBlogsPage() {
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
-                  {locale === 'vi' ? 'Nội dung bài viết (Markdown) *' : 'Markdown Article Content *'}
-                </label>
-                <textarea
+              <div>
+                <RichTextEditor
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={14}
-                  placeholder="# Write your markdown headers, code snippets, paragraphs here..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200 resize-y"
+                  onChange={setContent}
+                  label={locale === 'vi' ? 'Nội dung bài viết (Markdown / Rich Text) *' : 'Markdown Article Content *'}
+                  placeholder={locale === 'vi' ? 'Soạn thảo tiêu đề, đoạn văn, khối mã nguồn code, danh sách bài viết (Hỗ trợ định dạng Rich Text / Markdown)...' : 'Write your markdown headers, code snippets, paragraphs here (Rich Text / Markdown supported)...'}
+                  minHeight="min-h-[300px]"
                 />
               </div>
             </div>
