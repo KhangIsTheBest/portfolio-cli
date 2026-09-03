@@ -15,4 +15,4 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
           cd ~/portfolio-app
-          docker compose up -d --build frontend
+          docker compose up -d --build --no-deps frontend
