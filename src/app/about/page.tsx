@@ -53,23 +53,55 @@ export default function AboutPage() {
 
   const experiences = [
     {
-      role: locale === 'vi' ? 'Full-Stack / Backend Developer' : 'Full-Stack / Backend Developer',
-      company: 'Personal & Thesis Systems',
-      period: '2023 - Present',
+      role: locale === 'vi' ? 'Bắt đầu học Lập trình & Thi Học sinh giỏi' : 'Programming Foundations & Competitive Programming',
+      company: locale === 'vi' ? 'Pascal / Học sinh giỏi Tỉnh' : 'Pascal / Provincial Contest',
+      period: '2021 - 2022',
       desc: locale === 'vi' 
-        ? 'Thiết kế & triển khai ứng dụng Web thương mại điện tử và hệ thống quản trị với Java Spring Boot 3, RESTful API, PostgreSQL, React 19 và Docker.'
-        : 'Designed & deployed full-stack e-commerce and management platforms utilizing Java Spring Boot 3, REST APIs, PostgreSQL, React 19, and Docker.'
+        ? 'Bắt đầu học lập trình với ngôn ngữ Pascal. Đạt Giải Ba Học sinh giỏi cấp Tỉnh môn Tin học (năm 2021) và Giải Nhì Học sinh giỏi cấp Tỉnh môn Tin học (năm 2022) dành cho học sinh khối 10, 11, 12.'
+        : 'Started programming with Pascal. Achieved 3rd Prize in Provincial Competitive Programming Contest (2021) and 2nd Prize in Provincial Contest (2022) for high school students.'
+    },
+    {
+      role: locale === 'vi' ? 'Lập trình Thuật toán với Java' : 'Algorithms & Data Structures with Java',
+      company: locale === 'vi' ? 'Java Core & LeetCode' : 'Java Core & LeetCode',
+      period: '2022 - Present',
+      desc: locale === 'vi' 
+        ? 'Bắt đầu học lập trình Java, rèn luyện tư duy thuật toán chuyên sâu thông qua việc làm các bài tập cấu trúc dữ liệu và giải nhiều bài tập trên nền tảng LeetCode.'
+        : 'Started learning Java programming, sharpening algorithmic thinking by solving data structures problems and numerous LeetCode challenges using Java.'
+    },
+    {
+      role: locale === 'vi' ? 'Lập trình Web Backend với Spring Boot' : 'Backend Web Development with Spring Boot',
+      company: locale === 'vi' ? 'Java Spring Boot & Projects' : 'Java Spring Boot Projects',
+      period: '2024 - Present',
+      desc: locale === 'vi' 
+        ? 'Nghiên cứu & phát triển Web Backend với Java Spring Boot, xây dựng các ứng dụng thực tế như hệ thống TodoList, RESTful API và quản lý dữ liệu.'
+        : 'Researched & built backend services with Java Spring Boot, developing practical projects such as TodoList applications, RESTful APIs, and database integration.'
+    },
+    {
+      role: locale === 'vi' ? 'Hoàn thành Khóa luận Tốt nghiệp' : 'Graduation Thesis Completion',
+      company: locale === 'vi' ? 'ĐH Nguyễn Tất Thành (Điểm 9/10)' : 'NTT University (Grade 9/10)',
+      period: '10/2025 - 12/2025',
+      desc: locale === 'vi' 
+        ? 'Xây dựng và hoàn thành xuất sắc đề tài Khóa luận tốt nghiệp chuyên ngành Kỹ thuật Phần mềm với điểm số bảo vệ 9/10.'
+        : 'Successfully completed and defended Graduation Thesis in Software Engineering with an outstanding score of 9/10.'
+    },
+    {
+      role: locale === 'vi' ? 'Phát triển Dự án & Đa công nghệ' : 'Multi-Technology Project Development',
+      company: locale === 'vi' ? 'Full-Stack Portfolio & Apps' : 'Full-Stack Portfolio & Apps',
+      period: '2022 - 2026',
+      desc: locale === 'vi' 
+        ? 'Xây dựng & triển khai thành công nhiều dự án thực tế, tích lũy kinh nghiệm làm việc đa dạng với các ngôn ngữ lập trình và công nghệ khác nhau.'
+        : 'Developed and deployed multiple real-world projects, gaining extensive hands-on experience across diverse technologies and programming languages.'
     }
   ];
 
   const education = [
     {
-      degree: locale === 'vi' ? 'Cử nhân Kỹ thuật Phần mềm' : 'Bachelor of Software Engineering',
-      institution: locale === 'vi' ? 'Trường Đại học Công nghệ' : 'University of Technology',
-      period: '2021 - 2025',
+      degree: locale === 'vi' ? 'Kỹ sư Công nghệ Kỹ thuật Phần mềm' : 'Engineer in Software Engineering',
+      institution: locale === 'vi' ? 'Trường Đại học Nguyễn Tất Thành' : 'Nguyen Tat Thanh University',
+      period: '2022 - 2026',
       desc: locale === 'vi' 
-        ? 'Tập trung nghiên cứu Cấu trúc dữ liệu & Giải thuật, Thiết kế hệ thống, Cơ sở dữ liệu quan hệ (RDBMS) và Lập trình Hướng đối tượng (OOP).'
-        : 'Focused on Data Structures & Algorithms, System Design, Relational Databases (RDBMS), and Object-Oriented Programming (OOP).'
+        ? 'Tốt nghiệp Kỹ sư chuyên ngành Công nghệ Kỹ thuật phần mềm tại ĐH Nguyễn Tất Thành. Trang bị kiến thức toàn diện về Cấu trúc dữ liệu & Giải thuật, Kiến trúc phần mềm, Thiết kế hệ thống và DevOps.'
+        : 'Graduated as a Software Engineer from Nguyen Tat Thanh University. Equipped with comprehensive knowledge in Data Structures & Algorithms, Software Architecture, System Design, and DevOps.'
     }
   ];
 
