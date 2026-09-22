@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, MapPin, Mail, Download, Briefcase, GraduationCap, Calendar, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { User, MapPin, Mail, Download, Briefcase, GraduationCap, Calendar, ShieldCheck, Award, Sparkles, Code2 } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Profile } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
 import { FormattedContent } from '@/components/FormattedContent';
 import { CvViewer } from '@/components/CvViewer';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function AboutPage() {
   const { locale, t } = useLanguage();
@@ -33,7 +35,7 @@ export default function AboutPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
         <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-        <p className="text-xs tracking-wider animate-pulse">RETRIEVING PROFILE DATA...</p>
+        <p className="text-xs tracking-wider animate-pulse font-bold">RETRIEVING PROFILE SPECIFICATION...</p>
       </div>
     );
   }
@@ -45,10 +47,12 @@ export default function AboutPage() {
     aboutMe: locale === 'vi' 
       ? 'Sinh viên ngành Kỹ thuật phần mềm với nền tảng tốt về Data Structures & Algorithms cùng khả năng tự học tốt. Mong muốn phát triển chuyên sâu trong lĩnh vực Backend Engineering, hướng đến việc xây dựng các hệ thống hiệu năng cao.'
       : 'Software Engineering student with a strong foundation in Data Structures & Algorithms. Aiming to build high-performance backend systems.',
-    email: 'pdkhang.dev@gmail.com',
+    email: 'pdkhang1304@gmail.com',
     githubUrl: 'https://github.com/KhangIsTheBest',
     linkedinUrl: 'https://linkedin.com/in/phanduykhang',
     avatarUrl: '',
+    cvViUrl: '',
+    cvEnUrl: '',
     updatedAt: new Date().toISOString()
   };
 
@@ -106,14 +110,34 @@ export default function AboutPage() {
     }
   ];
 
+  const awards = [
+    {
+      title: locale === 'vi' ? 'Giải Nhì HSG Tin Học Cấp Tỉnh (2022)' : '2nd Prize Provincial Informatics Contest (2022)',
+      desc: locale === 'vi' ? 'Kỳ thi chọn Học sinh Giỏi cấp Tỉnh môn Tin học.' : 'Provincial Competitive Programming Examination.'
+    },
+    {
+      title: locale === 'vi' ? 'Giải Ba HSG Tin Học Cấp Tỉnh (2021)' : '3rd Prize Provincial Informatics Contest (2021)',
+      desc: locale === 'vi' ? 'Kỳ thi chọn Học sinh Giỏi cấp Tỉnh môn Tin học.' : 'Provincial Competitive Programming Examination.'
+    },
+    {
+      title: locale === 'vi' ? 'Bảo vệ Khóa Luận Tốt Nghiệp: 9.0/10' : 'Graduation Thesis Defense: 9.0/10',
+      desc: locale === 'vi' ? 'Chuyên ngành Công nghệ Kỹ thuật Phần mềm - ĐH Nguyễn Tất Thành.' : 'Software Engineering Major - Nguyen Tat Thanh University.'
+    }
+  ];
+
   return (
-    <div className="space-y-8 my-6 font-mono animate-fade-in select-text">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="space-y-8 my-6 font-mono select-text"
+    >
       
       {/* Header Bio Card */}
-      <section className="border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl transition-colors duration-300">
+      <SpotlightCard className="space-y-6" spotlightColor="rgba(16, 185, 129, 0.18)">
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <User className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <User className="w-5 h-5 text-emerald-500" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('about.title')}</h3>
           </div>
           <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded font-bold">
@@ -127,8 +151,8 @@ export default function AboutPage() {
             
             {/* Technical Philosophy Box */}
             <div className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
-              <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="text-xs font-mono font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 <span>{t('about.philosophyTitle')}</span>
               </div>
               <p className="text-xs text-[var(--secondary-color)] leading-relaxed font-sans">
@@ -138,11 +162,11 @@ export default function AboutPage() {
 
             <div className="flex flex-wrap gap-3 pt-2 text-xs text-[var(--secondary-color)] font-mono">
               <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1.5 rounded-xl border border-[var(--border-color)]">
-                <MapPin className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <MapPin className="w-4 h-4 text-amber-500" />
                 <span>{t('about.location')}</span>
               </span>
               <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1.5 rounded-xl border border-[var(--border-color)]">
-                <Mail className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <Mail className="w-4 h-4 text-emerald-500" />
                 <span>{userProfile.email}</span>
               </span>
             </div>
@@ -193,14 +217,36 @@ export default function AboutPage() {
               download="PhanDuyKhang_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer shadow-md"
+              className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer shadow-md active:scale-95"
             >
               <Download className="w-4 h-4" />
               <span>{locale === 'vi' ? 'TẢI CV KỸ SƯ' : 'DOWNLOAD RESUME'}</span>
             </a>
           </div>
         </div>
-      </section>
+      </SpotlightCard>
+
+      {/* Key Awards & Honors Bento */}
+      <SpotlightCard className="space-y-4" spotlightColor="rgba(245, 158, 11, 0.15)">
+        <div className="flex items-center space-x-2 border-b border-[var(--border-color)] pb-3">
+          <Award className="w-5 h-5 text-amber-500" />
+          <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider">
+            {locale === 'vi' ? 'Thành Tích & Giải Thưởng Tiêu Biểu' : 'Honors & Key Achievements'}
+          </h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {awards.map((award, idx) => (
+            <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-1.5 hover:border-amber-500/30 transition">
+              <div className="flex items-center gap-1.5 text-amber-500 font-mono text-[10px] font-bold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>HONOR #{idx + 1}</span>
+              </div>
+              <h5 className="text-xs font-bold text-[var(--text-color)] font-sans">{award.title}</h5>
+              <p className="text-[11px] text-[var(--secondary-color)] font-sans">{award.desc}</p>
+            </div>
+          ))}
+        </div>
+      </SpotlightCard>
 
       {/* Interactive CV Viewer Section */}
       <CvViewer cvViUrl={userProfile.cvViUrl} cvEnUrl={userProfile.cvEnUrl} />
@@ -208,23 +254,23 @@ export default function AboutPage() {
       {/* Experience & Education Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Work Experience */}
-        <section className="border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 space-y-4 shadow-xl transition-colors duration-300">
+        <SpotlightCard className="space-y-4" spotlightColor="rgba(16, 185, 129, 0.15)">
           <div className="flex items-center space-x-2 border-b border-[var(--border-color)] pb-3">
-            <Briefcase className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <Briefcase className="w-4 h-4 text-emerald-500" />
             <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider">
               {locale === 'vi' ? 'Kinh Nghiệm Thực Chiến' : 'Engineering Experience'}
             </h4>
           </div>
           <div className="space-y-4">
             {experiences.map((exp, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
+              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2 hover:border-emerald-500/30 transition">
                 <div className="flex justify-between items-start">
                   <div>
                     <h5 className="font-bold text-[var(--text-color)] text-xs font-sans">{exp.role}</h5>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">{exp.company}</p>
+                    <p className="text-[11px] text-emerald-500 font-mono">{exp.company}</p>
                   </div>
                   <span className="text-[10px] font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] px-2.5 py-1 rounded border border-[var(--border-color)] flex items-center gap-1 font-bold">
-                    <Calendar className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                    <Calendar className="w-3 h-3 text-amber-500" />
                     {exp.period}
                   </span>
                 </div>
@@ -232,26 +278,26 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </section>
+        </SpotlightCard>
 
         {/* Education */}
-        <section className="border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 space-y-4 shadow-xl transition-colors duration-300">
+        <SpotlightCard className="space-y-4" spotlightColor="rgba(99, 102, 241, 0.15)">
           <div className="flex items-center space-x-2 border-b border-[var(--border-color)] pb-3">
-            <GraduationCap className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+            <GraduationCap className="w-4 h-4 text-indigo-500" />
             <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider">
               {locale === 'vi' ? 'Học Vấn & Bằng Cấp' : 'Education & Degree'}
             </h4>
           </div>
           <div className="space-y-4">
             {education.map((edu, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
+              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2 hover:border-indigo-500/30 transition">
                 <div className="flex justify-between items-start">
                   <div>
                     <h5 className="font-bold text-[var(--text-color)] text-xs font-sans">{edu.degree}</h5>
-                    <p className="text-[11px] text-sky-600 dark:text-sky-400 font-mono">{edu.institution}</p>
+                    <p className="text-[11px] text-indigo-500 font-mono">{edu.institution}</p>
                   </div>
                   <span className="text-[10px] font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] px-2.5 py-1 rounded border border-[var(--border-color)] flex items-center gap-1 font-bold">
-                    <Calendar className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    <Calendar className="w-3 h-3 text-emerald-500" />
                     {edu.period}
                   </span>
                 </div>
@@ -259,9 +305,9 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </section>
+        </SpotlightCard>
       </div>
 
-    </div>
+    </motion.div>
   );
 }

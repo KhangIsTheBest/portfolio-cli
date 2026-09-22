@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Code2, ArrowRight, ExternalLink, GitBranch, Cpu, ShieldCheck, Filter } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Code2, ArrowRight, ExternalLink, GitBranch, Cpu, ShieldCheck, Filter, Sparkles } from 'lucide-react';
 import { apiService, formatImageUrl } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
@@ -50,11 +52,16 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="space-y-6 my-6 font-mono animate-fade-in select-text">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="space-y-6 my-6 font-mono select-text"
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-4">
         <div className="flex items-center space-x-2">
-          <Code2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <Code2 className="w-5 h-5 text-emerald-500" />
           <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('projects.title')}</h3>
         </div>
         <span className="text-xs font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] border border-[var(--border-color)] px-3 py-1 rounded-full font-bold">
@@ -66,7 +73,7 @@ export default function ProjectsPage() {
       {availableTechs.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-[11px]">
           <div className="flex items-center space-x-1.5 text-[var(--secondary-color)] pr-2 border-r border-[var(--border-color)]">
-            <Filter className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <Filter className="w-3.5 h-3.5 text-emerald-500" />
             <span className="uppercase text-[10px] tracking-wider font-bold">Filter:</span>
           </div>
 
@@ -110,19 +117,20 @@ export default function ProjectsPage() {
             const spanPattern = idx % 3 === 0 ? 'md:col-span-7' : idx % 3 === 1 ? 'md:col-span-5' : 'md:col-span-12';
             
             return (
-              <div
+              <SpotlightCard
                 key={project.id}
-                className={`${spanPattern} border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-emerald-500/40 transition duration-300 shadow-xl group`}
+                className={`${spanPattern} flex flex-col justify-between space-y-4 hover:border-emerald-500/40 group`}
+                spotlightColor="rgba(16, 185, 129, 0.15)"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                        <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
                           PROJ-{project.id}
                         </span>
                         {project.featured && (
-                          <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                          <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">
                             {t('projects.featuredLabel')}
                           </span>
                         )}
@@ -165,7 +173,7 @@ export default function ProjectsPage() {
                     <img
                       src={formatImageUrl(project.thumbnailUrl)}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
+                      className="w-full h-full object-cover group-hover:scale-103 transition duration-500"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
                       }}
@@ -174,9 +182,9 @@ export default function ProjectsPage() {
 
                   {/* Problem & Solution Card */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-                    <div className="p-3 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-1">
+                    <div className="p-3.5 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 space-y-1">
                       <div className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                        <Cpu className="w-3 h-3" />
+                        <Cpu className="w-3 h-3 text-amber-500" />
                         <span>{t('projects.problemTitle')}</span>
                       </div>
                       <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
@@ -184,9 +192,9 @@ export default function ProjectsPage() {
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-1">
+                    <div className="p-3.5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 space-y-1">
                       <div className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3" />
+                        <ShieldCheck className="w-3 h-3 text-emerald-500" />
                         <span>{t('projects.solutionTitle')}</span>
                       </div>
                       <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
@@ -206,7 +214,7 @@ export default function ProjectsPage() {
                     {project.technologies.map((t) => (
                       <span
                         key={t.id}
-                        className="px-2 py-0.5 rounded text-[10px] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-semibold"
+                        className="px-2.5 py-0.5 rounded-lg text-[10px] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-semibold font-mono"
                       >
                         {t.name}
                       </span>
@@ -221,11 +229,11 @@ export default function ProjectsPage() {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-              </div>
+              </SpotlightCard>
             );
           })}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

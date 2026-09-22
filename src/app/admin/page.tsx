@@ -1,9 +1,23 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, FolderGit2, Cpu, BookOpen, Mail, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { 
+  LayoutDashboard, 
+  FolderGit2, 
+  Cpu, 
+  BookOpen, 
+  Mail, 
+  ShieldCheck, 
+  ArrowUpRight, 
+  FileText, 
+  Settings,
+  Sparkles
+} from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function AdminDashboardPage() {
   const { locale } = useLanguage();
@@ -48,12 +62,12 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px] text-cyan-custom space-y-4">
-        <div className="relative w-8 h-8">
-          <div className="absolute inset-0 rounded-full border-4 border-cyan-custom/20 animate-pulse" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-custom animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-500 space-y-4 font-mono">
+        <div className="relative w-10 h-10">
+          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
+          <div className="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
         </div>
-        <p className="font-mono text-xs tracking-wider animate-pulse">
+        <p className="font-mono text-xs tracking-wider animate-pulse font-semibold">
           {locale === 'vi' ? 'ĐANG ĐỌC SỐ LIỆU THỐNG KÊ...' : 'COLLECTING SUMMARY STATS...'}
         </p>
       </div>
@@ -61,56 +75,155 @@ export default function AdminDashboardPage() {
   }
 
   const statCards = [
-    { label: locale === 'vi' ? 'Dự án' : 'Projects', value: stats.projectsCount, icon: FolderGit2, color: 'text-cyan-custom border-cyan-custom/30' },
-    { label: locale === 'vi' ? 'Công nghệ' : 'Skills / Techs', value: stats.skillsCount, icon: Cpu, color: 'text-purple-custom border-purple-custom/30' },
-    { label: locale === 'vi' ? 'Bài viết Blog' : 'Blog Articles', value: stats.blogsCount, icon: BookOpen, color: 'text-sky-400 border-sky-400/30' },
-    { label: locale === 'vi' ? 'Hòm thư' : 'Inbox Inquiries', value: stats.contactsCount, icon: Mail, color: 'text-pink-400 border-pink-400/30' }
+    { 
+      label: locale === 'vi' ? 'Dự án' : 'Projects', 
+      value: stats.projectsCount, 
+      icon: FolderGit2, 
+      href: '/admin/projects',
+      color: 'text-emerald-500'
+    },
+    { 
+      label: locale === 'vi' ? 'Kỹ năng & Công nghệ' : 'Skills & Techs', 
+      value: stats.skillsCount, 
+      icon: Cpu, 
+      href: '/admin/skills',
+      color: 'text-sky-500'
+    },
+    { 
+      label: locale === 'vi' ? 'Bài viết Blog' : 'Blog Articles', 
+      value: stats.blogsCount, 
+      icon: BookOpen, 
+      href: '/admin/blog',
+      color: 'text-purple-500'
+    },
+    { 
+      label: locale === 'vi' ? 'Hộp thư' : 'Inbox Inquiries', 
+      value: stats.contactsCount, 
+      icon: Mail, 
+      href: '/admin/contacts',
+      color: 'text-amber-500'
+    }
+  ];
+
+  const quickActions = [
+    {
+      title: locale === 'vi' ? 'Quản lý CV (VI & EN)' : 'Manage CVs (VI & EN)',
+      desc: locale === 'vi' ? 'Cập nhật và xem trước 2 phiên bản CV' : 'Upload and preview bilingual CV documents',
+      href: '/admin/profile',
+      icon: FileText
+    },
+    {
+      title: locale === 'vi' ? 'Thêm Dự Án Mới' : 'Add New Project',
+      desc: locale === 'vi' ? 'Đăng sản phẩm với hình ảnh, tags và video' : 'Publish projects with rich media & architecture links',
+      href: '/admin/projects',
+      icon: FolderGit2
+    },
+    {
+      title: locale === 'vi' ? 'Soạn Bài Viết' : 'Publish Blog Post',
+      desc: locale === 'vi' ? 'Viết bài Markdown với code highlighting' : 'Draft technical markdown articles',
+      href: '/admin/blog',
+      icon: BookOpen
+    }
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in font-mono">
+    <div className="space-y-8 animate-fade-in font-mono select-text">
       {/* Header title */}
-      <div className="flex items-center space-x-2 border-b border-border-custom/50 pb-3">
-        <LayoutDashboard className="w-5 h-5 text-cyan-custom" />
-        <h3 className="text-base font-bold text-text">
-          {locale === 'vi' ? 'Tổng quan hệ thống' : 'Dashboard Overview'}
-        </h3>
+      <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-3">
+        <div className="flex items-center space-x-2">
+          <LayoutDashboard className="w-5 h-5 text-emerald-500" />
+          <h2 className="text-base font-bold text-[var(--text-color)]">
+            {locale === 'vi' ? 'Tổng quan hệ thống' : 'Dashboard Overview'}
+          </h2>
+        </div>
+        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
+          LIVE CMS
+        </span>
       </div>
 
-      {/* Welcome Card */}
-      <div className="p-6 border border-border-custom bg-slate-900/40 rounded-2xl flex flex-col sm:flex-row items-center gap-4 relative overflow-hidden">
-        <div className="w-12 h-12 rounded-xl bg-cyan-custom/10 border border-cyan-custom/20 flex items-center justify-center text-cyan-custom shrink-0">
-          <ShieldCheck className="w-6 h-6" />
+      {/* Welcome Hero Spotlight Card */}
+      <SpotlightCard className="p-6 sm:p-8" spotlightColor="rgba(16, 185, 129, 0.12)">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0 shadow-glow">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div className="space-y-1.5 flex-1">
+            <h3 className="text-base font-bold text-[var(--text-color)] flex items-center gap-2">
+              <span>{locale === 'vi' ? 'Xin chào, Quản trị viên!' : 'Welcome back, Administrator!'}</span>
+              <Sparkles className="w-4 h-4 text-emerald-500" />
+            </h3>
+            <p className="text-xs text-[var(--secondary-color)] font-sans leading-relaxed">
+              {locale === 'vi' 
+                ? 'Tất cả các dịch vụ backend Spring Boot và cơ sở dữ liệu PostgreSQL đang hoạt động ổn định. Bạn có thể sử dụng các liên kết nhanh bên dưới để quản trị dữ liệu.' 
+                : 'All backend microservices and PostgreSQL database connections are verified healthy. Use the control cards below to manage your engineering portfolio.'}
+            </p>
+          </div>
         </div>
-        <div className="space-y-1 text-center sm:text-left">
-          <h4 className="text-sm font-bold text-text">
-            {locale === 'vi' ? 'Chào mừng bạn đã trở lại, Quản trị viên!' : 'Welcome back, Administrator!'}
-          </h4>
-          <p className="text-xs text-secondary font-sans leading-relaxed">
-            {locale === 'vi' 
-              ? 'Tất cả các kết nối dữ liệu tới Spring Boot API server đều đang hoạt động tốt. Bạn có thể sử dụng các thanh điều hướng bên trái để cập nhật nội dung hồ sơ, kỹ năng, các sản phẩm dự án và phản hồi của người dùng.' 
-              : 'All API routes to the Spring Boot backend server are verified active. Use the left navigation sidebar to update your portfolio sections, manage projects, and view visitor inbox messages.'}
-          </p>
-        </div>
-      </div>
+      </SpotlightCard>
 
       {/* Statistics Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((card, idx) => {
           const Icon = card.icon;
           return (
-            <div 
-              key={idx} 
-              className={`p-5 rounded-2xl border bg-slate-950/20 flex flex-col justify-between space-y-4 hover:bg-slate-900/10 transition duration-300 ${card.color}`}
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
             >
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] uppercase font-bold text-secondary">{card.label}</span>
-                <Icon className="w-4 h-4" />
-              </div>
-              <span className="text-3xl font-black">{card.value}</span>
-            </div>
+              <Link href={card.href} className="block group">
+                <SpotlightCard
+                  className="p-5 h-full flex flex-col justify-between space-y-3 group-hover:border-emerald-500/40 transition-colors"
+                  spotlightColor="rgba(16, 185, 129, 0.12)"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] uppercase font-bold text-[var(--secondary-color)]">
+                      {card.label}
+                    </span>
+                    <Icon className={`w-4 h-4 ${card.color}`} />
+                  </div>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-3xl font-black text-[var(--text-color)]">{card.value}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[var(--secondary-color)] group-hover:text-emerald-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </div>
+                </SpotlightCard>
+              </Link>
+            </motion.div>
           );
         })}
+      </div>
+
+      {/* Quick Action Hub */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--secondary-color)]">
+          {locale === 'vi' ? 'Thao tác nhanh' : 'Quick Actions'}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {quickActions.map((action, idx) => {
+            const Icon = action.icon;
+            return (
+              <Link key={idx} href={action.href} className="block group">
+                <SpotlightCard 
+                  className="p-5 h-full space-y-2 group-hover:border-emerald-500/40 transition-colors"
+                  spotlightColor="rgba(16, 185, 129, 0.12)"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <h4 className="text-xs font-bold text-[var(--text-color)] group-hover:text-emerald-500 transition-colors">
+                      {action.title}
+                    </h4>
+                  </div>
+                  <p className="text-[11px] text-[var(--secondary-color)] font-sans leading-relaxed">
+                    {action.desc}
+                  </p>
+                </SpotlightCard>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

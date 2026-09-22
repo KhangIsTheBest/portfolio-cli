@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { BookOpen, Calendar, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { BookOpen, Calendar, ChevronRight, Clock, Sparkles } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Blog } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function BlogPage() {
   const { locale, t } = useLanguage();
@@ -31,9 +33,12 @@ export default function BlogPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-        <p className="font-mono text-xs tracking-wider animate-pulse font-bold">
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-emerald-500 font-mono space-y-4">
+        <div className="relative w-10 h-10">
+          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
+          <div className="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+        </div>
+        <p className="font-mono text-xs tracking-wider animate-pulse font-semibold">
           {locale === 'vi' ? 'ĐANG TẢI DANH SÁCH BÀI VIẾT...' : 'SYNCHRONIZING ARTICLES...'}
         </p>
       </div>
@@ -41,47 +46,105 @@ export default function BlogPage() {
   }
 
   return (
-    <section className="space-y-6 my-6 font-mono animate-fade-in select-text">
-      <div className="flex items-center space-x-2 border-b border-[var(--border-color)] pb-3">
-        <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-        <h3 className="text-lg font-bold text-[var(--text-color)]">{t('blog.title')}</h3>
-      </div>
-
-      {blogs.length === 0 ? (
-        <div className="text-center py-12 border border-[var(--border-color)] bg-[var(--card-bg)] rounded-2xl font-mono text-xs text-[var(--secondary-color)]">
-          {t('blog.noArticles')}
+    <div className="space-y-10 my-6 font-mono select-text">
+      {/* Header section */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="space-y-3"
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 text-xs font-mono">
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>{locale === 'vi' ? 'KHO TRI THỨC KỸ THUẬT' : 'ENGINEERING LOGS'}</span>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {blogs.map((blog) => {
-            const dateStr = new Date(blog.createdAt).toLocaleDateString();
-            return (
-              <Link
-                key={blog.id}
-                href={`/blog/${blog.slug}`}
-                className="group flex items-center justify-between p-4 border border-[var(--border-color)] bg-[var(--card-bg)] rounded-2xl cursor-pointer hover:border-emerald-500/50 transition duration-300 shadow-md"
-              >
-                <div className="space-y-1 pr-4">
-                  <h4 className="text-xs font-bold text-[var(--text-color)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-1">
-                    {blog.title}
-                  </h4>
-                  <p className="text-[11px] text-[var(--secondary-color)] font-sans line-clamp-1">
-                    {blog.shortDescription}
-                  </p>
-                </div>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[var(--text-color)]">
+          {t('blog.title')}
+        </h1>
+        <p className="text-xs sm:text-sm text-[var(--secondary-color)] max-w-2xl font-sans leading-relaxed">
+          {locale === 'vi'
+            ? 'Chia sẻ kiến thức về kiến trúc phân tán, tối ưu hóa hệ thống Spring Boot, thiết kế database và kinh nghiệm thực chiến trong phát triển phần mềm.'
+            : 'Insights on distributed systems, Spring Boot microservices performance, database indexing, and real-world software engineering notes.'}
+        </p>
+      </motion.div>
 
-                <div className="flex items-center space-x-2 shrink-0 font-mono text-[9px] text-[var(--secondary-color)] font-bold">
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>{dateStr}</span>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </Link>
+      {/* Blog Cards Grid */}
+      {blogs.length === 0 ? (
+        <SpotlightCard className="p-12 text-center space-y-4" spotlightColor="rgba(16, 185, 129, 0.12)">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-500">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold text-[var(--text-color)]">{t('blog.noArticles')}</h3>
+            <p className="text-xs text-[var(--secondary-color)] font-sans max-w-md mx-auto">
+              {locale === 'vi'
+                ? 'Các bài viết kỹ thuật chuyên sâu đang được chuẩn bị và sẽ sớm được xuất bản.'
+                : 'In-depth engineering notes are currently being drafted and will appear here soon.'}
+            </p>
+          </div>
+        </SpotlightCard>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {blogs.map((blog, idx) => {
+            const dateStr = new Date(blog.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            });
+            // Estimate reading time (~200 words/min)
+            const wordCount = (blog.content || '').split(/\s+/).length;
+            const readTime = Math.max(1, Math.ceil(wordCount / 200));
+
+            return (
+              <motion.div
+                key={blog.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+              >
+                <Link href={`/blog/${blog.slug}`} className="block h-full group">
+                  <SpotlightCard
+                    className="p-6 h-full flex flex-col justify-between space-y-5 transition-all duration-300 group-hover:border-emerald-500/40"
+                    spotlightColor="rgba(16, 185, 129, 0.14)"
+                  >
+                    <div className="space-y-3">
+                      {/* Meta top bar */}
+                      <div className="flex items-center justify-between text-[11px] text-[var(--secondary-color)]">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>{dateStr}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>{readTime} {locale === 'vi' ? 'phút đọc' : 'min read'}</span>
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-base sm:text-lg font-bold text-[var(--text-color)] group-hover:text-emerald-500 transition-colors duration-200 line-clamp-2">
+                        {blog.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-xs text-[var(--secondary-color)] font-sans line-clamp-3 leading-relaxed">
+                        {blog.shortDescription}
+                      </p>
+                    </div>
+
+                    {/* Footer bar */}
+                    <div className="pt-4 border-t border-[var(--border-color)]/60 flex items-center justify-between text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      <span className="flex items-center gap-1 group-hover:underline">
+                        {locale === 'vi' ? 'Đọc bài viết' : 'Read Article'}
+                      </span>
+                      <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </SpotlightCard>
+                </Link>
+              </motion.div>
             );
           })}
         </div>
       )}
-    </section>
+    </div>
   );
 }

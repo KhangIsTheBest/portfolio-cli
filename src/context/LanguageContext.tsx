@@ -8,6 +8,7 @@ type Locale = 'vi' | 'en';
 interface LanguageContextType {
   locale: Locale;
   setLanguage: (locale: Locale) => void;
+  toggleLanguage: () => void;
   t: (keyPath: string) => string;
 }
 
@@ -27,6 +28,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setLanguage = (newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem('portfolio-locale', newLocale);
+  };
+
+  const toggleLanguage = () => {
+    const next = locale === 'vi' ? 'en' : 'vi';
+    setLanguage(next);
   };
 
   // Translation helper function
@@ -55,7 +61,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   return (
-    <LanguageContext.Provider value={{ locale, setLanguage, t }}>
+    <LanguageContext.Provider value={{ locale, setLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

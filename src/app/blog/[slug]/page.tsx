@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Calendar, User } from 'lucide-react';
+import { motion, useScroll, useSpring } from 'framer-motion';
+import { ArrowLeft, BookOpen, Calendar, Clock, Sparkles, User } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Blog } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -18,6 +20,14 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Reading progress
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -37,13 +47,13 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-cyan-custom space-y-4">
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-emerald-500 space-y-4 font-mono">
         <div className="relative w-12 h-12">
-          <div className="absolute inset-0 rounded-full border-4 border-cyan-custom/20 animate-pulse" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-custom animate-spin" />
+          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
+          <div className="w-12 h-12 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
         </div>
         <p className="font-mono text-xs tracking-wider animate-pulse font-bold">
-          {locale === 'vi' ? 'ĐANG TẢI NỘI DUNG BÀI VIẾT...' : 'LOADING ARTICLE FROM DATABASE...'}
+          {locale === 'vi' ? 'ĐANG TẢI NỘI DUNG BÀI VIẾT...' : 'LOADING ARTICLE CONTENT...'}
         </p>
       </div>
     );
@@ -55,7 +65,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
         <p className="text-sm font-bold">❌ {error || (locale === 'vi' ? 'Không tìm thấy bài viết' : 'Article not found')}</p>
         <Link
           href="/blog"
-          className="flex items-center space-x-1.5 px-4 py-2 border border-border-custom bg-slate-900 rounded-xl text-xs text-text hover:text-cyan-custom transition"
+          className="flex items-center space-x-2 px-4 py-2 border border-[var(--border-color)] bg-[var(--card-bg)] rounded-xl text-xs text-[var(--text-color)] hover:text-emerald-500 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>{locale === 'vi' ? 'Quay lại Blogs' : 'Back to Blogs'}</span>
@@ -64,50 +74,77 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
     );
   }
 
+  const wordCount = (blog.content || '').split(/\s+/).length;
+  const readTime = Math.max(1, Math.ceil(wordCount / 200));
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6 my-8 animate-fade-in">
-      {/* Header breadcrumb */}
-      <div className="flex items-center justify-between border-b border-border-custom/50 pb-3">
-        <Link
-          href="/blog"
-          className="flex items-center space-x-1.5 px-3 py-1.5 border border-border-custom/80 bg-slate-950/20 hover:bg-slate-800/40 rounded-xl text-xs text-secondary hover:text-cyan-custom transition"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>{locale === 'vi' ? 'Quay lại danh sách' : 'Back to Articles'}</span>
-        </Link>
-        <span className="text-[10px] text-secondary font-mono uppercase font-bold tracking-wider flex items-center gap-1">
-          <BookOpen className="w-3.5 h-3.5 text-cyan-custom" />
-          <span>{t('blog.articleViewer')}</span>
-        </span>
-      </div>
+    <>
+      {/* Top Reading Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-emerald-500 origin-left z-50 shadow-glow"
+        style={{ scaleX }}
+      />
 
-      {/* Main card panel */}
-      <div className="border border-border-custom glass-panel rounded-3xl p-8 space-y-6 relative overflow-hidden">
-        {/* Decorative corner accent */}
-        <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-purple-custom/10 blur-2xl -z-10 pointer-events-none" />
+      <div className="max-w-3xl mx-auto space-y-8 my-6 font-mono select-text">
+        {/* Breadcrumb Bar */}
+        <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-3">
+          <Link
+            href="/blog"
+            className="flex items-center gap-2 px-3 py-1.5 border border-[var(--border-color)] bg-[var(--card-bg)] hover:border-emerald-500/40 rounded-xl text-xs text-[var(--secondary-color)] hover:text-emerald-500 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>{locale === 'vi' ? 'Quay lại danh sách' : 'Back to Articles'}</span>
+          </Link>
+          <span className="text-[10px] text-[var(--secondary-color)] uppercase font-bold tracking-wider flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5 text-emerald-500" />
+            <span>{t('blog.articleViewer')}</span>
+          </span>
+        </div>
 
-        <div className="space-y-3">
-          <h2 className="text-2xl font-extrabold text-text leading-tight">{blog.title}</h2>
-          
-          <div className="flex flex-wrap gap-4 font-mono text-[10px] text-secondary">
-            <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
-              <User className="w-3.5 h-3.5 text-cyan-custom" />
-              <span>{t('blog.authorLabel')} {blog.createdBy?.fullName || (locale === 'vi' ? 'Tác giả' : 'Author')}</span>
-            </span>
-            <span className="flex items-center space-x-1 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-border-custom/50">
-              <Calendar className="w-3.5 h-3.5 text-purple-custom" />
-              <span>{t('blog.dateLabel')} {new Date(blog.createdAt).toLocaleDateString()}</span>
-            </span>
+        {/* Article Spotlight Card */}
+        <SpotlightCard className="p-6 sm:p-10 space-y-8" spotlightColor="rgba(16, 185, 129, 0.12)">
+          {/* Article Header */}
+          <div className="space-y-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--text-color)] leading-tight tracking-tight">
+              {blog.title}
+            </h1>
+
+            {/* Metadata Pills */}
+            <div className="flex flex-wrap gap-2.5 font-mono text-[11px] text-[var(--secondary-color)] pt-1">
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+                <User className="w-3.5 h-3.5 text-emerald-500" />
+                <span>{blog.createdBy?.fullName || (locale === 'vi' ? 'Tác giả' : 'Author')}</span>
+              </span>
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+                <Calendar className="w-3.5 h-3.5 text-emerald-500" />
+                <span>{new Date(blog.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}</span>
+              </span>
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+                <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                <span>{readTime} {locale === 'vi' ? 'phút đọc' : 'min read'}</span>
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Content body with Markdown support */}
-        <div className="border-t border-border-custom/50 pt-6 text-sm font-sans leading-relaxed text-secondary select-text markdown-body">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {blog.content}
-          </ReactMarkdown>
-        </div>
+          {/* Short description callout */}
+          {blog.shortDescription && (
+            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-xs text-[var(--text-color)] font-sans italic leading-relaxed">
+              &ldquo;{blog.shortDescription}&rdquo;
+            </div>
+          )}
+
+          {/* Markdown Content */}
+          <div className="border-t border-[var(--border-color)]/60 pt-6 text-sm font-sans leading-relaxed text-[var(--secondary-color)] select-text prose dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {blog.content}
+            </ReactMarkdown>
+          </div>
+        </SpotlightCard>
       </div>
-    </div>
+    </>
   );
 }

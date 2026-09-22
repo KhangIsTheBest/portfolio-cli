@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Cpu, Code2, Database, Server, Terminal, Cloud, FileCode, Layers, Monitor, Radio, ShieldCheck, GitBranch } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Cpu, Code2, Database, Server, Terminal, Cloud, FileCode, Layers, Monitor, Radio, ShieldCheck, GitBranch, Sparkles } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { Technology } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 const PRESET_ICONS = [
   { value: 'Java', icon: FileCode },
@@ -68,25 +70,30 @@ export default function SkillsPage() {
   }
 
   return (
-    <div className="w-full my-6 font-mono animate-fade-in select-text space-y-8">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="w-full my-6 font-mono select-text space-y-8"
+    >
       
       {/* Header section */}
-      <section className="w-full border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl transition-colors duration-300">
+      <SpotlightCard className="w-full space-y-6" spotlightColor="rgba(16, 185, 129, 0.18)">
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <Cpu className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <Cpu className="w-5 h-5 text-emerald-500" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('skills.title')}</h3>
           </div>
-          <span className="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded font-bold uppercase tracking-wider font-mono">
-            DATABASE SYNCHRONIZED
+          <span className="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider font-mono">
+            {technologies.length} REGISTERED NODES
           </span>
         </div>
 
         {/* System Architecture Domain Overview Cards with Rich Colors */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans text-xs">
           
-          <div className="p-4.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-[var(--terminal-header-bg)] to-teal-500/10 border border-emerald-500/25 space-y-2">
-            <div className="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--terminal-header-bg)] border border-emerald-500/25 space-y-2">
+            <div className="flex items-center space-x-2 text-emerald-500 font-mono font-bold">
               <Server className="w-4 h-4" />
               <span>{t('skills.backend')}</span>
             </div>
@@ -95,8 +102,8 @@ export default function SkillsPage() {
             </p>
           </div>
 
-          <div className="p-4.5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-[var(--terminal-header-bg)] to-indigo-500/10 border border-sky-500/25 space-y-2">
-            <div className="flex items-center space-x-2 text-sky-600 dark:text-sky-400 font-mono font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--terminal-header-bg)] border border-sky-500/25 space-y-2">
+            <div className="flex items-center space-x-2 text-sky-500 font-mono font-bold">
               <Code2 className="w-4 h-4" />
               <span>{t('skills.frontend')}</span>
             </div>
@@ -115,7 +122,7 @@ export default function SkillsPage() {
         ) : (
           <div className="space-y-4 pt-2">
             <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider flex items-center gap-1.5 font-mono">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span>REGISTERED TECH STACK (DATABASE REAL DATA)</span>
             </h4>
 
@@ -140,7 +147,7 @@ export default function SkillsPage() {
             </div>
           </div>
         )}
-      </section>
-    </div>
+      </SpotlightCard>
+    </motion.div>
   );
 }

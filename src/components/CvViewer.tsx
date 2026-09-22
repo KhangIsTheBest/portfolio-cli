@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import { FileText, Download, Maximize2, ExternalLink, X, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
+import { motion } from 'framer-motion';
+import { SpotlightCard } from './SpotlightCard';
+
 interface CvViewerProps {
   cvViUrl?: string;
   cvEnUrl?: string;
@@ -18,7 +21,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
   const downloadFileName = activeTab === 'vi' ? 'PhanDuyKhang_CV_VI.pdf' : 'PhanDuyKhang_CV_EN.pdf';
 
   return (
-    <section className="border border-[var(--border-color)] bg-[var(--card-bg)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl transition-colors duration-300">
+    <SpotlightCard className="space-y-6" spotlightColor="rgba(16, 185, 129, 0.15)">
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-5">
         <div className="space-y-1">
@@ -163,6 +166,6 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
           </div>
         </div>
       )}
-    </section>
+    </SpotlightCard>
   );
 };
