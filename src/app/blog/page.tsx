@@ -36,7 +36,7 @@ export default function BlogPage() {
       <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--primary-color)] font-mono space-y-4">
         <div className="relative w-10 h-10">
           <div className="absolute inset-0 rounded-full border-2 border-[var(--primary-border)] animate-ping" />
-          <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-[var(--primary-color)] rounded-full animate-spin" />
         </div>
         <p className="font-mono text-xs tracking-wider animate-pulse font-semibold">
           {locale === 'vi' ? 'ĐANG TẢI DANH SÁCH BÀI VIẾT...' : 'SYNCHRONIZING ARTICLES...'}

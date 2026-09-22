@@ -63,7 +63,7 @@ export default function SkillsPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[350px] text-[var(--primary-color)] font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-[var(--primary-color)] rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">QUERYING STACK MATRIX DATABASE...</p>
       </div>
     );

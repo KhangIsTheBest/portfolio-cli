@@ -46,7 +46,7 @@ export default function ArchitecturePage() {
               href={`${backendUrl}/swagger-ui.html`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs hover:from-emerald-500 hover:to-teal-500 transition shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer"
+              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs hover:from-emerald-500 hover:to-teal-500 transition shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer"
             >
               <FileCode className="w-4 h-4" />
               <span>Swagger API Docs (Live)</span>

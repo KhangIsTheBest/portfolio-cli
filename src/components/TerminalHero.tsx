@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal as TerminalIcon, RefreshCw, CornerDownLeft } from 'lucide-react';
@@ -154,14 +154,14 @@ export const TerminalHero: React.FC = () => {
   };
 
   return (
-    <div className="w-full rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl overflow-hidden font-mono select-text flex flex-col h-full min-h-[380px] transition-colors duration-300">
+    <div className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl overflow-hidden font-mono select-text flex flex-col h-full min-h-[380px] transition-colors duration-300">
       {/* Header bar */}
       <div className="px-4 py-3 bg-[var(--terminal-header-bg)] border-b border-[var(--border-color)] flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-2">
           <div className="flex space-x-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--primary-bg)]0 inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500/80 inline-block" />
           </div>
           <div className="flex items-center space-x-2">
             <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />

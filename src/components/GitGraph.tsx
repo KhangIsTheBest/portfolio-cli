@@ -27,10 +27,10 @@ export const GitGraph: React.FC = () => {
 
   const getLevelBg = (level: number) => {
     switch (level) {
-      case 4: return 'bg-emerald-400 border-emerald-300';
-      case 3: return 'bg-[var(--primary-bg)]0 border-emerald-400/50';
+      case 4: return 'bg-indigo-500 border-[var(--primary-color)]';
+      case 3: return 'bg-indigo-600/40 border-[var(--primary-color)]/50';
       case 2: return 'bg-indigo-600/50 border-[var(--primary-border)]';
-      case 1: return 'bg-emerald-800/30 border-emerald-700/20';
+      case 1: return 'bg-indigo-950/40 border-indigo-800/30';
       default: return 'bg-white/[0.02] border-white/[0.05]';
     }
   };
@@ -76,10 +76,10 @@ export const GitGraph: React.FC = () => {
           <span>Less</span>
           <div className="flex space-x-1">
             <span className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.02] border border-white/[0.05]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-800/30 border border-emerald-700/20" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-indigo-950/40 border border-indigo-800/30" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-indigo-600/50 border border-[var(--primary-border)]" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[var(--primary-bg)]0 border border-emerald-400/50" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-400 border border-emerald-300" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-indigo-600/40 border border-[var(--primary-color)]/50" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-indigo-500 border border-[var(--primary-color)]" />
           </div>
           <span>More</span>
         </div>

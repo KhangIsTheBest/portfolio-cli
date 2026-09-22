@@ -98,7 +98,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[450px] text-[var(--primary-color)] font-mono space-y-4">
-        <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-[var(--primary-color)] rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">INITIALIZING SWE WORKSTATION...</p>
       </div>
     );
@@ -122,7 +122,7 @@ export default function Home() {
           <div className="space-y-6">
             {/* Header Status Chip */}
             <div className="flex items-center justify-between">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-emerald-500/15 via-sky-500/15 to-indigo-500/15 border border-[var(--primary-border)] text-[var(--primary-color)] shadow-sm">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-violet-500/15 border border-[var(--primary-border)] text-[var(--primary-color)] shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span>{t('home.welcome')}</span>
               </div>
@@ -183,7 +183,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-[var(--border-color)] mt-6">
             <Link
               href="/contact"
-              className="flex-1 text-center px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 transition duration-200 shadow-md active:scale-95 cursor-pointer"
+              className="flex-1 text-center px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 transition duration-200 shadow-md active:scale-95 cursor-pointer"
             >
               {t('home.contactBtn')}
             </Link>
@@ -440,7 +440,7 @@ export default function Home() {
       {/* ========================================================================= */}
       {/* SECTION 5: QUICK CONTACT INVITATION */}
       {/* ========================================================================= */}
-      <SpotlightCard className="bg-gradient-to-r from-emerald-500/10 via-[var(--card-bg)] to-indigo-500/10 flex flex-col sm:flex-row items-center justify-between gap-6" spotlightColor="rgba(16, 185, 129, 0.25)">
+      <SpotlightCard className="bg-gradient-to-r from-indigo-500/10 via-[var(--card-bg)] to-purple-500/10 flex flex-col sm:flex-row items-center justify-between gap-6" spotlightColor="rgba(99, 102, 241, 0.25)">
         <div className="space-y-2 text-center sm:text-left">
           <h3 className="text-lg font-bold text-[var(--text-color)] font-sans">
             {locale === 'vi' ? 'Sẵn sàng hợp tác & phát triển hệ thống?' : 'Ready to build high-performance software?'}
@@ -454,7 +454,7 @@ export default function Home() {
 
         <Link
           href="/contact"
-          className="px-6 py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 transition duration-200 shadow-md shrink-0 cursor-pointer active:scale-95"
+          className="px-6 py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 transition duration-200 shadow-md shrink-0 cursor-pointer active:scale-95"
         >
           {t('home.contactBtn')}
         </Link>

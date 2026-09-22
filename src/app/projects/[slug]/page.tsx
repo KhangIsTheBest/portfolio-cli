@@ -57,7 +57,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--primary-color)] font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-[var(--primary-color)] rounded-full animate-spin" />
         <p className="font-mono text-xs tracking-wider animate-pulse font-bold">
           {locale === 'vi' ? 'ĐANG TÌM KIẾM CHI TIẾT DỰ ÁN...' : 'RETRIEVING FILES FROM ARCHIVE...'}
         </p>
@@ -216,7 +216,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs transition shadow-md active:scale-95"
+                className="flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs transition shadow-md active:scale-95"
               >
                 <ExternalLink className="w-4 h-4" />
                 <span>{t('projects.demoLabel')}</span>

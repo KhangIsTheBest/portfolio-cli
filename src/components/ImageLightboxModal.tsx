@@ -87,7 +87,7 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
         <button
           type="button"
           onClick={handlePrev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full border border-white/20 bg-black/60 text-white hover:bg-indigo-500 hover:border-emerald-400 hover:scale-110 active:scale-95 transition cursor-pointer shadow-2xl backdrop-blur-md group"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full border border-white/20 bg-black/60 text-white hover:bg-indigo-500 hover:border-[var(--primary-color)] hover:scale-110 active:scale-95 transition cursor-pointer shadow-2xl backdrop-blur-md group"
           title={locale === 'vi' ? 'Ảnh trước (phím Mũi tên trái)' : 'Previous Image (Left Arrow)'}
         >
           <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
@@ -114,7 +114,7 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full border border-white/20 bg-black/60 text-white hover:bg-indigo-500 hover:border-emerald-400 hover:scale-110 active:scale-95 transition cursor-pointer shadow-2xl backdrop-blur-md group"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full border border-white/20 bg-black/60 text-white hover:bg-indigo-500 hover:border-[var(--primary-color)] hover:scale-110 active:scale-95 transition cursor-pointer shadow-2xl backdrop-blur-md group"
           title={locale === 'vi' ? 'Ảnh tiếp theo (phím Mũi tên phải)' : 'Next Image (Right Arrow)'}
         >
           <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
@@ -134,7 +134,7 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
               onClick={() => onSelectIndex(idx)}
               className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0 transition cursor-pointer ${
                 idx === currentIndex
-                  ? 'border-emerald-400 scale-105 shadow-glow-sm'
+                  ? 'border-[var(--primary-color)] scale-105 shadow-glow-sm'
                   : 'border-transparent opacity-60 hover:opacity-100 hover:scale-102'
               }`}
             >

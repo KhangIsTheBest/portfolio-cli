@@ -50,7 +50,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
       <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--primary-color)] space-y-4 font-mono">
         <div className="relative w-12 h-12">
           <div className="absolute inset-0 rounded-full border-2 border-[var(--primary-border)] animate-ping" />
-          <div className="w-12 h-12 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
+          <div className="w-12 h-12 border-2 border-[var(--primary-border)] border-t-[var(--primary-color)] rounded-full animate-spin" />
         </div>
         <p className="font-mono text-xs tracking-wider animate-pulse font-bold">
           {locale === 'vi' ? 'ĐANG TẢI NỘI DUNG BÀI VIẾT...' : 'LOADING ARTICLE CONTENT...'}
