@@ -167,7 +167,7 @@ export default function YouTubePage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono transition shadow-lg shadow-rose-600/30"
             >
               <Youtube className="w-4 h-4" />
-              <span>{locale === 'vi' ? 'Đăng ký Kênh' : 'Subscribe on YouTube'}</span>
+              <span>{locale === 'vi' ? 'Xem Kênh' : 'Visit Channel'}</span>
               <ExternalLink className="w-3.5 h-3.5 opacity-80" />
             </a>
           </div>
@@ -179,10 +179,10 @@ export default function YouTubePage() {
         <div className="mb-10 space-y-4">
           <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-black shadow-2xl">
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
+              src={`https://www.youtube-nocookie.com/embed/${selectedVideo.videoId}?autoplay=0&rel=0`}
               title={selectedVideo.title}
               className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
           </div>
