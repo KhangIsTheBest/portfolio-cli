@@ -5,6 +5,7 @@ export const translations = {
       about: 'Giới thiệu',
       skills: 'Kỹ năng',
       projects: 'Dự án',
+      architecture: 'Kiến trúc Hệ thống',
       blog: 'Bài viết',
       contact: 'Liên hệ'
     },
@@ -14,6 +15,16 @@ export const translations = {
       latency: '24ms',
       commitHash: 'git-rev: a7f8c9b',
       uptime: '99.9% UPTIME'
+    },
+    architecture: {
+      title: 'Kiến trúc Hệ thống & Thiết kế Kỹ thuật',
+      subtitle: 'Phân rã kiến trúc micro/monolith đa tầng, cơ chế Caching Redis, Bảo mật JWT + OAuth2, Database Migration Flyway và Hạ tầng Container hóa.',
+      swaggerBtn: 'Trải nghiệm Live Swagger UI',
+      actuatorBtn: 'Actuator Health Metrics',
+      c4Title: 'Sơ đồ Phân tầng Hệ thống (C4 Component Model)',
+      securityTitle: 'Luồng Xác thực & Bảo mật (Security Pipeline)',
+      cachingTitle: 'Chiến lược Caching & Rate Limiting Phân tán',
+      dbTitle: 'Quản trị Cơ sở Dữ liệu & Flyway Migration'
     },
     home: {
       welcome: 'Kỹ sư Phần mềm / Backend & Full-Stack',
@@ -90,6 +101,7 @@ export const translations = {
       about: 'Engineering Bio',
       skills: 'Skills & Architecture',
       projects: 'Projects',
+      architecture: 'System Architecture',
       blog: 'Articles',
       contact: 'Connect'
     },
@@ -99,6 +111,16 @@ export const translations = {
       latency: '24ms',
       commitHash: 'git-rev: a7f8c9b',
       uptime: '99.9% UPTIME'
+    },
+    architecture: {
+      title: 'System Architecture & Engineering Design',
+      subtitle: 'Multi-layer system decomposition, Redis Caching, JWT + OAuth2 Security pipeline, Flyway Database Migrations, and Containerized Infrastructure.',
+      swaggerBtn: 'Explore Live Swagger UI',
+      actuatorBtn: 'Actuator Health Metrics',
+      c4Title: 'System Layer Decomposition (C4 Component Model)',
+      securityTitle: 'Security & Auth Pipeline',
+      cachingTitle: 'Distributed Caching & Rate Limiting Strategy',
+      dbTitle: 'Database Lifecycle & Flyway Migration'
     },
     home: {
       welcome: 'Software Engineer / Backend & Full-Stack',
