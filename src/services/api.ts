@@ -8,6 +8,7 @@ import {
   ContactRequest, 
   ContactResponse 
 } from '@/types';
+import { mockProfile, mockTechnologies, mockProjects, mockBlogs } from '@/data/mockData';
 
 const DEBUG = process.env.NODE_ENV !== 'production';
 
@@ -129,73 +130,107 @@ async function handleErrorResponse(response: Response, defaultMessage: string): 
 export const apiService = {
   // 1. PUBLIC PROFILE APIS
   async getProfile(): Promise<Profile> {
-    if (DEBUG) console.log('Fetching live profile...');
-    const response = await fetchWithTimeout('/api/v1/profile');
-    if (!response.ok) throw new Error('Failed to fetch profile');
-    const result: ApiResponse<Profile> = await response.json();
-    if (result.success && result.data) {
-      return result.data;
+    try {
+      if (DEBUG) console.log('Fetching live profile...');
+      const response = await fetchWithTimeout('/api/v1/profile');
+      if (response.ok) {
+        const result: ApiResponse<Profile> = await response.json();
+        if (result.success && result.data) {
+          return result.data;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn('Using fallback profile data:', e);
     }
-    throw new Error(result.message || 'Failed to retrieve profile data');
+    return mockProfile;
   },
 
   // 2. PUBLIC TECHNOLOGIES APIS
   async getTechnologies(): Promise<Technology[]> {
-    if (DEBUG) console.log('Fetching live technologies...');
-    const response = await fetchWithTimeout('/api/v1/technologies?size=100');
-    if (!response.ok) throw new Error('Failed to fetch technologies');
-    const result: ApiResponse<PagedResponse<Technology>> = await response.json();
-    if (result.success && result.data && result.data.content) {
-      return result.data.content;
+    try {
+      if (DEBUG) console.log('Fetching live technologies...');
+      const response = await fetchWithTimeout('/api/v1/technologies?size=100');
+      if (response.ok) {
+        const result: ApiResponse<PagedResponse<Technology>> = await response.json();
+        if (result.success && result.data && result.data.content && result.data.content.length > 0) {
+          return result.data.content;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn('Using fallback technologies data:', e);
     }
-    throw new Error(result.message || 'Failed to retrieve technologies');
+    return mockTechnologies;
   },
 
   // 3. PUBLIC PROJECTS APIS
   async getProjects(featuredOnly = false): Promise<Project[]> {
-    if (DEBUG) console.log(`Fetching live projects (featuredOnly: ${featuredOnly})...`);
-    const url = featuredOnly ? '/api/v1/projects/featured?size=100' : '/api/v1/projects?size=100';
-    const response = await fetchWithTimeout(url);
-    if (!response.ok) throw new Error('Failed to fetch projects');
-    const result: ApiResponse<PagedResponse<Project>> = await response.json();
-    if (result.success && result.data && result.data.content) {
-      return result.data.content;
+    try {
+      if (DEBUG) console.log(`Fetching live projects (featuredOnly: ${featuredOnly})...`);
+      const url = featuredOnly ? '/api/v1/projects/featured?size=100' : '/api/v1/projects?size=100';
+      const response = await fetchWithTimeout(url);
+      if (response.ok) {
+        const result: ApiResponse<PagedResponse<Project>> = await response.json();
+        if (result.success && result.data && result.data.content && result.data.content.length > 0) {
+          return result.data.content;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn('Using fallback projects catalog:', e);
     }
-    throw new Error(result.message || 'Failed to retrieve projects');
+    return featuredOnly ? mockProjects.filter(p => p.featured) : mockProjects;
   },
 
   async getProjectBySlug(slug: string): Promise<Project> {
-    if (DEBUG) console.log(`Fetching live project for slug: ${slug}...`);
-    const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
-    if (!response.ok) throw new Error(`Failed to fetch project for ${slug}`);
-    const result: ApiResponse<Project> = await response.json();
-    if (result.success && result.data) {
-      return result.data;
+    try {
+      if (DEBUG) console.log(`Fetching live project for slug: ${slug}...`);
+      const response = await fetchWithTimeout(`/api/v1/projects/slug/${slug}`);
+      if (response.ok) {
+        const result: ApiResponse<Project> = await response.json();
+        if (result.success && result.data) {
+          return result.data;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn(`Error fetching live project for slug ${slug}:`, e);
     }
-    throw new Error(result.message || 'Failed to retrieve project detail');
+    const foundMock = mockProjects.find(p => p.slug === slug);
+    if (foundMock) return foundMock;
+    throw new Error(`Failed to fetch project for ${slug}`);
   },
 
   // 4. PUBLIC BLOGS APIS
   async getBlogs(): Promise<Blog[]> {
-    if (DEBUG) console.log('Fetching live blogs...');
-    const response = await fetchWithTimeout('/api/v1/blogs?size=100');
-    if (!response.ok) throw new Error('Failed to fetch blogs');
-    const result: ApiResponse<PagedResponse<Blog>> = await response.json();
-    if (result.success && result.data && result.data.content) {
-      return result.data.content;
+    try {
+      if (DEBUG) console.log('Fetching live blogs...');
+      const response = await fetchWithTimeout('/api/v1/blogs?size=100');
+      if (response.ok) {
+        const result: ApiResponse<PagedResponse<Blog>> = await response.json();
+        if (result.success && result.data && result.data.content && result.data.content.length > 0) {
+          return result.data.content;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn('Using fallback blogs list:', e);
     }
-    throw new Error(result.message || 'Failed to retrieve blogs');
+    return mockBlogs;
   },
 
   async getBlogBySlug(slug: string): Promise<Blog> {
-    if (DEBUG) console.log(`Fetching live blog for slug: ${slug}...`);
-    const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
-    if (!response.ok) throw new Error(`Failed to fetch blog for ${slug}`);
-    const result: ApiResponse<Blog> = await response.json();
-    if (result.success && result.data) {
-      return result.data;
+    try {
+      if (DEBUG) console.log(`Fetching live blog for slug: ${slug}...`);
+      const response = await fetchWithTimeout(`/api/v1/blogs/slug/${slug}`);
+      if (response.ok) {
+        const result: ApiResponse<Blog> = await response.json();
+        if (result.success && result.data) {
+          return result.data;
+        }
+      }
+    } catch (e) {
+      if (DEBUG) console.warn(`Error fetching live blog for slug ${slug}:`, e);
     }
-    throw new Error(result.message || 'Failed to retrieve blog detail');
+    const foundBlog = mockBlogs.find(b => b.slug === slug);
+    if (foundBlog) return foundBlog;
+    throw new Error(`Failed to fetch blog for ${slug}`);
   },
 
   // 5. PUBLIC VISITORS CONTACT API
