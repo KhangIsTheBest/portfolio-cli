@@ -1,18 +1,17 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
   Server, Database, Shield, Zap, Layers, Cpu, CheckCircle2, 
-  ExternalLink, GitBranch, Lock, Activity, FileCode, Network, RefreshCw, Sparkles
+  ExternalLink, GitBranch, Lock, Network, RefreshCw, Sparkles
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function ArchitecturePage() {
   const { locale, t } = useLanguage();
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
   return (
     <motion.div 
@@ -39,31 +38,6 @@ export default function ArchitecturePage() {
               ? 'Phân tích chi tiết kiến trúc Decoupled Micro/Full-stack, cơ chế Caching Redis, Bảo mật JWT + OAuth2, Database Migration Flyway, Distributed Rate Limiting và hạ tầng Container hóa chuẩn Production.'
               : 'In-depth architectural breakdown of decoupled full-stack services, Redis caching, JWT + OAuth2 security, Flyway database migrations, distributed rate limiting, and containerized deployment.'}
           </p>
-
-          {/* Quick Action Badges */}
-          <div className="pt-4 flex flex-wrap items-center gap-3">
-            <a
-              href={`${backendUrl}/swagger-ui.html`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs hover:from-emerald-500 hover:to-teal-500 transition shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer"
-            >
-              <FileCode className="w-4 h-4" />
-              <span>Swagger API Docs (Live)</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-
-            <a
-              href={`${backendUrl}/actuator/health`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-bold text-xs hover:border-[var(--primary-border)] transition cursor-pointer"
-            >
-              <Activity className="w-4 h-4 text-[var(--primary-color)]" />
-              <span>Actuator Health Check</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
         </div>
       </SpotlightCard>
 
