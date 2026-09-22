@@ -730,9 +730,11 @@ export const apiService = {
     if (!response.ok) {
       await handleErrorResponse(response, 'Failed to fetch solution code');
     }
-    const result: ApiResponse<string> = await response.json();
+    const result: ApiResponse<any> = await response.json();
     if (result.success && result.data !== undefined) {
-      return result.data;
+      if (typeof result.data === 'string') return result.data;
+      if (result.data && typeof result.data.code === 'string') return result.data.code;
+      return JSON.stringify(result.data, null, 2);
     }
     throw new Error(result.message || 'Failed to retrieve code');
   },
@@ -773,7 +775,7 @@ export const apiService = {
   },
 
   async getYouTubeVideosAdmin(): Promise<YouTubeVideo[]> {
-    if (DEBUG) console.log('Fetching YouTube videos for Admin...');
+    if (DEBUG) console.log('Fetching YouTube videos for admin...');
     const response = await fetchWithTimeout('/api/v1/admin/youtube/videos', {
       headers: getAuthHeaders()
     });

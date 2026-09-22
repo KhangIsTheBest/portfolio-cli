@@ -11,6 +11,9 @@ export const mockProfile: Profile = {
   avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang",
   cvViUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   cvEnUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  leetcodeUsername: "psmNQXkg5O",
+  youtubeChannelId: "https://www.youtube.com/@dkp.13",
+  youtubeHandle: "@dkp.13",
   updatedAt: new Date().toISOString()
 };
 

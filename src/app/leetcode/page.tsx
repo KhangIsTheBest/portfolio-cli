@@ -261,16 +261,21 @@ export default function LeetCodePage() {
   const handleOpenSolution = async (sub: LeetCodeSubmission) => {
     setSelectedSubmission(sub);
     setCopied(false);
-    if (sub.code) {
+    if (sub.code && typeof sub.code === 'string') {
       setSolutionCode(sub.code);
       return;
     }
     try {
       setLoadingCode(true);
-      const code = await api.getLeetCodeSubmissionCode(sub.id);
-      setSolutionCode(code);
+      const codeResult = await api.getLeetCodeSubmissionCode(sub.id);
+      const formattedCode = typeof codeResult === 'string' ? codeResult : (codeResult ? JSON.stringify(codeResult, null, 2) : '');
+      if (formattedCode && formattedCode.trim()) {
+        setSolutionCode(formattedCode);
+      } else {
+        throw new Error('No code available');
+      }
     } catch (err) {
-      setSolutionCode(`// ${sub.title} (${sub.difficulty})\n// Language: ${sub.lang}\n// Status: ${sub.statusDisplay}\n\n// Giải pháp chưa được cấu hình phiên đăng nhập để trích xuất tự động.\n// Bạn có thể xem trực tiếp bài toán trên LeetCode:\n// https://leetcode.com/problems/${sub.titleSlug}/`);
+      setSolutionCode(`// Problem: ${sub.title} [${sub.difficulty}]\n// Submitted Language: ${sub.lang}\n// Status: ${sub.statusDisplay || 'Accepted'}\n\n// Ghi chú: Chi tiết mã nguồn submission ID ${sub.id} được bảo mật bởi chính sách phiên riêng tư của LeetCode.\n// Bạn có thể giải và xem trực tiếp bài toán tại:\n// https://leetcode.com/problems/${sub.titleSlug}/`);
     } finally {
       setLoadingCode(false);
     }
