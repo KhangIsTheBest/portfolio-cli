@@ -14,10 +14,12 @@ async function proxyRequest(
   const BACKEND_URL = getBackendUrl();
   const pathSegments = params.path || [];
 
-  // Determine backend path (support static /uploads/ and /api/v1/* routes)
-  const isUploadPath = pathSegments[0] === 'uploads' || pathSegments[0] === 'files';
-  const primaryBackendPath = isUploadPath ? '/' + pathSegments.join('/') : '/api/v1/' + pathSegments.join('/');
-  const fallbackBackendPath = isUploadPath ? '/api/v1/' + pathSegments.join('/') : '/' + pathSegments.join('/');
+  // Determine backend path:
+  // - /api/v1/uploads/* -> forwards to backend /uploads/* (static folder)
+  // - /api/v1/files/*, /api/v1/profile, etc. -> forwards to backend /api/v1/*
+  const isStaticUpload = pathSegments[0] === 'uploads';
+  const primaryBackendPath = isStaticUpload ? '/' + pathSegments.join('/') : '/api/v1/' + pathSegments.join('/');
+  const fallbackBackendPath = isStaticUpload ? '/api/v1/' + pathSegments.join('/') : '/' + pathSegments.join('/');
 
   const searchParams = request.nextUrl.searchParams.toString();
   const primaryBackendUrl = `${BACKEND_URL}${primaryBackendPath}${searchParams ? `?${searchParams}` : ''}`;
@@ -53,8 +55,8 @@ async function proxyRequest(
       body: body,
     });
 
-    // If 404 on upload path, try fallback path
-    if (backendResponse.status === 404 && isUploadPath) {
+    // If 404 on static upload path, try fallback path
+    if (backendResponse.status === 404 && isStaticUpload) {
       backendResponse = await fetch(fallbackBackendUrl, {
         method,
         headers: forwardHeaders,
