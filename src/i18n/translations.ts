@@ -5,7 +5,9 @@ export const translations = {
       about: 'Giới thiệu',
       skills: 'Kỹ năng',
       projects: 'Dự án',
-      architecture: 'Kiến trúc Hệ thống',
+      leetcode: 'LeetCode',
+      youtube: 'Videos',
+      architecture: 'Kiến trúc',
       blog: 'Bài viết',
       contact: 'Liên hệ'
     },
@@ -107,10 +109,12 @@ export const translations = {
   en: {
     nav: {
       home: 'Home',
-      about: 'Engineering Bio',
-      skills: 'Skills & Architecture',
+      about: 'About',
+      skills: 'Skills',
       projects: 'Projects',
-      architecture: 'System Architecture',
+      leetcode: 'LeetCode',
+      youtube: 'Videos',
+      architecture: 'Architecture',
       blog: 'Articles',
       contact: 'Connect'
     },

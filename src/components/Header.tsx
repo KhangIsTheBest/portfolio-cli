@@ -45,6 +45,8 @@ export const Header: React.FC = () => {
     { href: '/about', labelKey: 'nav.about',   shortVi: 'Giới thiệu', shortEn: 'About'      },
     { href: '/skills', labelKey: 'nav.skills', shortVi: 'Kỹ năng',    shortEn: 'Skills'     },
     { href: '/projects', labelKey: 'nav.projects', shortVi: 'Dự án',  shortEn: 'Projects'   },
+    { href: '/leetcode', labelKey: 'nav.leetcode', shortVi: 'LeetCode', shortEn: 'LeetCode' },
+    { href: '/youtube', labelKey: 'nav.youtube', shortVi: 'Videos',   shortEn: 'Videos'     },
     { href: '/architecture', labelKey: 'nav.architecture', shortVi: 'Kiến trúc', shortEn: 'Arch.' },
     { href: '/blog', labelKey: 'nav.blog',     shortVi: 'Blog',       shortEn: 'Blog'       },
     { href: '/contact', labelKey: 'nav.contact', shortVi: 'Liên hệ', shortEn: 'Contact'     },

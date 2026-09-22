@@ -6,8 +6,12 @@ import {
   Project, 
   Blog, 
   ContactRequest, 
-  ContactResponse 
+  ContactResponse,
+  LeetCodeStats,
+  LeetCodeSubmission,
+  YouTubeVideo
 } from '@/types';
+
 import { mockProfile, mockTechnologies, mockProjects, mockBlogs } from '@/data/mockData';
 
 const DEBUG = process.env.NODE_ENV !== 'production';
@@ -689,5 +693,161 @@ export const apiService = {
       return result.data.fileUrl;
     }
     throw new Error(result.message || 'File upload failed');
+  },
+
+  // =============================================================
+  // 13. LEETCODE APIS
+  // =============================================================
+  async getLeetCodeStats(): Promise<LeetCodeStats> {
+    if (DEBUG) console.log('Fetching LeetCode stats...');
+    const response = await fetchWithTimeout('/api/v1/leetcode/stats');
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch LeetCode statistics');
+    }
+    const result: ApiResponse<LeetCodeStats> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve LeetCode statistics');
+  },
+
+  async getLeetCodeSubmissions(limit = 20): Promise<LeetCodeSubmission[]> {
+    if (DEBUG) console.log(`Fetching LeetCode submissions (limit=${limit})...`);
+    const response = await fetchWithTimeout(`/api/v1/leetcode/submissions?limit=${limit}`);
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch LeetCode submissions');
+    }
+    const result: ApiResponse<LeetCodeSubmission[]> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve LeetCode submissions');
+  },
+
+  async getLeetCodeSubmissionCode(submissionId: string): Promise<string> {
+    if (DEBUG) console.log(`Fetching LeetCode submission code (${submissionId})...`);
+    const response = await fetchWithTimeout(`/api/v1/leetcode/submissions/${submissionId}/code`);
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch solution code');
+    }
+    const result: ApiResponse<string> = await response.json();
+    if (result.success && result.data !== undefined) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve code');
+  },
+
+  async syncLeetCode(): Promise<LeetCodeStats> {
+    if (DEBUG) console.log('Triggering LeetCode manual sync...');
+    const response = await fetchWithTimeout('/api/v1/admin/leetcode/sync', {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to sync LeetCode data');
+    }
+    const result: ApiResponse<LeetCodeStats> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to sync LeetCode stats');
+  },
+
+  // =============================================================
+  // 14. YOUTUBE VIDEO APIS
+  // =============================================================
+  async getYouTubeVideos(category?: string): Promise<YouTubeVideo[]> {
+    if (DEBUG) console.log(`Fetching YouTube videos (category: ${category || 'all'})...`);
+    const url = category && category !== 'ALL' 
+      ? `/api/v1/youtube/videos?category=${encodeURIComponent(category)}` 
+      : '/api/v1/youtube/videos';
+    const response = await fetchWithTimeout(url);
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch YouTube videos');
+    }
+    const result: ApiResponse<YouTubeVideo[]> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve YouTube videos');
+  },
+
+  async getYouTubeVideosAdmin(): Promise<YouTubeVideo[]> {
+    if (DEBUG) console.log('Fetching YouTube videos for Admin...');
+    const response = await fetchWithTimeout('/api/v1/admin/youtube/videos', {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to fetch YouTube videos for admin');
+    }
+    const result: ApiResponse<YouTubeVideo[]> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to retrieve YouTube videos');
+  },
+
+  async createYouTubeVideo(data: {
+    title: string;
+    youtubeUrl: string;
+    description?: string;
+    category?: string;
+    duration?: string;
+    displayOrder?: number;
+    featured?: boolean;
+    active?: boolean;
+  }): Promise<YouTubeVideo> {
+    if (DEBUG) console.log('Creating YouTube video...');
+    const response = await fetchWithTimeout('/api/v1/admin/youtube/videos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to create YouTube video');
+    }
+    const result: ApiResponse<YouTubeVideo> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to create YouTube video');
+  },
+
+  async updateYouTubeVideo(id: number, data: Partial<YouTubeVideo>): Promise<YouTubeVideo> {
+    if (DEBUG) console.log(`Updating YouTube video ${id}...`);
+    const response = await fetchWithTimeout(`/api/v1/admin/youtube/videos/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to update YouTube video');
+    }
+    const result: ApiResponse<YouTubeVideo> = await response.json();
+    if (result.success && result.data) {
+      return result.data;
+    }
+    throw new Error(result.message || 'Failed to update YouTube video');
+  },
+
+  async deleteYouTubeVideo(id: number): Promise<void> {
+    if (DEBUG) console.log(`Deleting YouTube video ${id}...`);
+    const response = await fetchWithTimeout(`/api/v1/admin/youtube/videos/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      await handleErrorResponse(response, 'Failed to delete YouTube video');
+    }
   }
 };
+
+export const api = apiService;
+
+

@@ -1,11 +1,12 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload } from 'lucide-react';
+import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload, Clock, FileText, Code } from 'lucide-react';
 import { apiService, formatImageUrl } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { Project, Technology } from '@/types';
 import { RichTextEditor } from '@/components/RichTextEditor';
+import { GitHubMarkdownView } from '@/components/GitHubMarkdownView';
 
 export default function AdminProjectsPage() {
   const { locale } = useLanguage();
@@ -25,6 +26,11 @@ export default function AdminProjectsPage() {
   const [slug, setSlug] = useState('');
   const [shortDescription, setShortDescription] = useState('');
   const [content, setContent] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [isCurrent, setIsCurrent] = useState(false);
+  const [contentType, setContentType] = useState<'HTML' | 'MARKDOWN'>('HTML');
+  const [markdownPreviewTab, setMarkdownPreviewTab] = useState<'edit' | 'preview'>('edit');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
@@ -39,6 +45,7 @@ export default function AdminProjectsPage() {
   const projectImagesRef = useRef<Array<{ imageUrl: string; displayOrder: number }>>([]);
   const isUploadingRef = useRef(false);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+  const mdFileInputRef = useRef<HTMLInputElement>(null);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -94,6 +101,11 @@ export default function AdminProjectsPage() {
     setSlug('');
     setShortDescription('');
     setContent('');
+    setStartDate('');
+    setEndDate('');
+    setIsCurrent(false);
+    setContentType('HTML');
+    setMarkdownPreviewTab('edit');
     setThumbnailUrl('');
     setGithubUrl('');
     setDemoUrl('');
@@ -114,6 +126,11 @@ export default function AdminProjectsPage() {
       setSlug(project.slug);
       setShortDescription(project.shortDescription);
       setContent(project.content || '');
+      setStartDate(project.startDate || '');
+      setEndDate(project.endDate || '');
+      setIsCurrent(!!project.isCurrent);
+      setContentType(project.contentType || 'HTML');
+      setMarkdownPreviewTab('edit');
       setThumbnailUrl(project.thumbnailUrl);
       setGithubUrl(project.githubUrl || '');
       setDemoUrl(project.demoUrl || '');
@@ -133,6 +150,25 @@ export default function AdminProjectsPage() {
       setLoading(false);
     }
   };
+
+  const handleMdFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        setContent(text);
+        setContentType('MARKDOWN');
+        setMessage({
+          type: 'success',
+          text: locale === 'vi' ? `Đã nạp file Markdown "${file.name}" thành công!` : `Loaded Markdown file "${file.name}"!`
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
 
   const handleDelete = async (id: number) => {
     if (!window.confirm(locale === 'vi' ? 'Bạn có muốn xóa dự án này không?' : 'Are you sure you want to delete this project?')) {
@@ -326,6 +362,10 @@ export default function AdminProjectsPage() {
       slug: cleanSlug,
       shortDescription: shortDescription.trim(),
       content: content ? content.trim() : '',
+      startDate: startDate.trim() || undefined,
+      endDate: isCurrent ? undefined : (endDate.trim() || undefined),
+      isCurrent,
+      contentType,
       thumbnailUrl: formatUrl(thumbnailUrl),
       githubUrl: formatUrl(githubUrl),
       demoUrl: formatUrl(demoUrl),
@@ -556,6 +596,54 @@ export default function AdminProjectsPage() {
                 />
               </div>
 
+              {/* Timeline Dates Box */}
+              <div className="p-3.5 rounded-2xl border border-border-custom/50 bg-slate-950/20 space-y-3">
+                <div className="flex items-center space-x-2 text-[10px] font-mono text-cyan-custom font-bold uppercase tracking-wider">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>{locale === 'vi' ? 'Thời gian thực hiện dự án' : 'Project Timeline Dates'}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-[9px] text-secondary uppercase font-bold">
+                      {locale === 'vi' ? 'Bắt đầu (VD: 10/2023 hoặc 2023-10)' : 'Start Date (e.g. 10/2023)'}
+                    </label>
+                    <input
+                      type="text"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      placeholder="10/2023"
+                      className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[9px] text-secondary uppercase font-bold">
+                        {locale === 'vi' ? 'Kết thúc (VD: 03/2024)' : 'End Date (e.g. 03/2024)'}
+                      </label>
+                      <label className="flex items-center space-x-1.5 text-[9px] text-cyan-custom cursor-pointer font-bold">
+                        <input
+                          type="checkbox"
+                          checked={isCurrent}
+                          onChange={(e) => setIsCurrent(e.target.checked)}
+                          className="w-3 h-3 rounded accent-cyan-custom"
+                        />
+                        <span>{locale === 'vi' ? 'Đang phát triển' : 'Present'}</span>
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      value={isCurrent ? (locale === 'vi' ? 'Hiện tại' : 'Present') : endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      disabled={isCurrent}
+                      placeholder="03/2024"
+                      className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-mono text-xs focus:outline-none focus:border-cyan-custom/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-[10px] text-secondary uppercase font-bold tracking-wider">
                   {locale === 'vi' ? 'Mô tả ngắn *' : 'Short Description *'}
@@ -569,14 +657,118 @@ export default function AdminProjectsPage() {
                 />
               </div>
 
-              <div>
-                <RichTextEditor
-                  value={content}
-                  onChange={setContent}
-                  label={locale === 'vi' ? 'Nội dung chi tiết dự án (Markdown / Rich Text)' : 'Detailed Description (Markdown / Rich Text)'}
-                  placeholder={locale === 'vi' ? 'Mô tả chi tiết giải pháp, kiến trúc hệ thống, thách thức và kết quả (Hỗ trợ định dạng Rich Text / Markdown)...' : 'Describe your implementation details, challenges, architecture (Rich Text / Markdown supported)...'}
-                  minHeight="min-h-[280px]"
-                />
+              {/* Detailed Content Header & Format Toggle */}
+              <div className="space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-custom/30 pb-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[10px] text-secondary uppercase font-bold tracking-wider">
+                      {locale === 'vi' ? 'Nội dung chi tiết dự án' : 'Detailed Description'}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyan-custom/10 text-cyan-custom border border-cyan-custom/20">
+                      {contentType === 'MARKDOWN' ? 'Markdown README Mode' : 'Rich Text HTML'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    {/* Content Mode Toggle */}
+                    <div className="flex items-center bg-slate-900 border border-border-custom rounded-lg p-0.5 text-[10px] font-mono">
+                      <button
+                        type="button"
+                        onClick={() => setContentType('HTML')}
+                        className={`px-2 py-1 rounded font-bold transition cursor-pointer ${
+                          contentType === 'HTML' ? 'bg-cyan-custom/20 text-cyan-custom border border-cyan-custom/30' : 'text-secondary hover:text-text'
+                        }`}
+                      >
+                        Rich Text
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setContentType('MARKDOWN')}
+                        className={`px-2 py-1 rounded font-bold transition cursor-pointer ${
+                          contentType === 'MARKDOWN' ? 'bg-purple-custom/20 text-purple-custom border border-purple-custom/30' : 'text-secondary hover:text-text'
+                        }`}
+                      >
+                        Markdown (.md)
+                      </button>
+                    </div>
+
+                    {/* Upload .md file button */}
+                    <button
+                      type="button"
+                      onClick={() => mdFileInputRef.current?.click()}
+                      className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-purple-custom/10 hover:bg-purple-custom/20 border border-purple-custom/30 text-purple-custom text-[10px] font-mono font-bold transition cursor-pointer select-none"
+                    >
+                      <FileText className="w-3 h-3" />
+                      <span>{locale === 'vi' ? 'Nạp file .md' : 'Upload .md'}</span>
+                    </button>
+                    <input
+                      ref={mdFileInputRef}
+                      type="file"
+                      accept=".md,.markdown,text/markdown,text/plain"
+                      onChange={handleMdFileUpload}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+
+                {contentType === 'HTML' ? (
+                  <RichTextEditor
+                    value={content}
+                    onChange={setContent}
+                    placeholder={locale === 'vi' ? 'Mô tả chi tiết giải pháp, kiến trúc hệ thống, thách thức và kết quả...' : 'Describe your implementation details, challenges, architecture...'}
+                    minHeight="min-h-[280px]"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    {/* Markdown Editor / Preview Switch Tabs */}
+                    <div className="flex items-center justify-between bg-slate-900/60 p-1.5 rounded-xl border border-border-custom text-xs font-mono">
+                      <div className="flex items-center space-x-1">
+                        <button
+                          type="button"
+                          onClick={() => setMarkdownPreviewTab('edit')}
+                          className={`flex items-center space-x-1 px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
+                            markdownPreviewTab === 'edit'
+                              ? 'bg-purple-custom/20 text-purple-custom border border-purple-custom/30'
+                              : 'text-secondary hover:text-text'
+                          }`}
+                        >
+                          <Code className="w-3 h-3" />
+                          <span>{locale === 'vi' ? 'Soạn thảo Markdown' : 'Markdown Source'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMarkdownPreviewTab('preview')}
+                          className={`flex items-center space-x-1 px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
+                            markdownPreviewTab === 'preview'
+                              ? 'bg-purple-custom/20 text-purple-custom border border-purple-custom/30'
+                              : 'text-secondary hover:text-text'
+                          }`}
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>{locale === 'vi' ? 'Xem trước GitHub Preview' : 'GitHub Preview'}</span>
+                        </button>
+                      </div>
+                      <span className="text-[10px] text-secondary font-mono pr-2">
+                        {content.length} {locale === 'vi' ? 'ký tự' : 'chars'}
+                      </span>
+                    </div>
+
+                    {markdownPreviewTab === 'edit' ? (
+                      <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        rows={14}
+                        placeholder={locale === 'vi' ? '# Tiêu đề dự án\n\n## Kiến trúc hệ thống\n- Tính năng 1\n- Tính năng 2\n\n```java\n// Code snippet\n```' : '# Project Title\n\n## Architecture\n- Feature 1\n- Feature 2'}
+                        className="w-full p-4 rounded-xl border border-border-custom bg-slate-950 font-mono text-xs text-slate-200 focus:outline-none focus:border-purple-custom/50 focus:ring-1 focus:ring-purple-custom/25 leading-relaxed resize-y"
+                      />
+                    ) : (
+                      <GitHubMarkdownView
+                        content={content || (locale === 'vi' ? '*Chưa có nội dung Markdown nào.*' : '*No Markdown content written yet.*')}
+                        filename={`${slug || 'project'}.md`}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Illustrative Images section */}

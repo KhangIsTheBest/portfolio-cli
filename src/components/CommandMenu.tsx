@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,8 @@ import {
   ArrowRight,
   Sparkles,
   Command as CommandIcon,
+  Code2,
+  Video,
   X
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
@@ -45,6 +47,8 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
         { id: 'nav-about', label: t('nav.about'), icon: User, action: () => router.push('/about') },
         { id: 'nav-skills', label: t('nav.skills'), icon: Layers, action: () => router.push('/skills') },
         { id: 'nav-projects', label: t('nav.projects'), icon: Briefcase, action: () => router.push('/projects') },
+        { id: 'nav-leetcode', label: 'LeetCode Portfolio', icon: Code2, action: () => router.push('/leetcode') },
+        { id: 'nav-youtube', label: 'YouTube Video Station', icon: Video, action: () => router.push('/youtube') },
         { id: 'nav-architecture', label: t('nav.architecture'), icon: Cpu, action: () => router.push('/architecture') },
         { id: 'nav-blog', label: t('nav.blog'), icon: BookOpen, action: () => router.push('/blog') },
         { id: 'nav-contact', label: t('nav.contact'), icon: Mail, action: () => router.push('/contact') },

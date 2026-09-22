@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code2, ArrowRight, ExternalLink, GitBranch, Cpu, ShieldCheck, Filter, Sparkles } from 'lucide-react';
+import { Code2, ArrowRight, ExternalLink, GitBranch, Cpu, ShieldCheck, Filter, Sparkles, Clock } from 'lucide-react';
 import { apiService, formatImageUrl } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
@@ -106,132 +106,146 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      {/* Projects Bento Grid */}
+      {/* Projects Grid */}
       {filteredProjects.length === 0 ? (
         <div className="p-12 text-center text-[var(--secondary-color)] text-xs font-mono border border-dashed border-[var(--border-color)] rounded-2xl bg-[var(--card-bg)]">
           {locale === 'vi' ? 'Không tìm thấy dự án phù hợp.' : 'No engineering projects match the selected technology filter.'}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {filteredProjects.map((project, idx) => {
-            const spanPattern = idx % 3 === 0 ? 'md:col-span-7' : idx % 3 === 1 ? 'md:col-span-5' : 'md:col-span-12';
-            
-            return (
-              <SpotlightCard
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <AnimatePresence>
+            {filteredProjects.map((project) => (
+              <motion.div
                 key={project.id}
-                className={`${spanPattern} flex flex-col justify-between space-y-4 hover:border-[var(--primary-border)] group`}
-                spotlightColor="rgba(99, 102, 241, 0.15)"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
               >
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-[9px] font-bold text-[var(--primary-color)] bg-[var(--primary-bg)] px-2 py-0.5 rounded border border-[var(--primary-border)] font-mono">
-                          PROJ-{project.id}
-                        </span>
-                        {project.featured && (
-                          <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">
-                            {t('projects.featuredLabel')}
+                <SpotlightCard className="h-full flex flex-col justify-between group space-y-4" spotlightColor="rgba(99, 102, 241, 0.12)">
+                  <div className="space-y-4">
+                    
+                    {/* Top Bar: Identifier + External Links */}
+                    <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center flex-wrap gap-2">
+                          <span className="text-[10px] font-mono text-[var(--primary-color)] bg-[var(--primary-bg)] px-2 py-0.5 rounded border border-[var(--primary-border)] font-bold">
+                            PROJ-{project.id}
                           </span>
+                          {project.featured && (
+                            <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">
+                              {t('projects.featuredLabel')}
+                            </span>
+                          )}
+                          {(project.startDate || project.endDate || project.isCurrent) && (
+                            <span className="text-[9px] font-bold text-[var(--secondary-color)] bg-[var(--terminal-header-bg)] px-2 py-0.5 rounded border border-[var(--border-color)] font-mono flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-[var(--primary-color)]" />
+                              <span>
+                                {project.startDate || ''}
+                                {' → '}
+                                {project.isCurrent ? (locale === 'vi' ? 'Hiện tại' : 'Present') : (project.endDate || '')}
+                              </span>
+                            </span>
+                          )}
+                        </div>
+                        <Link href={`/projects/${project.slug}`} className="block">
+                          <h4 className="text-base font-bold text-[var(--text-color)] font-sans group-hover:text-[var(--primary-color)] transition cursor-pointer mt-1">
+                            {project.title}
+                          </h4>
+                        </Link>
+                      </div>
+
+                      <div className="flex space-x-1.5 shrink-0">
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] transition"
+                            title="Source Code"
+                          >
+                            <GitBranch className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {project.demoUrl && (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] transition"
+                            title="Live Demo"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
                         )}
                       </div>
-                      <Link href={`/projects/${project.slug}`} className="block">
-                        <h4 className="text-base font-bold text-[var(--text-color)] font-sans group-hover:text-[var(--primary-color)] dark:group-hover:text-[var(--primary-color)] transition cursor-pointer">
-                          {project.title}
-                        </h4>
-                      </Link>
                     </div>
 
-                    <div className="flex space-x-1.5 shrink-0">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] transition"
-                          title="Source Code"
-                        >
-                          <GitBranch className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      {project.demoUrl && (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] transition"
-                          title="Live Demo"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                    {/* Thumbnail */}
+                    <Link href={`/projects/${project.slug}`} className="block rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] h-48 sm:h-52 relative cursor-pointer">
+                      <img
+                        src={formatImageUrl(project.thumbnailUrl)}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-103 transition duration-500"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
+                        }}
+                      />
+                    </Link>
 
-                  {/* Thumbnail */}
-                  <Link href={`/projects/${project.slug}`} className="block rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] h-48 sm:h-52 relative cursor-pointer">
-                    <img
-                      src={formatImageUrl(project.thumbnailUrl)}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-103 transition duration-500"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = DEFAULT_FALLBACK_IMAGE;
-                      }}
-                    />
-                  </Link>
-
-                  {/* Problem & Solution Card */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-                    <div className="p-3.5 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 space-y-1">
-                      <div className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                        <Cpu className="w-3 h-3 text-amber-500" />
-                        <span>{t('projects.problemTitle')}</span>
+                    {/* Problem & Solution Card */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+                      <div className="p-3.5 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 space-y-1">
+                        <div className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                          <Cpu className="w-3 h-3 text-amber-500" />
+                          <span>{t('projects.problemTitle')}</span>
+                        </div>
+                        <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
+                          {project.shortDescription}
+                        </p>
                       </div>
-                      <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
-                        {project.shortDescription}
-                      </p>
-                    </div>
 
-                    <div className="p-3.5 rounded-2xl bg-[var(--primary-bg)] dark:bg-[var(--primary-bg)] border border-[var(--primary-border)] space-y-1">
-                      <div className="text-[10px] font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-[var(--primary-color)]" />
-                        <span>{t('projects.solutionTitle')}</span>
+                      <div className="p-3.5 rounded-2xl bg-[var(--primary-bg)] dark:bg-[var(--primary-bg)] border border-[var(--primary-border)] space-y-1">
+                        <div className="text-[10px] font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-[var(--primary-color)]" />
+                          <span>{t('projects.solutionTitle')}</span>
+                        </div>
+                        <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
+                          {project.technologies && project.technologies.length > 0
+                            ? (locale === 'vi'
+                                ? `Hệ thống thiết kế theo kiến trúc chuẩn RESTful API dựa trên nền tảng ${project.technologies.map(t => t.name).join(', ')}.`
+                                : `Modular architecture powered by ${project.technologies.map(t => t.name).join(', ')}.`)
+                            : project.shortDescription}
+                        </p>
                       </div>
-                      <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
-                        {project.technologies && project.technologies.length > 0
-                          ? (locale === 'vi'
-                              ? `Hệ thống thiết kế theo kiến trúc chuẩn RESTful API dựa trên nền tảng ${project.technologies.map(t => t.name).join(', ')}, đảm bảo tính linh hoạt và mở rộng.`
-                              : `Full-stack modular architecture powered by ${project.technologies.map(t => t.name).join(', ')} with high-performance RESTful APIs.`)
-                          : project.shortDescription}
-                      </p>
                     </div>
                   </div>
-                </div>
 
-                {/* Card Footer */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[var(--border-color)]">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.technologies.map((t) => (
-                      <span
-                        key={t.id}
-                        className="px-2.5 py-0.5 rounded-lg text-[10px] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-semibold font-mono"
-                      >
-                        {t.name}
-                      </span>
-                    ))}
+                  {/* Card Footer */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[var(--border-color)]">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.technologies.map((t) => (
+                        <span
+                          key={t.id}
+                          className="px-2.5 py-0.5 rounded-lg text-[10px] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-semibold font-mono"
+                        >
+                          {t.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      className="text-xs font-bold text-[var(--primary-color)] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>{t('projects.detailsBtn')}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
-
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="text-xs font-bold text-[var(--primary-color)] hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>{t('projects.detailsBtn')}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </SpotlightCard>
-            );
-          })}
+                </SpotlightCard>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
     </motion.div>

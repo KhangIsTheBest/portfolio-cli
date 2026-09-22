@@ -1,10 +1,12 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2, FileText, ExternalLink } from 'lucide-react';
+import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2, FileText, ExternalLink, Code2 } from 'lucide-react';
+import { Youtube } from '@/components/YoutubeIcon';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { RichTextEditor } from '@/components/RichTextEditor';
+
 
 
 export default function AdminProfilePage() {
@@ -25,6 +27,10 @@ export default function AdminProfilePage() {
   const [cvEnUrl, setCvEnUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [leetcodeUsername, setLeetcodeUsername] = useState('');
+  const [leetcodeSession, setLeetcodeSession] = useState('');
+  const [youtubeChannelId, setYoutubeChannelId] = useState('');
+  const [youtubeHandle, setYoutubeHandle] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingCvVi, setUploadingCvVi] = useState(false);
   const [uploadingCvEn, setUploadingCvEn] = useState(false);
@@ -116,6 +122,10 @@ export default function AdminProfilePage() {
         setCvEnUrl(data.cvEnUrl || '');
         setGithubUrl(data.githubUrl || '');
         setLinkedinUrl(data.linkedinUrl || '');
+        setLeetcodeUsername(data.leetcodeUsername || '');
+        setLeetcodeSession(data.leetcodeSession || '');
+        setYoutubeChannelId(data.youtubeChannelId || '');
+        setYoutubeHandle(data.youtubeHandle || '');
       } catch (err) {
         console.error('Failed to load profile data:', err);
         setMessage({
@@ -155,7 +165,11 @@ export default function AdminProfilePage() {
         cvViUrl,
         cvEnUrl,
         githubUrl,
-        linkedinUrl
+        linkedinUrl,
+        leetcodeUsername: leetcodeUsername.trim() || undefined,
+        leetcodeSession: leetcodeSession.trim() || undefined,
+        youtubeChannelId: youtubeChannelId.trim() || undefined,
+        youtubeHandle: youtubeHandle.trim() || undefined
       });
 
       setMessage({
@@ -381,6 +395,89 @@ export default function AdminProfilePage() {
             </div>
           </div>
 
+        </div>
+
+        {/* LeetCode & YouTube Integrations */}
+        <div className="border border-border-custom bg-slate-950/40 rounded-2xl p-5 space-y-4">
+          <div className="flex items-center space-x-2 border-b border-border-custom/50 pb-3">
+            <Code2 className="w-4 h-4 text-amber-500" />
+            <h4 className="text-xs font-bold text-text uppercase tracking-wider">
+              {locale === 'vi' ? 'Tích hợp LeetCode & YouTube Channel' : 'LeetCode & YouTube Channel Integrations'}
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* LeetCode Settings */}
+            <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-3">
+              <div className="flex items-center space-x-2 text-xs font-bold text-amber-400">
+                <Code2 className="w-4 h-4" />
+                <span>LeetCode Integration</span>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] text-secondary uppercase font-bold">
+                  LeetCode Username
+                </label>
+                <input
+                  type="text"
+                  value={leetcodeUsername}
+                  onChange={(e) => setLeetcodeUsername(e.target.value)}
+                  placeholder="e.g. pdkhang or PhanDuyKhang"
+                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-amber-500/50"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] text-secondary uppercase font-bold">
+                  LeetCode Session Cookie (LEETCODE_SESSION)
+                </label>
+                <input
+                  type="password"
+                  value={leetcodeSession}
+                  onChange={(e) => setLeetcodeSession(e.target.value)}
+                  placeholder="Optional cookie to auto-fetch submission code"
+                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-amber-500/50"
+                />
+                <p className="text-[9px] text-secondary">
+                  {locale === 'vi' ? 'Dùng để tự động trích xuất code bài nộp khi bấm xem giải pháp.' : 'Used to automatically extract solution code for submissions.'}
+                </p>
+              </div>
+            </div>
+
+            {/* YouTube Settings */}
+            <div className="p-4 rounded-xl border border-rose-500/20 bg-rose-500/5 space-y-3">
+              <div className="flex items-center space-x-2 text-xs font-bold text-rose-400">
+                <Youtube className="w-4 h-4" />
+                <span>YouTube Station Channel</span>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] text-secondary uppercase font-bold">
+                  YouTube Channel URL / ID
+                </label>
+                <input
+                  type="text"
+                  value={youtubeChannelId}
+                  onChange={(e) => setYoutubeChannelId(e.target.value)}
+                  placeholder="https://youtube.com/@phanduykhang"
+                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-rose-500/50"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] text-secondary uppercase font-bold">
+                  YouTube Handle / Name
+                </label>
+                <input
+                  type="text"
+                  value={youtubeHandle}
+                  onChange={(e) => setYoutubeHandle(e.target.value)}
+                  placeholder="@phanduykhang.dev"
+                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-rose-500/50"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* CV Management Section */}

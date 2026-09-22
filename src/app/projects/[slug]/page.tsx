@@ -1,15 +1,17 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Calendar, Layers, X, Maximize2, ShieldCheck, Cpu } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, Layers, X, Maximize2, ShieldCheck, Cpu, Clock } from 'lucide-react';
 import { apiService, formatImageUrl } from '@/services/api';
 import { Project } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { ImageLightboxModal } from '@/components/ImageLightboxModal';
 import { FormattedContent } from '@/components/FormattedContent';
+import { GitHubMarkdownView } from '@/components/GitHubMarkdownView';
 import { SpotlightCard } from '@/components/SpotlightCard';
+
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop';
 
@@ -133,11 +135,30 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         <SpotlightCard className="space-y-6" spotlightColor="rgba(99, 102, 241, 0.15)">
           <div className="space-y-3">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-color)] font-sans tracking-tight">{project.title}</h2>
-            <div className="flex items-center space-x-4 font-mono text-[10px] text-[var(--secondary-color)]">
-              <span className="flex items-center space-x-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-xl border border-[var(--border-color)] font-bold">
-                <Calendar className="w-3.5 h-3.5 text-[var(--primary-color)]" />
-                <span>{t('projects.dateLabel')} {new Date(project.createdAt).toLocaleDateString()}</span>
-              </span>
+            
+            <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-[var(--secondary-color)]">
+              {/* Project Start - End Date Timeline */}
+              {(project.startDate || project.endDate || project.isCurrent) ? (
+                <span className="flex items-center space-x-1.5 bg-[var(--primary-bg)] px-3 py-1 rounded-xl border border-[var(--primary-border)] font-bold text-[var(--primary-color)]">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>
+                    {project.startDate || ''} 
+                    {' → '}
+                    {project.isCurrent ? (locale === 'vi' ? 'Hiện tại' : 'Present') : (project.endDate || '')}
+                  </span>
+                </span>
+              ) : (
+                <span className="flex items-center space-x-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-xl border border-[var(--border-color)] font-bold">
+                  <Calendar className="w-3.5 h-3.5 text-[var(--primary-color)]" />
+                  <span>{t('projects.dateLabel')} {new Date(project.createdAt).toLocaleDateString()}</span>
+                </span>
+              )}
+
+              {project.contentType === 'MARKDOWN' && (
+                <span className="px-2.5 py-1 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold">
+                  README.md Mode
+                </span>
+              )}
             </div>
           </div>
 
@@ -154,8 +175,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {/* Content body */}
-          <div className="border-t border-[var(--border-color)] pt-6 text-sm font-sans leading-relaxed text-[var(--text-color)] select-text markdown-body">
-            <FormattedContent content={project.content || project.shortDescription} />
+          <div className="border-t border-[var(--border-color)] pt-6 text-sm font-sans leading-relaxed text-[var(--text-color)] select-text">
+            {project.contentType === 'MARKDOWN' ? (
+              <GitHubMarkdownView 
+                content={project.content || project.shortDescription} 
+                filename={`${project.slug}.md`}
+              />
+            ) : (
+              <div className="markdown-body">
+                <FormattedContent content={project.content || project.shortDescription} />
+              </div>
+            )}
           </div>
 
           {/* Illustrative Images Gallery */}

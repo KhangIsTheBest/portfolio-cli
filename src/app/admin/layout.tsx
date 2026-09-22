@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -14,7 +14,9 @@ import {
   LogOut, 
   Globe, 
   Menu, 
-  X 
+  X,
+  Video,
+  Code2
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { ThemeSelector } from '@/components/ThemeSelector';
@@ -46,9 +48,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { href: '/admin', label: locale === 'vi' ? 'Thống kê' : 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/profile', label: locale === 'vi' ? 'Hồ sơ' : 'Profile', icon: User },
+    { href: '/admin/profile', label: locale === 'vi' ? 'Hồ sơ & Liên kết' : 'Profile & Links', icon: User },
     { href: '/admin/skills', label: locale === 'vi' ? 'Kỹ năng' : 'Skills Stack', icon: Cpu },
     { href: '/admin/projects', label: locale === 'vi' ? 'Dự án' : 'Projects', icon: FolderGit2 },
+    { href: '/admin/youtube', label: locale === 'vi' ? 'Quản lý Video (YouTube)' : 'YouTube Studio', icon: Video },
     { href: '/admin/blog', label: locale === 'vi' ? 'Bài viết Blog' : 'Blog Posts', icon: BookOpen },
     { href: '/admin/contacts', label: locale === 'vi' ? 'Hộp thư khách' : 'Visitor Inbox', icon: Mail }
   ];

@@ -26,6 +26,10 @@ export interface Profile {
   avatarUrl: string;
   cvViUrl?: string;
   cvEnUrl?: string;
+  leetcodeUsername?: string;
+  leetcodeSession?: string;
+  youtubeChannelId?: string;
+  youtubeHandle?: string;
   updatedAt: string;
 }
 
@@ -53,10 +57,30 @@ export interface Project {
   thumbnailUrl: string;
   featured: boolean;
   status: 'DRAFT' | 'PUBLISHED';
+  startDate?: string;
+  endDate?: string;
+  isCurrent?: boolean;
+  contentType?: 'HTML' | 'MARKDOWN';
   createdAt: string;
   updatedAt: string;
   technologies: Technology[];
   images?: ProjectImage[];
+}
+
+export interface ProjectSummary {
+  id: number;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  thumbnailUrl: string;
+  featured: boolean;
+  status: 'DRAFT' | 'PUBLISHED';
+  startDate?: string;
+  endDate?: string;
+  isCurrent?: boolean;
+  contentType?: 'HTML' | 'MARKDOWN';
+  createdAt: string;
+  technologies: Technology[];
 }
 
 export interface BlogAuthor {
@@ -93,3 +117,55 @@ export interface ContactResponse {
   message: string;
   createdAt: string;
 }
+
+// LeetCode Types
+export interface LeetCodeStats {
+  username: string;
+  totalSolved: number;
+  easySolved: number;
+  totalEasy: number;
+  mediumSolved: number;
+  totalMedium: number;
+  hardSolved: number;
+  totalHard: number;
+  acceptanceRate: number;
+  ranking: number;
+  contributionPoints: number;
+  reputation: number;
+  contestRating?: number;
+  contestGlobalRanking?: number;
+  contestAttended?: number;
+  submissionCalendar?: string; // JSON map timestamp -> count
+  recentSubmissions: LeetCodeSubmission[];
+}
+
+export interface LeetCodeSubmission {
+  id: string;
+  title: string;
+  titleSlug: string;
+  timestamp: string;
+  statusDisplay: string;
+  lang: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  code?: string;
+  runtime?: string;
+  memory?: string;
+}
+
+// YouTube Video Types
+export interface YouTubeVideo {
+  id: number;
+  title: string;
+  youtubeUrl: string;
+  videoId: string;
+  thumbnailUrl?: string;
+  description?: string;
+  category?: string;
+  duration?: string;
+  displayOrder: number;
+  featured: boolean;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
