@@ -48,7 +48,16 @@ export const translations = {
       secureChannels: 'Kênh liên kết chính thức',
       philosophyTitle: 'Triết lý Phát triển Phần mềm',
       philosophyDesc: 'Tập trung vào tính đơn giản, khả năng mở rộng (scalability) và hiệu năng mã nguồn. Ưu tiên cấu trúc dữ liệu tối ưu, REST API rõ ràng và tự động hóa quy trình phát triển.',
-      timelineTitle: 'Hành trình Kỹ thuật & Học vấn'
+      timelineTitle: 'Hành trình Kỹ thuật & Học vấn',
+      cvTitle: 'Hồ Sơ Năng Lực (Curriculum Vitae)',
+      cvSubtitle: 'Xem trực tiếp hoặc tải xuống bản PDF chính thức với 2 phiên bản song ngữ',
+      cvViTab: 'Bản Tiếng Việt (VI)',
+      cvEnTab: 'English Version (EN)',
+      cvDownload: 'Tải CV (PDF)',
+      cvFullscreen: 'Toàn màn hình',
+      cvClose: 'Đóng xem trước',
+      cvNotFound: 'Chưa có bản CV được tải lên.',
+      cvOpenInNewTab: 'Mở sang tab mới'
     },
     skills: {
       title: 'Bản đồ Kỹ năng & Kiến trúc Hệ thống',
@@ -144,7 +153,16 @@ export const translations = {
       secureChannels: 'Official Communication Channels',
       philosophyTitle: 'Software Engineering Principles',
       philosophyDesc: 'Prioritizing simplicity, scalability, and code performance. Dedicated to clean API design, optimal data structures, and automated workflows.',
-      timelineTitle: 'Technical Roadmap & Education'
+      timelineTitle: 'Technical Roadmap & Education',
+      cvTitle: 'Curriculum Vitae (CV)',
+      cvSubtitle: 'Interactive preview and direct download in bilingual formats (VI / EN)',
+      cvViTab: 'Vietnamese Version (VI)',
+      cvEnTab: 'English Version (EN)',
+      cvDownload: 'Download CV (PDF)',
+      cvFullscreen: 'Fullscreen View',
+      cvClose: 'Close Preview',
+      cvNotFound: 'No CV uploaded yet.',
+      cvOpenInNewTab: 'Open in new tab'
     },
     skills: {
       title: 'Technical Skills & Architecture Matrix',

@@ -7,6 +7,7 @@ import { Profile } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useServerStatus } from '@/context/ServerStatusContext';
 import { FormattedContent } from '@/components/FormattedContent';
+import { CvViewer } from '@/components/CvViewer';
 
 export default function AboutPage() {
   const { locale, t } = useLanguage();
@@ -188,8 +189,10 @@ export default function AboutPage() {
             </div>
 
             <a
-              href="/cv/PhanDuyKhang_CV.pdf"
+              href={userProfile.cvViUrl || userProfile.cvEnUrl || "/cv/PhanDuyKhang_CV.pdf"}
               download="PhanDuyKhang_CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer shadow-md"
             >
               <Download className="w-4 h-4" />
@@ -198,6 +201,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive CV Viewer Section */}
+      <CvViewer cvViUrl={userProfile.cvViUrl} cvEnUrl={userProfile.cvEnUrl} />
 
       {/* Experience & Education Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

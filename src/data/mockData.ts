@@ -9,6 +9,8 @@ export const mockProfile: Profile = {
   linkedinUrl: "https://linkedin.com/in/phanduykhang",
   email: "pdkhang1304@gmail.com",
   avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang",
+  cvViUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  cvEnUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   updatedAt: new Date().toISOString()
 };
 

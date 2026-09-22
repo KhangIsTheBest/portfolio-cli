@@ -24,6 +24,8 @@ export interface Profile {
   linkedinUrl: string;
   email: string;
   avatarUrl: string;
+  cvViUrl?: string;
+  cvEnUrl?: string;
   updatedAt: string;
 }
 

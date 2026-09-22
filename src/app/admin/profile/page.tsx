@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2 } from 'lucide-react';
+import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2, FileText, ExternalLink } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -21,9 +21,13 @@ export default function AdminProfilePage() {
   const [aboutMe, setAboutMe] = useState('');
   const [email, setEmail] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [cvViUrl, setCvViUrl] = useState('');
+  const [cvEnUrl, setCvEnUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingCvVi, setUploadingCvVi] = useState(false);
+  const [uploadingCvEn, setUploadingCvEn] = useState(false);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,6 +53,54 @@ export default function AdminProfilePage() {
     }
   };
 
+  const handleCvViUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCvVi(true);
+    setMessage(null);
+    try {
+      const url = await apiService.uploadFile(file);
+      setCvViUrl(url);
+      setMessage({
+        type: 'success',
+        text: locale === 'vi' ? 'Tải lên CV Tiếng Việt thành công!' : 'Vietnamese CV uploaded successfully!'
+      });
+    } catch (err: any) {
+      console.error('Failed to upload Vietnamese CV:', err);
+      setMessage({
+        type: 'error',
+        text: locale === 'vi' ? `Lỗi tải CV Tiếng Việt: ${err.message}` : `Upload error: ${err.message}`
+      });
+    } finally {
+      setUploadingCvVi(false);
+    }
+  };
+
+  const handleCvEnUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCvEn(true);
+    setMessage(null);
+    try {
+      const url = await apiService.uploadFile(file);
+      setCvEnUrl(url);
+      setMessage({
+        type: 'success',
+        text: locale === 'vi' ? 'Tải lên CV Tiếng Anh thành công!' : 'English CV uploaded successfully!'
+      });
+    } catch (err: any) {
+      console.error('Failed to upload English CV:', err);
+      setMessage({
+        type: 'error',
+        text: locale === 'vi' ? `Lỗi tải CV Tiếng Anh: ${err.message}` : `Upload error: ${err.message}`
+      });
+    } finally {
+      setUploadingCvEn(false);
+    }
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -60,6 +112,8 @@ export default function AdminProfilePage() {
         setAboutMe(data.aboutMe || '');
         setEmail(data.email || '');
         setAvatarUrl(data.avatarUrl || '');
+        setCvViUrl(data.cvViUrl || '');
+        setCvEnUrl(data.cvEnUrl || '');
         setGithubUrl(data.githubUrl || '');
         setLinkedinUrl(data.linkedinUrl || '');
       } catch (err) {
@@ -98,6 +152,8 @@ export default function AdminProfilePage() {
         aboutMe,
         email,
         avatarUrl,
+        cvViUrl,
+        cvEnUrl,
         githubUrl,
         linkedinUrl
       });
@@ -325,6 +381,144 @@ export default function AdminProfilePage() {
             </div>
           </div>
 
+        </div>
+
+        {/* CV Management Section */}
+        <div className="border border-border-custom bg-slate-950/40 rounded-2xl p-5 space-y-4">
+          <div className="flex items-center space-x-2 border-b border-border-custom/50 pb-3">
+            <FileText className="w-4 h-4 text-cyan-custom" />
+            <h4 className="text-xs font-bold text-text uppercase tracking-wider">
+              {locale === 'vi' ? 'Quản lý Hồ sơ CV (Song ngữ VI / EN)' : 'CV Document Management (Bilingual VI / EN)'}
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Vietnamese CV */}
+            <div className="p-4 rounded-xl border border-border-custom bg-slate-900/50 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-text flex items-center gap-1.5">
+                  🇻🇳 {locale === 'vi' ? 'CV Tiếng Việt (PDF)' : 'Vietnamese CV (PDF)'}
+                </span>
+                {cvViUrl ? (
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+                    {locale === 'vi' ? 'ĐÃ CẬP NHẬT' : 'UPLOADED'}
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
+                    {locale === 'vi' ? 'CHƯA CÓ' : 'EMPTY'}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="px-3 py-1.5 rounded-xl border border-cyan-custom/30 bg-cyan-custom/5 hover:bg-cyan-custom/15 text-cyan-custom text-xs flex items-center justify-center cursor-pointer select-none font-bold transition">
+                  <Upload className="w-3.5 h-3.5 mr-1.5" />
+                  <span>{uploadingCvVi ? (locale === 'vi' ? 'Đang tải PDF...' : 'Uploading PDF...') : (locale === 'vi' ? 'Tải tệp PDF lên' : 'Upload PDF File')}</span>
+                  <input
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handleCvViUpload}
+                    className="hidden"
+                    disabled={uploadingCvVi}
+                  />
+                </label>
+
+                {cvViUrl && (
+                  <>
+                    <a
+                      href={cvViUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1.5 rounded-xl border border-cyan-custom/30 text-cyan-custom hover:bg-cyan-custom/10 text-xs flex items-center gap-1 font-bold transition"
+                      title={locale === 'vi' ? 'Xem trước' : 'Preview'}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>{locale === 'vi' ? 'Xem' : 'View'}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setCvViUrl('')}
+                      className="p-1.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition"
+                      title={locale === 'vi' ? 'Xóa CV' : 'Remove CV'}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <input
+                type="text"
+                value={cvViUrl}
+                onChange={(e) => setCvViUrl(e.target.value)}
+                placeholder={locale === 'vi' ? 'Hoặc nhập link PDF trực tiếp...' : 'Or enter PDF URL directly...'}
+                className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
+              />
+            </div>
+
+            {/* English CV */}
+            <div className="p-4 rounded-xl border border-border-custom bg-slate-900/50 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-text flex items-center gap-1.5">
+                  🇬🇧 {locale === 'vi' ? 'CV Tiếng Anh (PDF)' : 'English CV (PDF)'}
+                </span>
+                {cvEnUrl ? (
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+                    {locale === 'vi' ? 'ĐÃ CẬP NHẬT' : 'UPLOADED'}
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
+                    {locale === 'vi' ? 'CHƯA CÓ' : 'EMPTY'}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="px-3 py-1.5 rounded-xl border border-cyan-custom/30 bg-cyan-custom/5 hover:bg-cyan-custom/15 text-cyan-custom text-xs flex items-center justify-center cursor-pointer select-none font-bold transition">
+                  <Upload className="w-3.5 h-3.5 mr-1.5" />
+                  <span>{uploadingCvEn ? (locale === 'vi' ? 'Đang tải PDF...' : 'Uploading PDF...') : (locale === 'vi' ? 'Tải tệp PDF lên' : 'Upload PDF File')}</span>
+                  <input
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handleCvEnUpload}
+                    className="hidden"
+                    disabled={uploadingCvEn}
+                  />
+                </label>
+
+                {cvEnUrl && (
+                  <>
+                    <a
+                      href={cvEnUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1.5 rounded-xl border border-cyan-custom/30 text-cyan-custom hover:bg-cyan-custom/10 text-xs flex items-center gap-1 font-bold transition"
+                      title={locale === 'vi' ? 'Xem trước' : 'Preview'}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>{locale === 'vi' ? 'Xem' : 'View'}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setCvEnUrl('')}
+                      className="p-1.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition"
+                      title={locale === 'vi' ? 'Xóa CV' : 'Remove CV'}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <input
+                type="text"
+                value={cvEnUrl}
+                onChange={(e) => setCvEnUrl(e.target.value)}
+                placeholder={locale === 'vi' ? 'Hoặc nhập link PDF trực tiếp...' : 'Or enter PDF URL directly...'}
+                className="w-full px-3 py-1.5 rounded-xl border border-border-custom bg-slate-950/40 text-text font-sans text-xs focus:outline-none focus:border-cyan-custom/50 focus:ring-1 focus:ring-cyan-custom/25 transition duration-200"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Form Action Buttons */}
