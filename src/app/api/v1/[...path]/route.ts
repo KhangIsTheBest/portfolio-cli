@@ -63,20 +63,22 @@ async function proxyRequest(
       });
     }
 
-    const responseText = await backendResponse.text();
+    const responseBuffer = await backendResponse.arrayBuffer();
 
     const responseHeaders = new Headers();
     backendResponse.headers.forEach((value, key) => {
       const lower = key.toLowerCase();
-      if (!['transfer-encoding', 'connection', 'keep-alive'].includes(lower)) {
+      if (!['transfer-encoding', 'connection', 'keep-alive', 'x-frame-options'].includes(lower)) {
         responseHeaders.set(key, value);
       }
     });
     if (!responseHeaders.has('content-type')) {
       responseHeaders.set('content-type', 'application/json');
     }
+    // Explicitly delete x-frame-options to allow iframe embedding in CV Viewer
+    responseHeaders.delete('x-frame-options');
 
-    return new NextResponse(responseText, {
+    return new NextResponse(responseBuffer, {
       status: backendResponse.status,
       statusText: backendResponse.statusText,
       headers: responseHeaders,

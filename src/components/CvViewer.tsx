@@ -1,10 +1,8 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { FileText, Download, Maximize2, ExternalLink, X, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-
-import { motion } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 
 interface CvViewerProps {
@@ -12,12 +10,35 @@ interface CvViewerProps {
   cvEnUrl?: string;
 }
 
+// Helper to normalize CV URLs to same-origin relative proxy paths
+const normalizeCvUrl = (url?: string): string => {
+  if (!url || !url.trim()) return '';
+  const trimmed = url.trim();
+
+  // If already relative
+  if (trimmed.startsWith('/api/v1/files/raw/') || trimmed.startsWith('/uploads/')) {
+    return trimmed.startsWith('/uploads/') ? `/api/v1${trimmed}` : trimmed;
+  }
+
+  // Convert backend domain URL to same-origin relative Next.js proxy path
+  if (trimmed.includes('/api/v1/files/raw/')) {
+    return trimmed.substring(trimmed.indexOf('/api/v1/files/raw/'));
+  }
+  if (trimmed.includes('/uploads/')) {
+    const rel = trimmed.substring(trimmed.indexOf('/uploads/'));
+    return `/api/v1${rel}`;
+  }
+
+  return trimmed;
+};
+
 export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
   const { locale, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'vi' | 'en'>(locale === 'vi' ? 'vi' : 'en');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const activeCvUrl = activeTab === 'vi' ? cvViUrl : cvEnUrl;
+  const rawCvUrl = activeTab === 'vi' ? cvViUrl : cvEnUrl;
+  const activeCvUrl = normalizeCvUrl(rawCvUrl);
   const downloadFileName = activeTab === 'vi' ? 'PhanDuyKhang_CV_VI.pdf' : 'PhanDuyKhang_CV_EN.pdf';
 
   return (
@@ -43,7 +64,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
             <button
               type="button"
               onClick={() => setActiveTab('vi')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeTab === 'vi'
                   ? 'bg-indigo-600 text-white shadow'
                   : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
@@ -54,7 +75,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
             <button
               type="button"
               onClick={() => setActiveTab('en')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeTab === 'en'
                   ? 'bg-indigo-600 text-white shadow'
                   : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
@@ -109,7 +130,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
           <iframe
             src={`${activeCvUrl}#toolbar=0&navpanes=0&scrollbar=1`}
             title={`CV Preview - ${activeTab.toUpperCase()}`}
-            className="w-full h-full border-0 rounded-2xl"
+            className="w-full h-full border-0 rounded-2xl bg-white"
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-3">
@@ -161,7 +182,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
             <iframe
               src={`${activeCvUrl}#toolbar=1&navpanes=0`}
               title={`Fullscreen CV Preview - ${activeTab.toUpperCase()}`}
-              className="w-full h-full border-0"
+              className="w-full h-full border-0 bg-white"
             />
           </div>
         </div>
