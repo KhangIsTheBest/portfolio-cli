@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -44,8 +44,8 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--primary-color)] font-mono space-y-4">
+        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">RETRIEVING PROJECT ARCHITECTURES...</p>
       </div>
     );
@@ -61,7 +61,7 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-4">
         <div className="flex items-center space-x-2">
-          <Code2 className="w-5 h-5 text-emerald-500" />
+          <Code2 className="w-5 h-5 text-[var(--primary-color)]" />
           <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('projects.title')}</h3>
         </div>
         <span className="text-xs font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] border border-[var(--border-color)] px-3 py-1 rounded-full font-bold">
@@ -73,7 +73,7 @@ export default function ProjectsPage() {
       {availableTechs.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-[11px]">
           <div className="flex items-center space-x-1.5 text-[var(--secondary-color)] pr-2 border-r border-[var(--border-color)]">
-            <Filter className="w-3.5 h-3.5 text-emerald-500" />
+            <Filter className="w-3.5 h-3.5 text-[var(--primary-color)]" />
             <span className="uppercase text-[10px] tracking-wider font-bold">Filter:</span>
           </div>
 
@@ -81,7 +81,7 @@ export default function ProjectsPage() {
             onClick={() => setSelectedTech('ALL')}
             className={`px-3 py-1.5 rounded-xl border transition shrink-0 cursor-pointer ${
               selectedTech === 'ALL'
-                ? 'border-emerald-500 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold'
+                ? 'border-[var(--primary-color)] bg-[var(--primary-bg)] text-[var(--primary-color)] font-bold'
                 : 'border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--secondary-color)] hover:text-[var(--text-color)]'
             }`}
           >
@@ -95,7 +95,7 @@ export default function ProjectsPage() {
                 onClick={() => setSelectedTech(tech)}
                 className={`px-3 py-1.5 rounded-xl border transition shrink-0 cursor-pointer ${
                   selectedTech === tech
-                    ? 'border-emerald-500 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold'
+                    ? 'border-[var(--primary-color)] bg-[var(--primary-bg)] text-[var(--primary-color)] font-bold'
                     : 'border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--secondary-color)] hover:text-[var(--text-color)]'
                 }`}
               >
@@ -119,14 +119,14 @@ export default function ProjectsPage() {
             return (
               <SpotlightCard
                 key={project.id}
-                className={`${spanPattern} flex flex-col justify-between space-y-4 hover:border-emerald-500/40 group`}
-                spotlightColor="rgba(16, 185, 129, 0.15)"
+                className={`${spanPattern} flex flex-col justify-between space-y-4 hover:border-[var(--primary-border)] group`}
+                spotlightColor="rgba(99, 102, 241, 0.15)"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
+                        <span className="text-[9px] font-bold text-[var(--primary-color)] bg-[var(--primary-bg)] px-2 py-0.5 rounded border border-[var(--primary-border)] font-mono">
                           PROJ-{project.id}
                         </span>
                         {project.featured && (
@@ -136,7 +136,7 @@ export default function ProjectsPage() {
                         )}
                       </div>
                       <Link href={`/projects/${project.slug}`} className="block">
-                        <h4 className="text-base font-bold text-[var(--text-color)] font-sans group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition cursor-pointer">
+                        <h4 className="text-base font-bold text-[var(--text-color)] font-sans group-hover:text-[var(--primary-color)] dark:group-hover:text-[var(--primary-color)] transition cursor-pointer">
                           {project.title}
                         </h4>
                       </Link>
@@ -148,7 +148,7 @@ export default function ProjectsPage() {
                           href={project.githubUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-emerald-600 dark:hover:text-emerald-400 transition"
+                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] transition"
                           title="Source Code"
                         >
                           <GitBranch className="w-3.5 h-3.5" />
@@ -159,7 +159,7 @@ export default function ProjectsPage() {
                           href={project.demoUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-emerald-600 dark:hover:text-emerald-400 transition"
+                          className="p-1.5 rounded-lg bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] transition"
                           title="Live Demo"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -192,9 +192,9 @@ export default function ProjectsPage() {
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 space-y-1">
-                      <div className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                    <div className="p-3.5 rounded-2xl bg-[var(--primary-bg)] dark:bg-[var(--primary-bg)] border border-[var(--primary-border)] space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-[var(--primary-color)]" />
                         <span>{t('projects.solutionTitle')}</span>
                       </div>
                       <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
@@ -223,7 +223,7 @@ export default function ProjectsPage() {
 
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[var(--primary-color)] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>{t('projects.detailsBtn')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />

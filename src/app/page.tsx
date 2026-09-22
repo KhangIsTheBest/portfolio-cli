@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -85,7 +85,7 @@ export default function Home() {
 
   const getTechBadgeStyle = (idx: number) => {
     const styles = [
-      'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+      'bg-[var(--primary-bg)] text-[var(--primary-color)] border-[var(--primary-border)]',
       'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30',
       'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30',
       'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
@@ -97,8 +97,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
-        <div className="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[450px] text-[var(--primary-color)] font-mono space-y-4">
+        <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">INITIALIZING SWE WORKSTATION...</p>
       </div>
     );
@@ -118,16 +118,16 @@ export default function Home() {
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Left Column: Developer Identity Bento Card (5 cols) */}
-        <SpotlightCard className="lg:col-span-5 flex flex-col justify-between" spotlightColor="rgba(16, 185, 129, 0.18)">
+        <SpotlightCard className="lg:col-span-5 flex flex-col justify-between" spotlightColor="rgba(99, 102, 241, 0.18)">
           <div className="space-y-6">
             {/* Header Status Chip */}
             <div className="flex items-center justify-between">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-emerald-500/15 via-sky-500/15 to-indigo-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-emerald-500/15 via-sky-500/15 to-indigo-500/15 border border-[var(--primary-border)] text-[var(--primary-color)] shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span>{t('home.welcome')}</span>
               </div>
-              <span className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="flex items-center gap-1.5 text-[9px] font-bold text-[var(--primary-color)] bg-[var(--primary-bg)] px-2.5 py-1 rounded-full border border-[var(--primary-border)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] animate-pulse" />
                 AVAILABLE
               </span>
             </div>
@@ -142,7 +142,7 @@ export default function Home() {
                     className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[var(--card-bg)]" title="Connected" />
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[var(--primary-color)] border-2 border-[var(--card-bg)]" title="Connected" />
               </div>
 
               <div>
@@ -150,7 +150,7 @@ export default function Home() {
                   {userProfile.fullName}
                 </h1>
                 <p className="text-xs text-indigo-600 dark:text-indigo-400 font-mono mt-0.5 flex items-center gap-1.5 font-bold">
-                  <Server className="w-3.5 h-3.5 text-emerald-500" />
+                  <Server className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                   <span>{userProfile.title}</span>
                 </p>
               </div>
@@ -161,8 +161,8 @@ export default function Home() {
 
             {/* Real Data Metrics Bar */}
             <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3.5 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-emerald-500/30 transition">
-                <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+              <div className="p-3.5 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-[var(--primary-border)] transition">
+                <div className="text-xl font-extrabold text-[var(--primary-color)] font-mono flex items-center gap-1.5">
                   <FolderGit2 className="w-4.5 h-4.5" />
                   <span>{totalProjectCount}</span>
                 </div>
@@ -189,10 +189,10 @@ export default function Home() {
             </Link>
             <Link
               href="/projects"
-              className="flex items-center justify-center space-x-1 px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--text-color)] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-emerald-500/40 transition duration-200 cursor-pointer"
+              className="flex items-center justify-center space-x-1 px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--text-color)] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-[var(--primary-border)] transition duration-200 cursor-pointer"
             >
               <span>{t('home.projectsBtn')}</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1 text-emerald-500" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1 text-[var(--primary-color)]" />
             </Link>
             <a
               href={cvDownloadUrl}
@@ -219,7 +219,7 @@ export default function Home() {
       <section className="space-y-6">
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <Code2 className="w-5 h-5 text-emerald-500" />
+            <Code2 className="w-5 h-5 text-[var(--primary-color)]" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">
               {t('projects.title')}
             </h3>
@@ -241,7 +241,7 @@ export default function Home() {
             return (
               <SpotlightCard
                 key={project.id}
-                className={`${colSpan} flex flex-col justify-between space-y-4 hover:border-emerald-500/40 group`}
+                className={`${colSpan} flex flex-col justify-between space-y-4 hover:border-[var(--primary-border)] group`}
                 spotlightColor="rgba(99, 102, 241, 0.15)"
               >
                 <div className="space-y-4">
@@ -249,7 +249,7 @@ export default function Home() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20 font-mono">
+                        <span className="text-[9px] font-bold text-[var(--primary-color)] bg-[var(--primary-bg)] px-2.5 py-0.5 rounded border border-[var(--primary-border)] font-mono">
                           SYSTEM #{project.id}
                         </span>
                         {project.featured && (
@@ -259,7 +259,7 @@ export default function Home() {
                         )}
                       </div>
                       <Link href={`/projects/${project.slug}`} className="block">
-                        <h4 className="text-lg font-bold text-[var(--text-color)] font-sans group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition cursor-pointer">
+                        <h4 className="text-lg font-bold text-[var(--text-color)] font-sans group-hover:text-[var(--primary-color)] dark:group-hover:text-[var(--primary-color)] transition cursor-pointer">
                           {project.title}
                         </h4>
                       </Link>
@@ -315,9 +315,9 @@ export default function Home() {
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 space-y-1">
-                      <div className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    <div className="p-3.5 rounded-2xl bg-[var(--primary-bg)] dark:bg-[var(--primary-bg)] border border-[var(--primary-border)] space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-[var(--primary-color)]" />
                         <span>{t('projects.solutionTitle')}</span>
                       </div>
                       <p className="text-[var(--secondary-color)] text-[11px] line-clamp-2 leading-relaxed">
@@ -346,7 +346,7 @@ export default function Home() {
 
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[var(--primary-color)] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>{t('projects.detailsBtn')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -394,8 +394,8 @@ export default function Home() {
       {/* SECTION 4: PROOF OF WORK & ENGINEERING PRINCIPLES */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <SpotlightCard className="space-y-3" spotlightColor="rgba(16, 185, 129, 0.15)">
-          <div className="flex items-center space-x-2 text-emerald-500">
+        <SpotlightCard className="space-y-3" spotlightColor="rgba(99, 102, 241, 0.15)">
+          <div className="flex items-center space-x-2 text-[var(--primary-color)]">
             <ShieldCheck className="w-5 h-5" />
             <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-color)]">
               {locale === 'vi' ? 'Kiến Trúc Chuẩn Mực' : 'Clean Architecture'}

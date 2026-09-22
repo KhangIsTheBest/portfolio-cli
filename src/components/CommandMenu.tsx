@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -142,7 +142,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
           >
             {/* Search Input Bar */}
             <div className="flex items-center px-4 py-3.5 border-b border-[var(--border-color)] gap-3">
-              <Search className="w-4 h-4 text-emerald-500 shrink-0" />
+              <Search className="w-4 h-4 text-[var(--primary-color)] shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
@@ -189,16 +189,16 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                           onMouseEnter={() => setSelectedIndex(itemIdx)}
                           className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
                             isSelected
-                              ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                              ? 'bg-[var(--primary-bg)] text-[var(--primary-color)] border border-[var(--primary-border)]'
                               : 'text-[var(--text-color)] hover:bg-[var(--terminal-header-bg)]'
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-emerald-500' : 'text-[var(--secondary-color)]'}`} />
+                            <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-[var(--primary-color)]' : 'text-[var(--secondary-color)]'}`} />
                             <span className="font-sans text-xs font-semibold">{item.label}</span>
                           </div>
                           {isSelected && (
-                            <ArrowRight className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+                            <ArrowRight className="w-3.5 h-3.5 text-[var(--primary-color)] animate-pulse" />
                           )}
                         </div>
                       );
@@ -215,7 +215,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                 <span>Select: <kbd className="px-1 py-0.5 rounded bg-[var(--card-bg)] border border-[var(--border-color)]">↵</kbd></span>
               </div>
               <div className="flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-emerald-500" />
+                <Sparkles className="w-3 h-3 text-[var(--primary-color)]" />
                 <span>Command Menu</span>
               </div>
             </div>

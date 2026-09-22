@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal as TerminalIcon, RefreshCw, CornerDownLeft } from 'lucide-react';
@@ -44,12 +44,12 @@ export const TerminalHero: React.FC = () => {
         command: 'system --status',
         result: (
           <div className="space-y-1 font-mono text-[11px] leading-relaxed">
-            <div className="text-emerald-600 dark:text-emerald-400 font-bold">✔ SYSTEM INITIALIZED: {name} Workstation</div>
+            <div className="text-[var(--primary-color)] font-bold">✔ SYSTEM INITIALIZED: {name} Workstation</div>
             <div className="text-[var(--text-color)]">
               • <span className="text-amber-600 dark:text-amber-400 font-bold">Role:</span> {title}
             </div>
             <div className="text-[var(--text-color)]">
-              • <span className="text-emerald-600 dark:text-emerald-400 font-bold">Live API Status:</span> 200 OK (Spring Boot Backend Connected)
+              • <span className="text-[var(--primary-color)] font-bold">Live API Status:</span> 200 OK (Spring Boot Backend Connected)
             </div>
             <div className="text-[var(--secondary-color)]">
               • <span className="text-sky-600 dark:text-sky-400 font-bold">Registered Stack Items:</span> {techCount || 10} technologies in Database
@@ -81,11 +81,11 @@ export const TerminalHero: React.FC = () => {
         resNode = (
           <div className="space-y-1 text-[var(--text-color)] font-mono text-[11px]">
             <div className="font-bold text-[var(--secondary-color)]">Available CLI Commands:</div>
-            <div>  <span className="text-emerald-600 dark:text-emerald-400 font-bold">stack</span>       - List tech stack & architecture</div>
-            <div>  <span className="text-emerald-600 dark:text-emerald-400 font-bold">projects</span>    - Summary of published systems</div>
-            <div>  <span className="text-emerald-600 dark:text-emerald-400 font-bold">contact</span>     - View direct email & socials</div>
-            <div>  <span className="text-emerald-600 dark:text-emerald-400 font-bold">cv</span>          - Download engineering resume</div>
-            <div>  <span className="text-emerald-600 dark:text-emerald-400 font-bold">clear</span>       - Clear terminal window</div>
+            <div>  <span className="text-[var(--primary-color)] font-bold">stack</span>       - List tech stack & architecture</div>
+            <div>  <span className="text-[var(--primary-color)] font-bold">projects</span>    - Summary of published systems</div>
+            <div>  <span className="text-[var(--primary-color)] font-bold">contact</span>     - View direct email & socials</div>
+            <div>  <span className="text-[var(--primary-color)] font-bold">cv</span>          - Download engineering resume</div>
+            <div>  <span className="text-[var(--primary-color)] font-bold">clear</span>       - Clear terminal window</div>
           </div>
         );
         break;
@@ -95,7 +95,7 @@ export const TerminalHero: React.FC = () => {
           <div className="space-y-1 text-[var(--text-color)] font-mono text-[11px]">
             <div className="text-amber-600 dark:text-amber-400 font-bold">[Backend Core]</div>
             <div>Java 17+, Spring Boot 3, Spring Security, JWT, Hibernate/JPA, REST APIs</div>
-            <div className="text-emerald-600 dark:text-emerald-400 font-bold mt-2">[Database & Tools]</div>
+            <div className="text-[var(--primary-color)] font-bold mt-2">[Database & Tools]</div>
             <div>PostgreSQL, Docker, Docker Compose, Redis, Maven, Cloudinary</div>
             <div className="text-sky-600 dark:text-sky-400 font-bold mt-2">[Frontend Architecture]</div>
             <div>TypeScript, React 19, Next.js 16 (App Router), Tailwind CSS</div>
@@ -106,9 +106,9 @@ export const TerminalHero: React.FC = () => {
       case 'projects':
         resNode = (
           <div className="space-y-1.5 text-[var(--text-color)] font-mono text-[11px]">
-            <div><span className="text-emerald-600 dark:text-emerald-400 font-bold">1. Portfolio CLI & REST Platform:</span> Spring Boot 3 API + Next.js client.</div>
-            <div><span className="text-emerald-600 dark:text-emerald-400 font-bold">2. E-Commerce Backend System:</span> Microservice store platform with JWT & OAuth2.</div>
-            <div><span className="text-emerald-600 dark:text-emerald-400 font-bold">3. Admin Management Portal:</span> Role-based management dashboard.</div>
+            <div><span className="text-[var(--primary-color)] font-bold">1. Portfolio CLI & REST Platform:</span> Spring Boot 3 API + Next.js client.</div>
+            <div><span className="text-[var(--primary-color)] font-bold">2. E-Commerce Backend System:</span> Microservice store platform with JWT & OAuth2.</div>
+            <div><span className="text-[var(--primary-color)] font-bold">3. Admin Management Portal:</span> Role-based management dashboard.</div>
           </div>
         );
         break;
@@ -116,7 +116,7 @@ export const TerminalHero: React.FC = () => {
       case 'contact':
         resNode = (
           <div className="space-y-1 text-[var(--text-color)] font-mono text-[11px]">
-            <div><span className="text-[var(--secondary-color)]">Email:</span> <a href={`mailto:${email}`} className="text-emerald-600 dark:text-emerald-400 underline font-bold">{email}</a></div>
+            <div><span className="text-[var(--secondary-color)]">Email:</span> <a href={`mailto:${email}`} className="text-[var(--primary-color)] underline font-bold">{email}</a></div>
             <div><span className="text-[var(--secondary-color)]">GitHub:</span> <a href={github} target="_blank" rel="noreferrer" className="text-sky-600 dark:text-sky-400 underline font-bold">{github}</a></div>
             <div><span className="text-[var(--secondary-color)]">LinkedIn:</span> <a href={linkedin} target="_blank" rel="noreferrer" className="text-amber-600 dark:text-amber-400 underline font-bold">{linkedin}</a></div>
           </div>
@@ -125,7 +125,7 @@ export const TerminalHero: React.FC = () => {
 
       case 'cv':
         resNode = (
-          <div className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">
+          <div className="text-[var(--primary-color)] font-mono text-[11px]">
             ✔ Triggering Resume Download... <a href="/cv/PhanDuyKhang_CV.pdf" download className="underline font-bold text-[var(--text-color)]">Click here if download doesn&apos;t start.</a>
           </div>
         );
@@ -161,7 +161,7 @@ export const TerminalHero: React.FC = () => {
           <div className="flex space-x-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--primary-bg)]0 inline-block" />
           </div>
           <div className="flex items-center space-x-2">
             <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
@@ -172,7 +172,7 @@ export const TerminalHero: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2 text-[10px]">
-          <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold">
+          <span className="px-2 py-0.5 rounded bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] font-bold">
             BASH 5.2
           </span>
           <button
@@ -190,7 +190,7 @@ export const TerminalHero: React.FC = () => {
         {history.map((item, idx) => (
           <div key={idx} className="space-y-1.5">
             <div className="flex items-center space-x-2 text-[var(--secondary-color)]">
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold">visitor@pdkhang:~$</span>
+              <span className="text-[var(--primary-color)] font-bold">visitor@pdkhang:~$</span>
               <span className="text-[var(--text-color)] font-semibold">{item.command}</span>
             </div>
             <div className="pl-4 border-l border-[var(--border-color)]">{item.result}</div>
@@ -199,7 +199,7 @@ export const TerminalHero: React.FC = () => {
 
         {/* Form input line */}
         <form onSubmit={onSubmit} className="flex items-center space-x-2 pt-1">
-          <span className="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">visitor@pdkhang:~$</span>
+          <span className="text-[var(--primary-color)] font-bold shrink-0">visitor@pdkhang:~$</span>
           <input
             type="text"
             value={inputVal}
@@ -207,7 +207,7 @@ export const TerminalHero: React.FC = () => {
             placeholder="type 'help', 'stack', 'projects'..."
             className="flex-1 bg-transparent text-[var(--text-color)] outline-none text-xs font-mono placeholder:text-[var(--secondary-color)]"
           />
-          <button type="submit" className="text-[var(--secondary-color)] hover:text-emerald-600 dark:hover:text-emerald-400 transition cursor-pointer">
+          <button type="submit" className="text-[var(--secondary-color)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] transition cursor-pointer">
             <CornerDownLeft className="w-3.5 h-3.5" />
           </button>
         </form>
@@ -221,7 +221,7 @@ export const TerminalHero: React.FC = () => {
             key={cmd}
             type="button"
             onClick={() => handleCommand(cmd)}
-            className="px-2 py-0.5 rounded bg-black/5 dark:bg-white/[0.04] border border-[var(--border-color)] hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400 text-[var(--text-color)] transition shrink-0 cursor-pointer"
+            className="px-2 py-0.5 rounded bg-black/5 dark:bg-white/[0.04] border border-[var(--border-color)] hover:border-[var(--primary-border)] hover:text-[var(--primary-color)] dark:hover:text-[var(--primary-color)] text-[var(--text-color)] transition shrink-0 cursor-pointer"
           >
             ${cmd}
           </button>

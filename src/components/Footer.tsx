@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Terminal, Shield } from 'lucide-react';
@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
 
         {/* Middle technical badges */}
         <div className="flex items-center space-x-3 text-[10px]">
-          <span className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded-md font-bold">
+          <span className="flex items-center gap-1 bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] px-2.5 py-1 rounded-md font-bold">
             <Shield className="w-3 h-3" />
             <span>SPRING BOOT + NEXT.JS</span>
           </span>

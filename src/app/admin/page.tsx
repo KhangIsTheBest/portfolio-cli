@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -62,10 +62,10 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-500 space-y-4 font-mono">
+      <div className="flex flex-col items-center justify-center min-h-[350px] text-[var(--primary-color)] space-y-4 font-mono">
         <div className="relative w-10 h-10">
-          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
-          <div className="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+          <div className="absolute inset-0 rounded-full border-2 border-[var(--primary-border)] animate-ping" />
+          <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         </div>
         <p className="font-mono text-xs tracking-wider animate-pulse font-semibold">
           {locale === 'vi' ? 'ĐANG ĐỌC SỐ LIỆU THỐNG KÊ...' : 'COLLECTING SUMMARY STATS...'}
@@ -80,7 +80,7 @@ export default function AdminDashboardPage() {
       value: stats.projectsCount, 
       icon: FolderGit2, 
       href: '/admin/projects',
-      color: 'text-emerald-500'
+      color: 'text-[var(--primary-color)]'
     },
     { 
       label: locale === 'vi' ? 'Kỹ năng & Công nghệ' : 'Skills & Techs', 
@@ -131,26 +131,26 @@ export default function AdminDashboardPage() {
       {/* Header title */}
       <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-3">
         <div className="flex items-center space-x-2">
-          <LayoutDashboard className="w-5 h-5 text-emerald-500" />
+          <LayoutDashboard className="w-5 h-5 text-[var(--primary-color)]" />
           <h2 className="text-base font-bold text-[var(--text-color)]">
             {locale === 'vi' ? 'Tổng quan hệ thống' : 'Dashboard Overview'}
           </h2>
         </div>
-        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
+        <span className="text-[10px] text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2.5 py-0.5 rounded-full font-bold">
           LIVE CMS
         </span>
       </div>
 
       {/* Welcome Hero Spotlight Card */}
-      <SpotlightCard className="p-6 sm:p-8" spotlightColor="rgba(16, 185, 129, 0.12)">
+      <SpotlightCard className="p-6 sm:p-8" spotlightColor="rgba(99, 102, 241, 0.12)">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0 shadow-glow">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center text-[var(--primary-color)] shrink-0 shadow-glow">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div className="space-y-1.5 flex-1">
             <h3 className="text-base font-bold text-[var(--text-color)] flex items-center gap-2">
               <span>{locale === 'vi' ? 'Xin chào, Quản trị viên!' : 'Welcome back, Administrator!'}</span>
-              <Sparkles className="w-4 h-4 text-emerald-500" />
+              <Sparkles className="w-4 h-4 text-[var(--primary-color)]" />
             </h3>
             <p className="text-xs text-[var(--secondary-color)] font-sans leading-relaxed">
               {locale === 'vi' 
@@ -174,8 +174,8 @@ export default function AdminDashboardPage() {
             >
               <Link href={card.href} className="block group">
                 <SpotlightCard
-                  className="p-5 h-full flex flex-col justify-between space-y-3 group-hover:border-emerald-500/40 transition-colors"
-                  spotlightColor="rgba(16, 185, 129, 0.12)"
+                  className="p-5 h-full flex flex-col justify-between space-y-3 group-hover:border-[var(--primary-border)] transition-colors"
+                  spotlightColor="rgba(99, 102, 241, 0.12)"
                 >
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] uppercase font-bold text-[var(--secondary-color)]">
@@ -185,7 +185,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="flex items-baseline justify-between">
                     <span className="text-3xl font-black text-[var(--text-color)]">{card.value}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-[var(--secondary-color)] group-hover:text-emerald-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[var(--secondary-color)] group-hover:text-[var(--primary-color)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                   </div>
                 </SpotlightCard>
               </Link>
@@ -205,14 +205,14 @@ export default function AdminDashboardPage() {
             return (
               <Link key={idx} href={action.href} className="block group">
                 <SpotlightCard 
-                  className="p-5 h-full space-y-2 group-hover:border-emerald-500/40 transition-colors"
-                  spotlightColor="rgba(16, 185, 129, 0.12)"
+                  className="p-5 h-full space-y-2 group-hover:border-[var(--primary-border)] transition-colors"
+                  spotlightColor="rgba(99, 102, 241, 0.12)"
                 >
                   <div className="flex items-center space-x-2.5">
-                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                    <div className="p-2 rounded-xl bg-[var(--primary-bg)] text-[var(--primary-color)] border border-[var(--primary-border)]">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <h4 className="text-xs font-bold text-[var(--text-color)] group-hover:text-emerald-500 transition-colors">
+                    <h4 className="text-xs font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] transition-colors">
                       {action.title}
                     </h4>
                   </div>

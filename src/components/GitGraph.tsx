@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { GitCommit, GitPullRequest, GitBranch, ShieldCheck } from 'lucide-react';
@@ -28,8 +28,8 @@ export const GitGraph: React.FC = () => {
   const getLevelBg = (level: number) => {
     switch (level) {
       case 4: return 'bg-emerald-400 border-emerald-300';
-      case 3: return 'bg-emerald-500/80 border-emerald-400/50';
-      case 2: return 'bg-emerald-600/50 border-emerald-500/30';
+      case 3: return 'bg-[var(--primary-bg)]0 border-emerald-400/50';
+      case 2: return 'bg-indigo-600/50 border-[var(--primary-border)]';
       case 1: return 'bg-emerald-800/30 border-emerald-700/20';
       default: return 'bg-white/[0.02] border-white/[0.05]';
     }
@@ -39,13 +39,13 @@ export const GitGraph: React.FC = () => {
     <div className="w-full border border-white/[0.08] bg-[#0d0f17] rounded-2xl p-5 space-y-4 font-mono select-text shadow-xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
         <div className="flex items-center space-x-2">
-          <GitCommit className="w-4 h-4 text-emerald-400" />
+          <GitCommit className="w-4 h-4 text-[var(--primary-color)]" />
           <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
             {locale === 'vi' ? 'LỊCH SỬ COMMIT & CODE ACTIVITY (52 WEEKS)' : 'ENGINEERING COMMIT HISTORY (52 WEEKS)'}
           </h4>
         </div>
         <div className="flex items-center space-x-3 text-[10px] text-slate-400">
-          <span className="flex items-center gap-1 font-bold text-emerald-400">
+          <span className="flex items-center gap-1 font-bold text-[var(--primary-color)]">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>1,420+ COMMITS</span>
           </span>
@@ -77,8 +77,8 @@ export const GitGraph: React.FC = () => {
           <div className="flex space-x-1">
             <span className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.02] border border-white/[0.05]" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-800/30 border border-emerald-700/20" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-600/50 border border-emerald-500/30" />
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-500/80 border border-emerald-400/50" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-indigo-600/50 border border-[var(--primary-border)]" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-[var(--primary-bg)]0 border border-emerald-400/50" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-emerald-400 border border-emerald-300" />
           </div>
           <span>More</span>
@@ -89,7 +89,7 @@ export const GitGraph: React.FC = () => {
             <GitPullRequest className="w-3 h-3 text-sky-400" />
             <span>48 Merged PRs</span>
           </span>
-          <span className="text-emerald-400 font-bold">100% Verified Signatures</span>
+          <span className="text-[var(--primary-color)] font-bold">100% Verified Signatures</span>
         </div>
       </div>
     </div>

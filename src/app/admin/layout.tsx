@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Top Header */}
       <div className="md:hidden flex items-center justify-between p-4 border border-border-custom bg-card-custom rounded-xl select-none">
         <div className="flex items-center space-x-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1">
+          <div className="w-7 h-7 rounded-lg bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center p-1">
             <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-xs uppercase tracking-wider font-mono text-text">Admin Portal</span>
@@ -104,14 +104,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="space-y-6">
           {/* Brand header */}
           <div className="hidden md:flex items-center space-x-2.5 pb-4 border-b border-border-custom/50 select-none">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 shadow-glow">
+            <div className="w-9 h-9 rounded-xl bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center p-1.5 shadow-glow">
               <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="text-xs font-black tracking-widest text-text">
                 PORTFOLIO<span className="text-cyan-custom">.ADMIN</span>
               </h2>
-              <p className="text-[7px] text-emerald-400 font-mono">AUTH: ACTIVE</p>
+              <p className="text-[7px] text-[var(--primary-color)] font-mono">AUTH: ACTIVE</p>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderGit2, Plus, Edit2, Trash2, ArrowLeft, Save, AlertTriangle, RefreshCw, Eye, EyeOff, Globe, Upload } from 'lucide-react';
@@ -422,7 +422,7 @@ export default function AdminProjectsPage() {
       {message && (
         <div className={`p-4 rounded-xl border flex items-center space-x-3 text-xs ${
           message.type === 'success' 
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+            ? 'bg-[var(--primary-bg)] border-[var(--primary-border)] text-[var(--primary-color)]' 
             : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
         }`}>
           <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -477,7 +477,7 @@ export default function AdminProjectsPage() {
                       <td className="p-4 font-mono text-[11px] text-secondary">{project.slug}</td>
                       <td className="p-4">
                         {project.status === 'PUBLISHED' ? (
-                          <span className="inline-flex items-center space-x-1 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold">
+                          <span className="inline-flex items-center space-x-1 text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2 py-0.5 rounded-full text-[9px] font-mono font-bold">
                             <Eye className="w-3 h-3" />
                             <span>{locale === 'vi' ? 'HIỂN THỊ' : 'PUBLISHED'}</span>
                           </span>

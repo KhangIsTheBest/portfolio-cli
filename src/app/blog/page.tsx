@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -33,10 +33,10 @@ export default function BlogPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-emerald-500 font-mono space-y-4">
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-[var(--primary-color)] font-mono space-y-4">
         <div className="relative w-10 h-10">
-          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
-          <div className="w-10 h-10 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+          <div className="absolute inset-0 rounded-full border-2 border-[var(--primary-border)] animate-ping" />
+          <div className="w-10 h-10 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         </div>
         <p className="font-mono text-xs tracking-wider animate-pulse font-semibold">
           {locale === 'vi' ? 'ĐANG TẢI DANH SÁCH BÀI VIẾT...' : 'SYNCHRONIZING ARTICLES...'}
@@ -54,7 +54,7 @@ export default function BlogPage() {
         transition={{ duration: 0.4 }}
         className="space-y-3"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 text-xs font-mono">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--primary-border)] bg-[var(--primary-bg)] text-[var(--primary-color)] text-xs font-mono">
           <BookOpen className="w-3.5 h-3.5" />
           <span>{locale === 'vi' ? 'KHO TRI THỨC KỸ THUẬT' : 'ENGINEERING LOGS'}</span>
         </div>
@@ -70,8 +70,8 @@ export default function BlogPage() {
 
       {/* Blog Cards Grid */}
       {blogs.length === 0 ? (
-        <SpotlightCard className="p-12 text-center space-y-4" spotlightColor="rgba(16, 185, 129, 0.12)">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-500">
+        <SpotlightCard className="p-12 text-center space-y-4" spotlightColor="rgba(99, 102, 241, 0.12)">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center mx-auto text-[var(--primary-color)]">
             <Sparkles className="w-6 h-6" />
           </div>
           <div className="space-y-1">
@@ -104,24 +104,24 @@ export default function BlogPage() {
               >
                 <Link href={`/blog/${blog.slug}`} className="block h-full group">
                   <SpotlightCard
-                    className="p-6 h-full flex flex-col justify-between space-y-5 transition-all duration-300 group-hover:border-emerald-500/40"
-                    spotlightColor="rgba(16, 185, 129, 0.14)"
+                    className="p-6 h-full flex flex-col justify-between space-y-5 transition-all duration-300 group-hover:border-[var(--primary-border)]"
+                    spotlightColor="rgba(99, 102, 241, 0.14)"
                   >
                     <div className="space-y-3">
                       {/* Meta top bar */}
                       <div className="flex items-center justify-between text-[11px] text-[var(--secondary-color)]">
                         <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-emerald-500" />
+                          <Calendar className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                           <span>{dateStr}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                          <Clock className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                           <span>{readTime} {locale === 'vi' ? 'phút đọc' : 'min read'}</span>
                         </div>
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--text-color)] group-hover:text-emerald-500 transition-colors duration-200 line-clamp-2">
+                      <h3 className="text-base sm:text-lg font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] transition-colors duration-200 line-clamp-2">
                         {blog.title}
                       </h3>
 
@@ -132,7 +132,7 @@ export default function BlogPage() {
                     </div>
 
                     {/* Footer bar */}
-                    <div className="pt-4 border-t border-[var(--border-color)]/60 flex items-center justify-between text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    <div className="pt-4 border-t border-[var(--border-color)]/60 flex items-center justify-between text-xs font-bold text-[var(--primary-color)]">
                       <span className="flex items-center gap-1 group-hover:underline">
                         {locale === 'vi' ? 'Đọc bài viết' : 'Read Article'}
                       </span>

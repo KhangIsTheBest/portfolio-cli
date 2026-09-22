@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -156,7 +156,7 @@ export default function GuestProfilePage() {
 
         {/* Success Alert */}
         {successMsg && (
-          <div className="flex items-center space-x-2.5 p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl text-xs font-mono">
+          <div className="flex items-center space-x-2.5 p-3 bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] rounded-xl text-xs font-mono">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>

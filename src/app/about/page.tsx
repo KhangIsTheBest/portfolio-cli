@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -33,8 +33,8 @@ export default function AboutPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[350px] text-[var(--primary-color)] font-mono space-y-4">
+        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">RETRIEVING PROFILE SPECIFICATION...</p>
       </div>
     );
@@ -134,13 +134,13 @@ export default function AboutPage() {
     >
       
       {/* Header Bio Card */}
-      <SpotlightCard className="space-y-6" spotlightColor="rgba(16, 185, 129, 0.18)">
+      <SpotlightCard className="space-y-6" spotlightColor="rgba(99, 102, 241, 0.18)">
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <User className="w-5 h-5 text-emerald-500" />
+            <User className="w-5 h-5 text-[var(--primary-color)]" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('about.title')}</h3>
           </div>
-          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded font-bold">
+          <span className="text-[10px] text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2.5 py-1 rounded font-bold">
             VERIFIED PROFILE
           </span>
         </div>
@@ -151,8 +151,8 @@ export default function AboutPage() {
             
             {/* Technical Philosophy Box */}
             <div className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2">
-              <div className="text-xs font-mono font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <div className="text-xs font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-[var(--primary-color)]" />
                 <span>{t('about.philosophyTitle')}</span>
               </div>
               <p className="text-xs text-[var(--secondary-color)] leading-relaxed font-sans">
@@ -166,7 +166,7 @@ export default function AboutPage() {
                 <span>{t('about.location')}</span>
               </span>
               <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1.5 rounded-xl border border-[var(--border-color)]">
-                <Mail className="w-4 h-4 text-emerald-500" />
+                <Mail className="w-4 h-4 text-[var(--primary-color)]" />
                 <span>{userProfile.email}</span>
               </span>
             </div>
@@ -184,7 +184,7 @@ export default function AboutPage() {
                   href={userProfile.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-emerald-500/50 text-[var(--text-color)] transition-all"
+                  className="p-2.5 rounded-xl bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-[var(--primary-color)]/50 text-[var(--text-color)] transition-all"
                   title="GitHub Profile"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
@@ -217,7 +217,7 @@ export default function AboutPage() {
               download="PhanDuyKhang_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer shadow-md active:scale-95"
+              className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition cursor-pointer shadow-md active:scale-95"
             >
               <Download className="w-4 h-4" />
               <span>{locale === 'vi' ? 'TẢI CV KỸ SƯ' : 'DOWNLOAD RESUME'}</span>
@@ -254,20 +254,20 @@ export default function AboutPage() {
       {/* Experience & Education Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Work Experience */}
-        <SpotlightCard className="space-y-4" spotlightColor="rgba(16, 185, 129, 0.15)">
+        <SpotlightCard className="space-y-4" spotlightColor="rgba(99, 102, 241, 0.15)">
           <div className="flex items-center space-x-2 border-b border-[var(--border-color)] pb-3">
-            <Briefcase className="w-4 h-4 text-emerald-500" />
+            <Briefcase className="w-4 h-4 text-[var(--primary-color)]" />
             <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider">
               {locale === 'vi' ? 'Kinh Nghiệm Thực Chiến' : 'Engineering Experience'}
             </h4>
           </div>
           <div className="space-y-4">
             {experiences.map((exp, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2 hover:border-emerald-500/30 transition">
+              <div key={idx} className="p-4 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] space-y-2 hover:border-[var(--primary-border)] transition">
                 <div className="flex justify-between items-start">
                   <div>
                     <h5 className="font-bold text-[var(--text-color)] text-xs font-sans">{exp.role}</h5>
-                    <p className="text-[11px] text-emerald-500 font-mono">{exp.company}</p>
+                    <p className="text-[11px] text-[var(--primary-color)] font-mono">{exp.company}</p>
                   </div>
                   <span className="text-[10px] font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] px-2.5 py-1 rounded border border-[var(--border-color)] flex items-center gap-1 font-bold">
                     <Calendar className="w-3 h-3 text-amber-500" />
@@ -297,7 +297,7 @@ export default function AboutPage() {
                     <p className="text-[11px] text-indigo-500 font-mono">{edu.institution}</p>
                   </div>
                   <span className="text-[10px] font-mono text-[var(--secondary-color)] bg-[var(--card-bg)] px-2.5 py-1 rounded border border-[var(--border-color)] flex items-center gap-1 font-bold">
-                    <Calendar className="w-3 h-3 text-emerald-500" />
+                    <Calendar className="w-3 h-3 text-[var(--primary-color)]" />
                     {edu.period}
                   </span>
                 </div>

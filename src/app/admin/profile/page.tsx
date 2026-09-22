@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { User, Save, RefreshCw, AlertTriangle, CheckCircle2, Upload, Trash2, FileText, ExternalLink } from 'lucide-react';
@@ -210,7 +210,7 @@ export default function AdminProfilePage() {
       {message && (
         <div className={`p-4 rounded-xl border flex items-start space-x-3 text-xs leading-relaxed ${
           message.type === 'success' 
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+            ? 'bg-[var(--primary-bg)] border-[var(--primary-border)] text-[var(--primary-color)]' 
             : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
         }`}>
           {message.type === 'success' ? (
@@ -400,7 +400,7 @@ export default function AdminProfilePage() {
                   🇻🇳 {locale === 'vi' ? 'CV Tiếng Việt (PDF)' : 'Vietnamese CV (PDF)'}
                 </span>
                 {cvViUrl ? (
-                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+                  <span className="text-[10px] text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2 py-0.5 rounded font-bold">
                     {locale === 'vi' ? 'ĐÃ CẬP NHẬT' : 'UPLOADED'}
                   </span>
                 ) : (
@@ -463,7 +463,7 @@ export default function AdminProfilePage() {
                   🇬🇧 {locale === 'vi' ? 'CV Tiếng Anh (PDF)' : 'English CV (PDF)'}
                 </span>
                 {cvEnUrl ? (
-                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+                  <span className="text-[10px] text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2 py-0.5 rounded font-bold">
                     {locale === 'vi' ? 'ĐÃ CẬP NHẬT' : 'UPLOADED'}
                   </span>
                 ) : (

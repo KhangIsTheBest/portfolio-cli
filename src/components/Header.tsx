@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Globe, LogIn, User, Search, Sparkles, Command as CommandIcon } from 'lucide-react';
+import { Menu, X, Globe, LogIn, User, Search } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { CommandMenu } from './CommandMenu';
 import { useLanguage } from '@/context/LanguageContext';
@@ -66,25 +66,25 @@ export const Header: React.FC = () => {
     <>
       <header className="sticky top-4 z-40 w-full max-w-6xl mx-auto mb-8 px-3 sm:px-4 select-none font-mono">
         <nav className="w-full border border-[var(--border-color)] bg-[var(--card-bg)]/80 backdrop-blur-2xl rounded-2xl px-4 py-2.5 flex items-center justify-between shadow-2xl transition-all duration-300">
-          
+
           {/* Brand Logo & Status */}
           <Link href="/" className="flex items-center space-x-2.5 group shrink-0 cursor-pointer">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1 group-hover:bg-emerald-500/20 group-hover:scale-105 transition duration-300">
+            <div className="w-8 h-8 rounded-xl bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center p-1 group-hover:bg-[var(--primary-bg)] group-hover:scale-105 transition duration-300">
               <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-bold tracking-tight text-[var(--text-color)] group-hover:text-emerald-500 transition font-sans">
-                PhanDuyKhang<span className="text-emerald-500 font-mono">.dev</span>
+              <span className="text-xs font-bold tracking-tight text-[var(--text-color)] font-sans">
+                PhanDuyKhang<span className="text-[var(--primary-color)] font-mono">.dev</span>
               </span>
               <div className="flex items-center space-x-1.5 text-[8px] text-[var(--secondary-color)]">
-                <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-indigo-500 animate-pulse' : 'bg-rose-500'}`} />
                 <span className="whitespace-nowrap font-mono">{isOnline ? 'ONLINE' : 'OFFLINE'}</span>
               </div>
             </div>
           </Link>
 
-          {/* Desktop Navigation Links with Animated Pill Indicator */}
-          <div className="hidden lg:flex items-center space-x-1 mx-3 bg-[var(--terminal-header-bg)]/50 p-1 rounded-xl border border-[var(--border-color)]/60">
+          {/* Desktop Navigation Links with Animated Active Pill */}
+          <div className="hidden lg:flex items-center space-x-1 mx-3 bg-[var(--terminal-header-bg)]/80 p-1 rounded-xl border border-[var(--border-color)]">
             {menuItems.map((item) => {
               const active = isActive(item.href);
               return (
@@ -93,14 +93,14 @@ export const Header: React.FC = () => {
                   href={item.href}
                   className={`relative px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-200 cursor-pointer ${
                     active
-                      ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+                      ? 'text-[var(--primary-color)] font-bold'
                       : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
                   }`}
                 >
                   {active && (
                     <motion.div
                       layoutId="active-pill"
-                      className="absolute inset-0 bg-emerald-500/15 border border-emerald-500/30 rounded-lg shadow-sm"
+                      className="absolute inset-0 bg-[var(--primary-bg)] border border-[var(--primary-border)] rounded-lg"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -110,16 +110,16 @@ export const Header: React.FC = () => {
             })}
           </div>
 
-          {/* Right Actions: Command Search, Language, Theme, Portal */}
+          {/* Right Actions */}
           <div className="hidden lg:flex items-center space-x-2 shrink-0 select-none">
-            {/* Quick Command Palette Button */}
+            {/* Command Palette Button */}
             <button
               onClick={() => setCommandMenuOpen(true)}
               type="button"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-emerald-500/40 text-[var(--secondary-color)] hover:text-[var(--text-color)] rounded-xl text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-[var(--primary-border)] text-[var(--secondary-color)] hover:text-[var(--primary-color)] rounded-xl text-xs font-bold transition cursor-pointer"
               title="Quick Command Menu (Ctrl+K / Cmd+K)"
             >
-              <Search className="w-3.5 h-3.5 text-emerald-500" />
+              <Search className="w-3.5 h-3.5 text-[var(--primary-color)]" />
               <span className="text-[10px] hidden xl:inline text-[var(--secondary-color)]">Search</span>
               <kbd className="text-[9px] bg-[var(--card-bg)] border border-[var(--border-color)] px-1 rounded text-[var(--secondary-color)] font-mono">
                 ⌘K
@@ -130,20 +130,20 @@ export const Header: React.FC = () => {
             <button
               onClick={toggleLanguage}
               type="button"
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-emerald-500/40 text-[var(--text-color)] rounded-xl text-xs font-bold transition cursor-pointer"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-[var(--primary-border)] text-[var(--text-color)] rounded-xl text-xs font-bold transition cursor-pointer"
               title={locale === 'vi' ? 'Switch to English' : 'Chuyển sang Tiếng Việt'}
             >
-              <Globe className="w-3.5 h-3.5 text-emerald-500" />
+              <Globe className="w-3.5 h-3.5 text-[var(--primary-color)]" />
               <span>{locale === 'vi' ? 'VN' : 'EN'}</span>
             </button>
-            
+
             {/* Theme Selector */}
             <ThemeSelector />
 
             {/* Account Portal Button */}
             <Link
               href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
-              className="flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-bold transition cursor-pointer shrink-0 shadow-sm"
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-[var(--primary-bg)] hover:bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] rounded-xl text-xs font-bold transition cursor-pointer shrink-0"
             >
               {isLoggedIn ? (
                 <>
@@ -164,10 +164,9 @@ export const Header: React.FC = () => {
             <button
               onClick={() => setCommandMenuOpen(true)}
               type="button"
-              className="p-2 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] rounded-xl text-[var(--text-color)]"
-              title="Search"
+              className="p-2 bg-[var(--terminal-header-bg)] border border-[var(--border-color)] rounded-xl text-[var(--primary-color)]"
             >
-              <Search className="w-4 h-4 text-emerald-500" />
+              <Search className="w-4 h-4" />
             </button>
 
             <button
@@ -177,14 +176,13 @@ export const Header: React.FC = () => {
             >
               <span>{locale === 'vi' ? 'VN' : 'EN'}</span>
             </button>
-            
+
             <ThemeSelector />
-            
+
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
               className="p-1.5 rounded-xl border border-[var(--border-color)] text-[var(--text-color)] bg-[var(--terminal-header-bg)]"
-              title="Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -208,18 +206,18 @@ export const Header: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`w-full block px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
                     isActive(item.href)
-                      ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/25'
+                      ? 'text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)]'
                       : 'text-[var(--secondary-color)] hover:text-[var(--text-color)] hover:bg-[var(--terminal-header-bg)]'
                   }`}
                 >
                   {t(item.labelKey)}
                 </Link>
               ))}
-              
+
               <Link
                 href={isLoggedIn ? (isAdmin ? '/admin' : '/profile') : '/login'}
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl text-xs font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 block mt-3"
+                className="w-full text-center py-2.5 rounded-xl text-xs font-bold bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] block mt-3"
               >
                 {isLoggedIn ? (locale === 'vi' ? 'Quản lý tài khoản' : 'Account Portal') : (locale === 'vi' ? 'Đăng nhập / Đăng ký' : 'Sign In / Register')}
               </Link>

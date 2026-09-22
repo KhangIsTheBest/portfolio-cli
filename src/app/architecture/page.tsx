@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -23,9 +23,9 @@ export default function ArchitecturePage() {
     >
       
       {/* Hero Header */}
-      <SpotlightCard className="p-8 md:p-12 space-y-4" spotlightColor="rgba(16, 185, 129, 0.18)">
+      <SpotlightCard className="p-8 md:p-12 space-y-4" spotlightColor="rgba(99, 102, 241, 0.18)">
         <div className="space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-bold">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] text-xs font-bold">
             <Cpu className="w-3.5 h-3.5" />
             <span>ENTERPRISE BACKEND ARCHITECTURE</span>
           </div>
@@ -57,9 +57,9 @@ export default function ArchitecturePage() {
               href={`${backendUrl}/actuator/health`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-bold text-xs hover:border-emerald-500/40 transition cursor-pointer"
+              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-bold text-xs hover:border-[var(--primary-border)] transition cursor-pointer"
             >
-              <Activity className="w-4 h-4 text-emerald-500" />
+              <Activity className="w-4 h-4 text-[var(--primary-color)]" />
               <span>Actuator Health Check</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
@@ -70,7 +70,7 @@ export default function ArchitecturePage() {
       {/* System Topology (C4 Model Representation) */}
       <section className="space-y-6">
         <div className="flex items-center space-x-3">
-          <Layers className="w-6 h-6 text-emerald-500" />
+          <Layers className="w-6 h-6 text-[var(--primary-color)]" />
           <h2 className="text-xl md:text-2xl font-bold text-[var(--text-color)] font-sans">
             {locale === 'vi' ? '1. Sơ đồ Phân tầng Hệ thống (Multi-Tier Topology)' : '1. Multi-Tier System Topology'}
           </h2>
@@ -88,40 +88,40 @@ export default function ArchitecturePage() {
             </div>
             <ul className="text-xs text-[var(--secondary-color)] space-y-2 font-sans">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Server-Side Rendering (SSR) & Streaming UI</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Next.js API Route Proxy (`/api/v1/*`)</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Offline Resilience với Client-side Mock Fallback</span>
               </li>
             </ul>
           </SpotlightCard>
 
           {/* Tier 2: Core API Server */}
-          <SpotlightCard className="space-y-4" spotlightColor="rgba(16, 185, 129, 0.15)">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
+          <SpotlightCard className="space-y-4" spotlightColor="rgba(99, 102, 241, 0.15)">
+            <div className="w-10 h-10 rounded-xl bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center text-[var(--primary-color)]">
               <Server className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-bold text-emerald-500 tracking-wider font-mono">TIER 2: API ENGINE</span>
+              <span className="text-[10px] font-bold text-[var(--primary-color)] tracking-wider font-mono">TIER 2: API ENGINE</span>
               <h3 className="text-base font-bold text-[var(--text-color)] font-sans">Java 21 + Spring Boot 3</h3>
             </div>
             <ul className="text-xs text-[var(--secondary-color)] space-y-2 font-sans">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Spring Security 6 Stateless Authentication</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>RESTful Architecture & Global Exception Advice</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Spring Data JPA & Dynamic Storage Strategy</span>
               </li>
             </ul>
@@ -138,15 +138,15 @@ export default function ArchitecturePage() {
             </div>
             <ul className="text-xs text-[var(--secondary-color)] space-y-2 font-sans">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>PostgreSQL 16 ACID Database với Flyway Migrations</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>Redis 7 In-Memory Cache & Distributed Rate Limiter</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--primary-color)] shrink-0 mt-0.5" />
                 <span>MinIO S3 Compatible Object Storage</span>
               </li>
             </ul>
@@ -158,9 +158,9 @@ export default function ArchitecturePage() {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Security & Authentication */}
-        <SpotlightCard className="space-y-4" spotlightColor="rgba(16, 185, 129, 0.15)">
+        <SpotlightCard className="space-y-4" spotlightColor="rgba(99, 102, 241, 0.15)">
           <div className="flex items-center space-x-3">
-            <Lock className="w-5 h-5 text-emerald-500" />
+            <Lock className="w-5 h-5 text-[var(--primary-color)]" />
             <h3 className="text-lg font-bold text-[var(--text-color)] font-sans">
               {locale === 'vi' ? 'Bảo mật & Luồng Xác thực (Auth Pipeline)' : 'Security & Auth Pipeline'}
             </h3>
@@ -171,7 +171,7 @@ export default function ArchitecturePage() {
               : 'Dual-mode authentication: Traditional BCrypt password hashing and Google OAuth2 ID Token verification. JWT tokens signed with HMAC-SHA256 with role claims protect privileged endpoints.'}
           </p>
           <div className="bg-[var(--terminal-header-bg)] p-4 rounded-xl border border-[var(--border-color)] text-[11px] text-[var(--text-color)] font-mono space-y-1">
-            <div className="text-emerald-500 font-bold">Flow: [Client] → Google / Form → [Backend Auth Controller]</div>
+            <div className="text-[var(--primary-color)] font-bold">Flow: [Client] → Google / Form → [Backend Auth Controller]</div>
             <div>↳ Verify Google ID Token (GoogleHttpClient) / BCrypt verify</div>
             <div>↳ Generate JWT Claims (Subject, Role, Expiration)</div>
             <div>↳ Stateless Request Filtering via `JwtAuthenticationFilter`</div>

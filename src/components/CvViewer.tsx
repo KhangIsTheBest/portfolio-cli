@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { FileText, Download, Maximize2, ExternalLink, X, AlertCircle } from 'lucide-react';
@@ -21,12 +21,12 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
   const downloadFileName = activeTab === 'vi' ? 'PhanDuyKhang_CV_VI.pdf' : 'PhanDuyKhang_CV_EN.pdf';
 
   return (
-    <SpotlightCard className="space-y-6" spotlightColor="rgba(16, 185, 129, 0.15)">
+    <SpotlightCard className="space-y-6" spotlightColor="rgba(99, 102, 241, 0.15)">
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-5">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <FileText className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <FileText className="w-5 h-5 text-[var(--primary-color)]" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">
               {t('about.cvTitle')}
             </h3>
@@ -45,7 +45,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
               onClick={() => setActiveTab('vi')}
               className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeTab === 'vi'
-                  ? 'bg-emerald-600 text-white shadow'
+                  ? 'bg-indigo-600 text-white shadow'
                   : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
               }`}
             >
@@ -56,7 +56,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
               onClick={() => setActiveTab('en')}
               className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeTab === 'en'
-                  ? 'bg-emerald-600 text-white shadow'
+                  ? 'bg-indigo-600 text-white shadow'
                   : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
               }`}
             >
@@ -70,10 +70,10 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
               <button
                 type="button"
                 onClick={() => setIsFullscreen(true)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold font-mono text-[var(--text-color)] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-emerald-500/50 transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold font-mono text-[var(--text-color)] bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-[var(--primary-color)]/50 transition cursor-pointer"
                 title={t('about.cvFullscreen')}
               >
-                <Maximize2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <Maximize2 className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span className="hidden sm:inline">{t('about.cvFullscreen')}</span>
               </button>
 
@@ -93,7 +93,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
                 download={downloadFileName}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold font-mono text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer shadow-md"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold font-mono text-white bg-indigo-600 hover:bg-indigo-500 transition cursor-pointer shadow-md"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>{t('about.cvDownload')}</span>
@@ -129,7 +129,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col p-4 sm:p-6 animate-fade-in">
           <div className="flex items-center justify-between pb-4 border-b border-zinc-700/60 max-w-6xl w-full mx-auto">
             <div className="flex items-center space-x-3">
-              <FileText className="w-5 h-5 text-emerald-400" />
+              <FileText className="w-5 h-5 text-[var(--primary-color)]" />
               <span className="text-sm font-bold text-white font-mono uppercase tracking-wider">
                 {t('about.cvTitle')} - {activeTab === 'vi' ? 'Tiếng Việt' : 'English'}
               </span>
@@ -141,7 +141,7 @@ export const CvViewer: React.FC<CvViewerProps> = ({ cvViUrl, cvEnUrl }) => {
                 download={downloadFileName}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono text-white bg-indigo-600 hover:bg-indigo-500 transition cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>{t('about.cvDownload')}</span>

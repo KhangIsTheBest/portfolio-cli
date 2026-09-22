@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { WifiOff, Loader2, CheckCircle, RefreshCw } from 'lucide-react';
@@ -33,13 +33,13 @@ export function ServerStatusBanner() {
   return (
     <div className={`w-full border-b text-[11px] font-mono py-2 px-4 flex items-center justify-between transition-all duration-500 animate-slide-down ${
       justConnected 
-        ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+        ? 'bg-emerald-950/80 border-[var(--primary-border)] text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
         : 'bg-amber-950/80 border-amber-500/40 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
     } backdrop-blur-md sticky top-0 z-50`}>
       <div className="flex items-center space-x-2.5 max-w-4xl mx-auto w-full justify-between sm:justify-start">
         <div className="flex items-center space-x-2 flex-1 sm:flex-initial">
           {justConnected ? (
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 animate-bounce" />
+            <CheckCircle className="w-4 h-4 text-[var(--primary-color)] shrink-0 animate-bounce" />
           ) : (
             <div className="relative shrink-0">
               <WifiOff className="w-4 h-4 text-amber-400 shrink-0" />

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -50,7 +50,7 @@ export default function SkillsPage() {
 
   const getCardStyle = (idx: number) => {
     const styles = [
-      'border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5',
+      'border-[var(--primary-border)] text-[var(--primary-color)] bg-[var(--primary-bg)]',
       'border-sky-500/30 text-sky-600 dark:text-sky-400 bg-sky-500/5',
       'border-indigo-500/30 text-indigo-600 dark:text-indigo-400 bg-indigo-500/5',
       'border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-500/5',
@@ -62,8 +62,8 @@ export default function SkillsPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[350px] text-emerald-600 dark:text-emerald-400 font-mono space-y-4">
-        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[350px] text-[var(--primary-color)] font-mono space-y-4">
+        <div className="w-8 h-8 border-2 border-[var(--primary-border)] border-t-emerald-500 rounded-full animate-spin" />
         <p className="text-xs tracking-wider animate-pulse font-bold">QUERYING STACK MATRIX DATABASE...</p>
       </div>
     );
@@ -78,10 +78,10 @@ export default function SkillsPage() {
     >
       
       {/* Header section */}
-      <SpotlightCard className="w-full space-y-6" spotlightColor="rgba(16, 185, 129, 0.18)">
+      <SpotlightCard className="w-full space-y-6" spotlightColor="rgba(99, 102, 241, 0.18)">
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <Cpu className="w-5 h-5 text-emerald-500" />
+            <Cpu className="w-5 h-5 text-[var(--primary-color)]" />
             <h3 className="text-base font-bold text-[var(--text-color)] uppercase tracking-wider">{t('skills.title')}</h3>
           </div>
           <span className="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider font-mono">
@@ -92,8 +92,8 @@ export default function SkillsPage() {
         {/* System Architecture Domain Overview Cards with Rich Colors */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans text-xs">
           
-          <div className="p-5 rounded-2xl bg-[var(--terminal-header-bg)] border border-emerald-500/25 space-y-2">
-            <div className="flex items-center space-x-2 text-emerald-500 font-mono font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--terminal-header-bg)] border border-[var(--primary-border)] space-y-2">
+            <div className="flex items-center space-x-2 text-[var(--primary-color)] font-mono font-bold">
               <Server className="w-4 h-4" />
               <span>{t('skills.backend')}</span>
             </div>
@@ -122,7 +122,7 @@ export default function SkillsPage() {
         ) : (
           <div className="space-y-4 pt-2">
             <h4 className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider flex items-center gap-1.5 font-mono">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <ShieldCheck className="w-4 h-4 text-[var(--primary-color)]" />
               <span>REGISTERED TECH STACK (DATABASE REAL DATA)</span>
             </h4>
 

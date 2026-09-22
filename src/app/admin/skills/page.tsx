@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Cpu, Plus, Edit2, Trash2, X, Check, AlertTriangle, RefreshCw, Code, Database, Server, Terminal, Cloud, FileCode, Layers, Monitor, Radio } from 'lucide-react';
@@ -190,7 +190,7 @@ export default function AdminSkillsPage() {
       {message && (
         <div className={`p-4 rounded-xl border flex items-center space-x-3 text-xs ${
           message.type === 'success' 
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+            ? 'bg-[var(--primary-bg)] border-[var(--primary-border)] text-[var(--primary-color)]' 
             : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
         }`}>
           <AlertTriangle className="w-4 h-4 shrink-0" />

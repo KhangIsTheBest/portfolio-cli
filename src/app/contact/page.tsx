@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Send, CheckCircle2, UserCheck, Info, Sparkles, MessageSquare, Terminal } from 'lucide-react';
@@ -125,7 +125,7 @@ export default function ContactPage() {
         transition={{ duration: 0.4 }}
         className="space-y-3 text-center sm:text-left"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 text-xs font-mono">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--primary-border)] bg-[var(--primary-bg)] text-[var(--primary-color)] text-xs font-mono">
           <Terminal className="w-3.5 h-3.5" />
           <span>{locale === 'vi' ? 'KẾT NỐI TRỰC TIẾP' : 'DIRECT TRANSMISSION PIPELINE'}</span>
         </div>
@@ -140,23 +140,23 @@ export default function ContactPage() {
       </motion.div>
 
       {/* Main Form Card */}
-      <SpotlightCard className="p-6 sm:p-8 space-y-6 shadow-xl" spotlightColor="rgba(16, 185, 129, 0.12)">
+      <SpotlightCard className="p-6 sm:p-8 space-y-6 shadow-xl" spotlightColor="rgba(99, 102, 241, 0.12)">
         {/* Top meta indicator */}
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
           <div className="flex items-center space-x-2">
-            <Mail className="w-4 h-4 text-emerald-500" />
+            <Mail className="w-4 h-4 text-[var(--primary-color)]" />
             <span className="text-xs font-bold text-[var(--text-color)] uppercase tracking-wider">
               {locale === 'vi' ? 'Biểu mẫu liên hệ' : 'Dispatch Console'}
             </span>
           </div>
-          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
+          <span className="text-[10px] text-[var(--primary-color)] bg-[var(--primary-bg)] border border-[var(--primary-border)] px-2.5 py-0.5 rounded-full font-bold">
             SPRING BOOT REST
           </span>
         </div>
 
         {/* User Session Bar */}
         {loggedInUser ? (
-          <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-mono">
+          <div className="p-3.5 bg-[var(--primary-bg)] border border-[var(--primary-border)] rounded-2xl flex items-center justify-between text-xs text-[var(--primary-color)] font-mono">
             <div className="flex items-center space-x-2">
               <UserCheck className="w-4 h-4 shrink-0" />
               <span>{locale === 'vi' ? `Xác thực: ${loggedInUser.fullName}` : `Authenticated: ${loggedInUser.fullName}`}</span>
@@ -170,9 +170,9 @@ export default function ContactPage() {
             <Info className="w-4 h-4 text-amber-500 shrink-0" />
             <p>
               {locale === 'vi' ? (
-                <>Bạn có thể <Link href="/login" className="text-emerald-600 dark:text-emerald-400 underline font-bold">Đăng nhập</Link> để tự động điền thông tin.</>
+                <>Bạn có thể <Link href="/login" className="text-[var(--primary-color)] underline font-bold">Đăng nhập</Link> để tự động điền thông tin.</>
               ) : (
-                <>You can <Link href="/login" className="text-emerald-600 dark:text-emerald-400 underline font-bold">Sign In</Link> to pre-fill your details.</>
+                <>You can <Link href="/login" className="text-[var(--primary-color)] underline font-bold">Sign In</Link> to pre-fill your details.</>
               )}
             </p>
           </div>
@@ -183,13 +183,13 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-12 text-center space-y-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl font-mono"
+            className="flex flex-col items-center justify-center py-12 text-center space-y-4 bg-[var(--primary-bg)] border border-[var(--primary-border)] rounded-2xl font-mono"
           >
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-500 shadow-glow">
+            <div className="w-14 h-14 rounded-full bg-[var(--primary-bg)] border border-[var(--primary-border)] flex items-center justify-center text-[var(--primary-color)] shadow-glow">
               <CheckCircle2 className="w-8 h-8 animate-bounce" />
             </div>
             <div className="space-y-1 max-w-sm">
-              <h4 className="text-emerald-600 dark:text-emerald-400 font-bold text-base">
+              <h4 className="text-[var(--primary-color)] font-bold text-base">
                 {t('contact.successTitle')}
               </h4>
               <p className="text-xs text-[var(--secondary-color)] leading-relaxed">
@@ -208,7 +208,7 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-mono font-bold uppercase text-[var(--secondary-color)]">
-                  {t('contact.nameLabel')} <span className="text-emerald-500">*</span>
+                  {t('contact.nameLabel')} <span className="text-[var(--primary-color)]">*</span>
                 </label>
                 <input
                   type="text"
@@ -218,13 +218,13 @@ export default function ContactPage() {
                   required
                   readOnly={!!loggedInUser}
                   placeholder={t('contact.namePlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-colors"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-[10px] font-mono font-bold uppercase text-[var(--secondary-color)]">
-                  {t('contact.emailLabel')} <span className="text-emerald-500">*</span>
+                  {t('contact.emailLabel')} <span className="text-[var(--primary-color)]">*</span>
                 </label>
                 <input
                   type="email"
@@ -234,7 +234,7 @@ export default function ContactPage() {
                   required
                   readOnly={!!loggedInUser}
                   placeholder={t('contact.emailPlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-colors"
                 />
               </div>
             </div>
@@ -249,13 +249,13 @@ export default function ContactPage() {
                 value={formData.subject}
                 onChange={handleInputChange}
                 placeholder={t('contact.subjectPlaceholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-colors"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-mono font-bold uppercase text-[var(--secondary-color)]">
-                {t('contact.msgLabel')} <span className="text-emerald-500">*</span>
+                {t('contact.msgLabel')} <span className="text-[var(--primary-color)]">*</span>
               </label>
               <textarea
                 name="message"
@@ -264,14 +264,14 @@ export default function ContactPage() {
                 onChange={handleInputChange}
                 required
                 placeholder={t('contact.msgPlaceholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors resize-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--text-color)] text-xs focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-colors resize-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all duration-200 cursor-pointer disabled:opacity-50 shadow-md active:scale-[0.99]"
+              className="flex items-center justify-center space-x-2 w-full px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all duration-200 cursor-pointer disabled:opacity-50 shadow-md active:scale-[0.99]"
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-2">

@@ -1,67 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Default Multi-Accent Dark Theme (Space Aurora) */
-  --bg-color: #03050d;
-  --text-color: #f8fafc;
-  --primary-color: #10b981;
-  --secondary-color: #94a3b8;
-  --indigo-accent: #6366f1;
-  --cyan-accent: #06b6d4;
-  --amber-accent: #f59e0b;
-  --rose-accent: #f43f5e;
-  --purple-accent: #8b5cf6;
+  /* === Indigo/Violet Design System — Dark Mode (Default) === */
+  --bg-color: #09090b;
+  --text-color: #fafafa;
+  --secondary-color: #a1a1aa;
+  --primary-color: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-bg: rgba(99, 102, 241, 0.1);
+  --primary-border: rgba(99, 102, 241, 0.25);
 
-  --cursor-color: #10b981;
-  --glow-color: rgba(16, 185, 129, 0.18);
-  --border-color: rgba(255, 255, 255, 0.09);
-  --card-bg: rgba(13, 16, 26, 0.85);
-  --terminal-header-bg: rgba(19, 23, 38, 0.9);
-  --cyan-color: #10b981;
-  --purple-color: #6366f1;
+  --card-bg: #18181b;
+  --card-hover: #1e1e23;
+  --border-color: #27272a;
+  --terminal-header-bg: #1e1e23;
+
+  --cursor-color: #6366f1;
+  --glow-color: rgba(99, 102, 241, 0.15);
+
+  /* Legacy aliases kept for backward compat */
+  --cyan-color: #6366f1;
+  --purple-color: #8b5cf6;
 }
 
-/* Vibrant Prismatic Light Mode (Daylight Aurora) */
+/* === Light Mode === */
 .light, body.theme-light {
-  --bg-color: #f8fafc;
-  --text-color: #0f172a;
-  --primary-color: #0d9488;
-  --secondary-color: #475569;
-  --indigo-accent: #4f46e5;
-  --cyan-accent: #0284c7;
-  --amber-accent: #d97706;
-  --rose-accent: #e11d48;
-  --purple-accent: #7c3aed;
+  --bg-color: #ffffff;
+  --text-color: #09090b;
+  --secondary-color: #71717a;
+  --primary-color: #4f46e5;
+  --primary-hover: #6366f1;
+  --primary-bg: rgba(79, 70, 229, 0.08);
+  --primary-border: rgba(79, 70, 229, 0.2);
 
-  --cursor-color: #0f172a;
-  --glow-color: rgba(13, 148, 136, 0.08);
-  --border-color: rgba(226, 232, 240, 0.95);
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --terminal-header-bg: rgba(241, 245, 249, 0.95);
-  --cyan-color: #0d9488;
-  --purple-color: #4f46e5;
+  --card-bg: #f4f4f5;
+  --card-hover: #ebebed;
+  --border-color: #e4e4e7;
+  --terminal-header-bg: #f4f4f5;
+
+  --cursor-color: #4f46e5;
+  --glow-color: rgba(79, 70, 229, 0.08);
+
+  --cyan-color: #4f46e5;
+  --purple-color: #7c3aed;
 }
 
-/* Explicit Space Dark Theme */
+/* === Dark Mode Explicit === */
 .dark, body.theme-dark {
-  --bg-color: #03050d;
-  --text-color: #f8fafc;
-  --primary-color: #10b981;
-  --secondary-color: #94a3b8;
-  --indigo-accent: #6366f1;
-  --cyan-accent: #06b6d4;
-  --amber-accent: #f59e0b;
-  --rose-accent: #f43f5e;
-  --purple-accent: #8b5cf6;
+  --bg-color: #09090b;
+  --text-color: #fafafa;
+  --secondary-color: #a1a1aa;
+  --primary-color: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-bg: rgba(99, 102, 241, 0.1);
+  --primary-border: rgba(99, 102, 241, 0.25);
 
-  --cursor-color: #10b981;
-  --glow-color: rgba(16, 185, 129, 0.18);
-  --border-color: rgba(255, 255, 255, 0.09);
-  --card-bg: rgba(13, 16, 26, 0.85);
-  --terminal-header-bg: rgba(19, 23, 38, 0.9);
-  --cyan-color: #10b981;
-  --purple-color: #6366f1;
+  --card-bg: #18181b;
+  --card-hover: #1e1e23;
+  --border-color: #27272a;
+  --terminal-header-bg: #1e1e23;
+
+  --cursor-color: #6366f1;
+  --glow-color: rgba(99, 102, 241, 0.15);
+
+  --cyan-color: #6366f1;
+  --purple-color: #8b5cf6;
 }
 
 @theme inline {
@@ -74,15 +77,15 @@
   --color-border-custom: var(--border-color);
   --color-card-custom: var(--card-bg);
   --color-terminal-header: var(--terminal-header-bg);
-  
+
   --color-cyan-custom: var(--cyan-color);
   --color-purple-custom: var(--purple-color);
 
-  --font-mono: 'JetBrains Mono', var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-sans: 'Plus Jakarta Sans', var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Custom styles and typography */
+/* === Base Styles === */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -91,7 +94,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism custom classes */
+/* === Card & Glass === */
 .glass-panel {
   background: var(--card-bg);
   backdrop-filter: blur(16px);
@@ -100,33 +103,33 @@ body {
   box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.2);
 }
 
-/* Custom scrollbar */
+/* === Custom Scrollbar === */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 150, 0.25);
-  border-radius: 3px;
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-color);
 }
 
-/* Selection style */
+/* === Selection Style === */
 ::selection {
   background-color: var(--primary-color);
   color: #ffffff;
 }
 
-/* Fade In Animation */
+/* === Fade In Animation === */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -135,10 +138,15 @@ body {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Markdown Content Formatting */
+/* === Glow shadow utility === */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+/* === Markdown Content === */
 .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
   color: var(--text-color);
   font-weight: 800;
@@ -169,13 +177,13 @@ body {
   border-radius: 0 0.5rem 0.5rem 0;
 }
 .markdown-body code {
-  background: rgba(150, 150, 150, 0.1);
-  border: 1px solid var(--border-color);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid var(--primary-border);
   padding: 0.15em 0.4em;
   border-radius: 0.375rem;
   font-family: var(--font-mono);
   font-size: 0.85em;
-  color: var(--cyan-color);
+  color: var(--primary-color);
 }
 .markdown-body pre {
   background: var(--terminal-header-bg);
@@ -192,56 +200,20 @@ body {
   color: var(--text-color);
 }
 
-/* TipTap ProseMirror WYSIWYG Editor Styles */
+/* === TipTap ProseMirror === */
 .ProseMirror {
   outline: none !important;
   min-height: inherit;
 }
-.ProseMirror p {
-  margin-bottom: 0.75em;
-  line-height: 1.6;
-}
-.ProseMirror ul {
-  list-style-type: disc !important;
-  padding-left: 1.5rem !important;
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
-}
-.ProseMirror ol {
-  list-style-type: decimal !important;
-  padding-left: 1.5rem !important;
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
-}
-.ProseMirror li {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.25rem !important;
-}
-.ProseMirror h1 {
-  font-size: 1.5rem !important;
-  font-weight: 800 !important;
-  margin-top: 1.25rem !important;
-  margin-bottom: 0.5rem !important;
-  color: var(--text-color) !important;
-}
-.ProseMirror h2 {
-  font-size: 1.25rem !important;
-  font-weight: 700 !important;
-  margin-top: 1rem !important;
-  margin-bottom: 0.4rem !important;
-  color: var(--text-color) !important;
-  border-bottom: 1px solid var(--border-color) !important;
-  padding-bottom: 0.3rem !important;
-}
-.ProseMirror h3 {
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  margin-top: 0.85rem !important;
-  margin-bottom: 0.35rem !important;
-  color: var(--text-color) !important;
-}
+.ProseMirror p { margin-bottom: 0.75em; line-height: 1.6; }
+.ProseMirror ul { list-style-type: disc !important; padding-left: 1.5rem !important; margin: 0.5rem 0 !important; }
+.ProseMirror ol { list-style-type: decimal !important; padding-left: 1.5rem !important; margin: 0.5rem 0 !important; }
+.ProseMirror li { margin: 0.25rem 0 !important; }
+.ProseMirror h1 { font-size: 1.5rem !important; font-weight: 800 !important; margin: 1.25rem 0 0.5rem !important; color: var(--text-color) !important; }
+.ProseMirror h2 { font-size: 1.25rem !important; font-weight: 700 !important; margin: 1rem 0 0.4rem !important; color: var(--text-color) !important; border-bottom: 1px solid var(--border-color) !important; padding-bottom: 0.3rem !important; }
+.ProseMirror h3 { font-size: 1.1rem !important; font-weight: 700 !important; margin: 0.85rem 0 0.35rem !important; color: var(--text-color) !important; }
 .ProseMirror blockquote {
-  border-left: 3px solid var(--cyan-color) !important;
+  border-left: 3px solid var(--primary-color) !important;
   padding-left: 1rem !important;
   margin: 0.75rem 0 !important;
   color: var(--secondary-color) !important;
@@ -251,22 +223,7 @@ body {
   padding-bottom: 0.4rem !important;
   border-radius: 0 0.5rem 0.5rem 0 !important;
 }
-.ProseMirror table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  margin: 1rem 0 !important;
-  font-family: var(--font-mono) !important;
-  font-size: 0.8rem !important;
-}
-.ProseMirror th, .ProseMirror td {
-  border: 1px solid var(--border-color) !important;
-  padding: 0.5rem !important;
-}
-.ProseMirror th {
-  background-color: var(--terminal-header-bg) !important;
-  color: var(--cyan-color) !important;
-  font-weight: 700 !important;
-}
-.ProseMirror-selectednode {
-  outline: 2px solid var(--cyan-color) !important;
-}
+.ProseMirror table { width: 100% !important; border-collapse: collapse !important; margin: 1rem 0 !important; font-size: 0.8rem !important; }
+.ProseMirror th, .ProseMirror td { border: 1px solid var(--border-color) !important; padding: 0.5rem !important; }
+.ProseMirror th { background-color: var(--terminal-header-bg) !important; color: var(--primary-color) !important; font-weight: 700 !important; }
+.ProseMirror-selectednode { outline: 2px solid var(--primary-color) !important; }

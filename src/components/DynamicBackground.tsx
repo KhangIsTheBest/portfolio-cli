@@ -54,8 +54,8 @@ export const DynamicBackground: React.FC = () => {
 
     // Interactive Tech Constellation Nodes
     const numParticles = Math.min(Math.floor(width / 24), 45);
-    const darkColors = ['#10b981', '#06b6d4', '#6366f1', '#8b5cf6', '#f59e0b'];
-    const lightColors = ['#0d9488', '#0284c7', '#4f46e5', '#7c3aed', '#d97706'];
+    const darkColors = ['#6366f1', '#8b5cf6', '#818cf8', '#a78bfa', '#4f46e5'];
+    const lightColors = ['#4f46e5', '#6366f1', '#7c3aed', '#8b5cf6', '#6d28d9'];
 
     const particles: Particle[] = Array.from({ length: numParticles }, () => ({
       x: Math.random() * width,
@@ -93,29 +93,28 @@ export const DynamicBackground: React.FC = () => {
       // 1. BASE COSMIC / DAYLIGHT GRADIENT BACKGROUND
       // =========================================================================
       if (isDark) {
-        // Deep Space Cosmic Void Gradient
+        // Deep Zinc/Indigo Dark Background
         const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-        bgGrad.addColorStop(0, '#03050d');
-        bgGrad.addColorStop(0.5, '#070b1a');
-        bgGrad.addColorStop(1, '#0c081c');
+        bgGrad.addColorStop(0, '#09090b');
+        bgGrad.addColorStop(0.5, '#0c0c10');
+        bgGrad.addColorStop(1, '#0f0d18');
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, width, height);
 
         // Twinkling Space Stars
         for (let star of stars) {
           star.phase += star.speed;
-          const alpha = 0.2 + Math.abs(Math.sin(star.phase)) * 0.7;
+          const alpha = 0.15 + Math.abs(Math.sin(star.phase)) * 0.5;
           ctx.beginPath();
           ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
           ctx.fill();
         }
       } else {
-        // Prismatic Daylight Pastel Gradient
+        // Clean White/Indigo-tinted Light Background
         const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-        bgGrad.addColorStop(0, '#f8fafc');
-        bgGrad.addColorStop(0.4, '#f0fdf4');
-        bgGrad.addColorStop(0.8, '#eff6ff');
+        bgGrad.addColorStop(0, '#ffffff');
+        bgGrad.addColorStop(0.5, '#fafaff');
         bgGrad.addColorStop(1, '#f5f3ff');
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, width, height);
@@ -159,15 +158,15 @@ export const DynamicBackground: React.FC = () => {
       };
 
       if (isDark) {
-        // Dark Mode Space Aurora (Emerald Green, Radiant Cyan, Deep Violet)
-        drawAuroraWave('rgba(16, 185, 129, 0.28)', 'rgba(6, 182, 212, 0.18)', height * 0.2, 90, 1.0, 0.85);
-        drawAuroraWave('rgba(99, 102, 241, 0.25)', 'rgba(139, 92, 246, 0.15)', height * 0.45, 110, 0.7, 0.8);
-        drawAuroraWave('rgba(244, 63, 94, 0.18)', 'rgba(236, 72, 153, 0.12)', height * 0.7, 80, 1.2, 0.75);
+        // Dark Mode Aurora — Indigo/Violet/Blue palette
+        drawAuroraWave('rgba(99, 102, 241, 0.30)', 'rgba(139, 92, 246, 0.18)', height * 0.2, 90, 1.0, 0.85);
+        drawAuroraWave('rgba(67, 56, 202, 0.25)', 'rgba(109, 40, 217, 0.15)', height * 0.45, 110, 0.7, 0.8);
+        drawAuroraWave('rgba(124, 58, 237, 0.20)', 'rgba(99, 102, 241, 0.12)', height * 0.7, 80, 1.2, 0.75);
       } else {
-        // Light Mode Prism Aurora (Soft Teal, Sky Blue, Sunset Lavender)
-        drawAuroraWave('rgba(13, 148, 136, 0.18)', 'rgba(20, 184, 166, 0.12)', height * 0.25, 80, 0.9, 0.9);
-        drawAuroraWave('rgba(2, 132, 199, 0.16)', 'rgba(56, 189, 248, 0.10)', height * 0.5, 100, 0.7, 0.85);
-        drawAuroraWave('rgba(124, 58, 237, 0.12)', 'rgba(244, 114, 182, 0.08)', height * 0.75, 70, 1.1, 0.8);
+        // Light Mode Aurora — Soft Indigo/Violet palette
+        drawAuroraWave('rgba(99, 102, 241, 0.14)', 'rgba(139, 92, 246, 0.08)', height * 0.25, 80, 0.9, 0.9);
+        drawAuroraWave('rgba(79, 70, 229, 0.12)', 'rgba(124, 58, 237, 0.08)', height * 0.5, 100, 0.7, 0.85);
+        drawAuroraWave('rgba(139, 92, 246, 0.10)', 'rgba(99, 102, 241, 0.06)', height * 0.75, 70, 1.1, 0.8);
       }
 
       // =========================================================================
@@ -227,7 +226,7 @@ export const DynamicBackground: React.FC = () => {
       if (mouse.active) {
         ctx.beginPath();
         ctx.arc(mouse.x, mouse.y, 45, 0, Math.PI * 2);
-        ctx.strokeStyle = isDark ? 'rgba(16, 185, 129, 0.3)' : 'rgba(13, 148, 136, 0.3)';
+        ctx.strokeStyle = isDark ? 'rgba(99, 102, 241, 0.35)' : 'rgba(79, 70, 229, 0.25)';
         ctx.lineWidth = 1.5;
         ctx.globalAlpha = 0.6;
         ctx.stroke();
