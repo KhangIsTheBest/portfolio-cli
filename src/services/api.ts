@@ -791,22 +791,35 @@ export const apiService = {
 
   async createYouTubeVideo(data: {
     title: string;
-    youtubeUrl: string;
+    videoUrlOrId?: string;
+    youtubeUrl?: string;
     description?: string;
     category?: string;
+    thumbnailUrl?: string;
     duration?: string;
     displayOrder?: number;
     featured?: boolean;
     active?: boolean;
   }): Promise<YouTubeVideo> {
     if (DEBUG) console.log('Creating YouTube video...');
+    const payload = {
+      title: data.title,
+      videoUrlOrId: data.videoUrlOrId || data.youtubeUrl,
+      description: data.description,
+      category: data.category,
+      thumbnailUrl: data.thumbnailUrl,
+      duration: data.duration,
+      displayOrder: data.displayOrder,
+      featured: data.featured,
+      active: data.active
+    };
     const response = await fetchWithTimeout('/api/v1/admin/youtube/videos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         ...getAuthHeaders()
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     });
     if (!response.ok) {
       await handleErrorResponse(response, 'Failed to create YouTube video');
@@ -818,15 +831,19 @@ export const apiService = {
     throw new Error(result.message || 'Failed to create YouTube video');
   },
 
-  async updateYouTubeVideo(id: number, data: Partial<YouTubeVideo>): Promise<YouTubeVideo> {
+  async updateYouTubeVideo(id: number, data: Partial<YouTubeVideo> & { videoUrlOrId?: string }): Promise<YouTubeVideo> {
     if (DEBUG) console.log(`Updating YouTube video ${id}...`);
+    const payload = {
+      ...data,
+      videoUrlOrId: data.videoUrlOrId || data.youtubeUrl
+    };
     const response = await fetchWithTimeout(`/api/v1/admin/youtube/videos/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         ...getAuthHeaders()
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     });
     if (!response.ok) {
       await handleErrorResponse(response, 'Failed to update YouTube video');

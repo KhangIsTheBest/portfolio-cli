@@ -142,6 +142,7 @@ export default function AdminYouTubePage() {
     setSaving(true);
     const payload = {
       title: title.trim(),
+      videoUrlOrId: youtubeUrl.trim(),
       youtubeUrl: youtubeUrl.trim(),
       description: description.trim() || undefined,
       category: category.trim() || undefined,
