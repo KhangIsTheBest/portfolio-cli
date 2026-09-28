@@ -66,7 +66,7 @@ const getAuthHeaders = (): HeadersInit => {
 };
 
 // Generic fetch with timeout helper
-async function fetchWithTimeout(resource: string, options: RequestInit = {}, timeout = 5000): Promise<Response> {
+async function fetchWithTimeout(resource: string, options: RequestInit = {}, timeout = 15000): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   try {
@@ -682,7 +682,7 @@ export const apiService = {
       method: 'POST',
       headers: getAuthHeaders(),
       body: formData
-    });
+    }, 60000);
 
     if (!response.ok) {
       await handleErrorResponse(response, 'Upload failed');
@@ -744,7 +744,7 @@ export const apiService = {
     const response = await fetchWithTimeout('/api/v1/admin/leetcode/sync', {
       method: 'POST',
       headers: getAuthHeaders()
-    });
+    }, 120000);
     if (!response.ok) {
       await handleErrorResponse(response, 'Failed to sync LeetCode data');
     }
