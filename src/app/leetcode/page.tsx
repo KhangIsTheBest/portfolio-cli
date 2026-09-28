@@ -206,6 +206,10 @@ export default function LeetCodePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<'ALL' | 'Easy' | 'Medium' | 'Hard'>('ALL');
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
+
   // Modal Solution Code Viewer state
   const [selectedSubmission, setSelectedSubmission] = useState<LeetCodeSubmission | null>(null);
   const [solutionCode, setSolutionCode] = useState<string>('');
@@ -216,13 +220,18 @@ export default function LeetCodePage() {
     fetchLeetCodeData();
   }, []);
 
+  // Reset page when filter/search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, difficultyFilter, pageSize]);
+
   const fetchLeetCodeData = async () => {
     try {
       setLoading(true);
       setError(null);
       const [statsData, subData] = await Promise.all([
         api.getLeetCodeStats().catch(() => null),
-        api.getLeetCodeSubmissions(50).catch(() => [])
+        api.getLeetCodeSubmissions(500).catch(() => [])
       ]);
       if (statsData) {
         setStats(statsData);
@@ -291,6 +300,12 @@ export default function LeetCodePage() {
     const matchesDifficulty = difficultyFilter === 'ALL' || sub.difficulty === difficultyFilter;
     return matchesSearch && matchesDifficulty;
   });
+
+  // Pagination calculation
+  const totalPages = Math.max(1, Math.ceil(filteredSubmissions.length / pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, filteredSubmissions.length);
+  const paginatedSubmissions = filteredSubmissions.slice(startIndex, endIndex);
 
   // Calculate percentages
   const easyPct = stats && stats.totalEasy ? Math.round((stats.easySolved / stats.totalEasy) * 100) : 0;
@@ -583,7 +598,7 @@ export default function LeetCodePage() {
                       </td>
                     </tr>
                   ) : (
-                    filteredSubmissions.map((sub) => {
+                    paginatedSubmissions.map((sub) => {
                       const diffColor = 
                         sub.difficulty === 'Easy' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
                         sub.difficulty === 'Medium' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
@@ -633,6 +648,80 @@ export default function LeetCodePage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {filteredSubmissions.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[var(--border-color)] font-mono text-xs text-[var(--secondary-color)]">
+                <div className="flex items-center gap-3">
+                  <span>
+                    {locale === 'vi' 
+                      ? `Hiển thị ${startIndex + 1} - ${endIndex} trên ${filteredSubmissions.length} bài`
+                      : `Showing ${startIndex + 1} - ${endIndex} of ${filteredSubmissions.length} submissions`}
+                  </span>
+                  
+                  <div className="flex items-center gap-1.5 ml-2">
+                    <span className="text-[10px] uppercase">{locale === 'vi' ? 'Mỗi trang:' : 'Per page:'}</span>
+                    <select
+                      value={pageSize}
+                      onChange={(e) => setPageSize(Number(e.target.value))}
+                      className="bg-[var(--terminal-header-bg)] border border-[var(--border-color)] rounded-lg px-2 py-0.5 text-xs text-[var(--text-color)] focus:outline-none focus:border-amber-500"
+                    >
+                      <option value={10}>10</option>
+                      <option value={15}>15</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Page Buttons */}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold"
+                  >
+                    {locale === 'vi' ? 'Trước' : 'Prev'}
+                  </button>
+
+                  <div className="flex items-center gap-1 px-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(page => {
+                        return page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1;
+                      })
+                      .map((page, idx, arr) => {
+                        const prev = arr[idx - 1];
+                        return (
+                          <React.Fragment key={page}>
+                            {prev && page - prev > 1 && (
+                              <span className="px-1 text-[var(--secondary-color)]">...</span>
+                            )}
+                            <button
+                              onClick={() => setCurrentPage(page)}
+                              className={`w-7 h-7 rounded-lg font-bold text-xs transition cursor-pointer flex items-center justify-center ${
+                                currentPage === page
+                                  ? 'bg-amber-500 text-slate-950 shadow-sm'
+                                  : 'border border-[var(--border-color)] bg-[var(--terminal-header-bg)] text-[var(--secondary-color)] hover:text-[var(--text-color)]'
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          </React.Fragment>
+                        );
+                      })}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold"
+                  >
+                    {locale === 'vi' ? 'Sau' : 'Next'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
