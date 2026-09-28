@@ -315,21 +315,21 @@ export default function LeetCodePage() {
   const totalPct = stats ? Math.round((stats.totalSolved / totalAll) * 100) : 0;
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto font-sans">
+    <div className="min-h-screen py-6 sm:py-10 px-0 sm:px-4 lg:px-8 max-w-6xl mx-auto font-sans w-full">
       {/* Page Title & Breadcrumb */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <div className="flex items-center gap-2 text-[12px] font-mono text-[var(--secondary-color)] uppercase tracking-wider mb-2">
-            <Terminal className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center gap-2 text-[11px] sm:text-[12px] font-mono text-[var(--secondary-color)] uppercase tracking-wider mb-2">
+            <Terminal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
             <span>Competitive Programming / Algorithms Hub</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[var(--text-color)] flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
-              <Code2 className="w-7 h-7" />
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[var(--text-color)] flex items-center gap-2.5 sm:gap-3">
+            <span className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 shrink-0">
+              <Code2 className="w-5 h-5 sm:w-7 sm:h-7" />
             </span>
-            LeetCode Profile & Solutions
+            <span>LeetCode Profile & Solutions</span>
           </h1>
-          <p className="mt-2 text-sm text-[var(--secondary-color)] max-w-2xl">
+          <p className="mt-2 text-xs sm:text-sm text-[var(--secondary-color)] max-w-2xl leading-relaxed">
             {locale === 'vi'
               ? 'Hồ sơ thuật toán trực tuyến, thống kê số lượng bài giải thuật toán (DSA) đã Accepted, chỉ số xếp hạng toàn cầu và thư viện lời giải mã nguồn.'
               : 'Live algorithmic stats, accepted Data Structures & Algorithms solutions, global ranking metrics, and source code solution explorer.'}
@@ -337,13 +337,13 @@ export default function LeetCodePage() {
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           {stats?.username && (
             <a
               href={`https://leetcode.com/u/${stats.username}/`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-amber-500/40 text-[var(--text-color)] hover:text-amber-400 text-xs font-mono font-bold transition shadow-sm"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-amber-500/40 text-[var(--text-color)] hover:text-amber-400 text-xs font-mono font-bold transition shadow-sm"
             >
               <span>leetcode.com/u/{stats.username}</span>
               <ExternalLink className="w-3.5 h-3.5 text-amber-500" />
@@ -352,7 +352,7 @@ export default function LeetCodePage() {
           <button
             onClick={handleSync}
             disabled={syncing || loading}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs font-mono hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs font-mono hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
             <span>{syncing ? 'Syncing...' : 'Sync Live'}</span>
@@ -361,17 +361,17 @@ export default function LeetCodePage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 animate-pulse">
           <div className="h-64 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] p-6"></div>
           <div className="h-64 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] p-6 md:col-span-2"></div>
           <div className="h-96 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] p-6 md:col-span-3"></div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Top Metrics Banner */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Total Solved Card */}
-            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 flex flex-col justify-between shadow-xl group hover:border-amber-500/40 transition">
+            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 flex flex-col justify-between shadow-xl group hover:border-amber-500/40 transition min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-[var(--secondary-color)] uppercase font-semibold">Total Solved</span>
                 <span className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
@@ -379,7 +379,7 @@ export default function LeetCodePage() {
                 </span>
               </div>
               <div className="my-3">
-                <div className="text-3xl sm:text-4xl font-black text-[var(--text-color)] font-mono">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--text-color)] font-mono">
                   {stats?.totalSolved || 0}
                   <span className="text-xs text-[var(--secondary-color)] font-normal ml-1">/ {totalAll}</span>
                 </div>
@@ -394,7 +394,7 @@ export default function LeetCodePage() {
             </div>
 
             {/* Global Ranking */}
-            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 flex flex-col justify-between shadow-xl group hover:border-indigo-500/40 transition">
+            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 flex flex-col justify-between shadow-xl group hover:border-indigo-500/40 transition min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-[var(--secondary-color)] uppercase font-semibold">Global Ranking</span>
                 <span className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
@@ -402,7 +402,7 @@ export default function LeetCodePage() {
                 </span>
               </div>
               <div className="my-3">
-                <div className="text-3xl font-black text-[var(--text-color)] font-mono">
+                <div className="text-2xl sm:text-3xl font-black text-[var(--text-color)] font-mono truncate">
                   #{stats?.ranking ? stats.ranking.toLocaleString() : 'N/A'}
                 </div>
                 <span className="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
@@ -416,7 +416,7 @@ export default function LeetCodePage() {
             </div>
 
             {/* Contest Rating */}
-            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 flex flex-col justify-between shadow-xl group hover:border-orange-500/40 transition">
+            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 flex flex-col justify-between shadow-xl group hover:border-orange-500/40 transition min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-[var(--secondary-color)] uppercase font-semibold">Contest Rating</span>
                 <span className="p-2 rounded-lg bg-orange-500/10 text-orange-400">
@@ -424,7 +424,7 @@ export default function LeetCodePage() {
                 </span>
               </div>
               <div className="my-3">
-                <div className="text-3xl font-black text-[var(--text-color)] font-mono">
+                <div className="text-2xl sm:text-3xl font-black text-[var(--text-color)] font-mono">
                   {stats?.contestRating ? Math.round(stats.contestRating) : '1,500+'}
                 </div>
                 <span className="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-orange-500/10 text-orange-400 border border-orange-500/20">
@@ -438,7 +438,7 @@ export default function LeetCodePage() {
             </div>
 
             {/* Contribution Points */}
-            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 flex flex-col justify-between shadow-xl group hover:border-cyan-500/40 transition">
+            <div className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 flex flex-col justify-between shadow-xl group hover:border-cyan-500/40 transition min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-[var(--secondary-color)] uppercase font-semibold">DSA Mastery</span>
                 <span className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
@@ -446,7 +446,7 @@ export default function LeetCodePage() {
                 </span>
               </div>
               <div className="my-3">
-                <div className="text-3xl font-black text-[var(--text-color)] font-mono">
+                <div className="text-2xl sm:text-3xl font-black text-[var(--text-color)] font-mono">
                   {stats?.contributionPoints || 250}+
                 </div>
                 <span className="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
@@ -461,9 +461,9 @@ export default function LeetCodePage() {
           </div>
 
           {/* Difficulty Breakdown & Progress Bars */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
             {/* Easy */}
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-xl">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 shadow-xl min-w-0">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
@@ -486,7 +486,7 @@ export default function LeetCodePage() {
             </div>
 
             {/* Medium */}
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-xl">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 shadow-xl min-w-0">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
@@ -509,7 +509,7 @@ export default function LeetCodePage() {
             </div>
 
             {/* Hard */}
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-xl">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5 shadow-xl min-w-0">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
@@ -533,12 +533,12 @@ export default function LeetCodePage() {
           </div>
 
           {/* Submissions & Solutions Explorer Section */}
-          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-xl space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-5">
+          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-6 shadow-xl space-y-4 sm:space-y-6 min-w-0 w-full">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-4 sm:pb-5">
               <div>
-                <h2 className="text-xl font-bold text-[var(--text-color)] flex items-center gap-2 font-mono">
-                  <Activity className="w-5 h-5 text-amber-500" />
-                  Recent Accepted Submissions & Solutions
+                <h2 className="text-lg sm:text-xl font-bold text-[var(--text-color)] flex items-center gap-2 font-mono">
+                  <Activity className="w-5 h-5 text-amber-500 shrink-0" />
+                  <span>Recent Accepted Submissions & Solutions</span>
                 </h2>
                 <p className="text-xs text-[var(--secondary-color)] mt-1 font-mono">
                   Click any problem row to inspect full solution source code and runtime analysis.
@@ -546,9 +546,9 @@ export default function LeetCodePage() {
               </div>
 
               {/* Filters */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
                 {/* Search */}
-                <div className="relative min-w-[180px]">
+                <div className="relative w-full sm:w-auto sm:min-w-[180px]">
                   <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--secondary-color)]" />
                   <input
                     type="text"
@@ -560,12 +560,12 @@ export default function LeetCodePage() {
                 </div>
 
                 {/* Difficulty tabs */}
-                <div className="flex items-center gap-1 bg-[var(--terminal-header-bg)] p-1 rounded-xl border border-[var(--border-color)] text-xs font-mono">
+                <div className="flex items-center gap-1 bg-[var(--terminal-header-bg)] p-1 rounded-xl border border-[var(--border-color)] text-xs font-mono justify-between sm:justify-start">
                   {(['ALL', 'Easy', 'Medium', 'Hard'] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setDifficultyFilter(tab)}
-                      className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                      className={`flex-1 sm:flex-none px-2.5 py-1 rounded-lg font-bold transition cursor-pointer text-center ${
                         difficultyFilter === tab
                           ? 'bg-amber-500 text-slate-950 shadow-sm'
                           : 'text-[var(--secondary-color)] hover:text-[var(--text-color)]'
@@ -579,15 +579,15 @@ export default function LeetCodePage() {
             </div>
 
             {/* Submissions List Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+              <table className="w-full text-left text-xs font-mono min-w-[540px]">
                 <thead>
                   <tr className="border-b border-[var(--border-color)] text-[var(--secondary-color)] uppercase text-[10px] tracking-wider">
-                    <th className="py-3 px-3">Problem Title</th>
-                    <th className="py-3 px-3">Difficulty</th>
-                    <th className="py-3 px-3">Language</th>
-                    <th className="py-3 px-3">Status</th>
-                    <th className="py-3 px-3 text-right">Action</th>
+                    <th className="py-2.5 sm:py-3 px-2.5 sm:px-3">Problem Title</th>
+                    <th className="py-2.5 sm:py-3 px-2.5 sm:px-3">Difficulty</th>
+                    <th className="py-2.5 sm:py-3 px-2.5 sm:px-3">Language</th>
+                    <th className="py-2.5 sm:py-3 px-2.5 sm:px-3">Status</th>
+                    <th className="py-2.5 sm:py-3 px-2.5 sm:px-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--border-color)]">
@@ -610,33 +610,33 @@ export default function LeetCodePage() {
                           onClick={() => handleOpenSolution(sub)}
                           className="hover:bg-[var(--terminal-header-bg)]/80 transition cursor-pointer group"
                         >
-                          <td className="py-3 px-3 font-semibold text-[var(--text-color)] group-hover:text-amber-400 transition">
+                          <td className="py-2.5 sm:py-3 px-2.5 sm:px-3 font-semibold text-[var(--text-color)] group-hover:text-amber-400 transition max-w-[200px] truncate">
                             <div className="flex items-center gap-2">
-                              <span>{sub.title}</span>
-                              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 text-amber-500 transition" />
+                              <span className="truncate">{sub.title}</span>
+                              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 text-amber-500 transition shrink-0" />
                             </div>
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-2.5 sm:py-3 px-2.5 sm:px-3 whitespace-nowrap">
                             <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold border ${diffColor}`}>
                               {sub.difficulty}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-[var(--secondary-color)] uppercase font-bold">
+                          <td className="py-2.5 sm:py-3 px-2.5 sm:px-3 text-[var(--secondary-color)] uppercase font-bold whitespace-nowrap">
                             {sub.lang}
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-2.5 sm:py-3 px-2.5 sm:px-3 whitespace-nowrap">
                             <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
                               <CheckCircle2 className="w-3.5 h-3.5" />
                               {sub.statusDisplay || 'Accepted'}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-right">
+                          <td className="py-2.5 sm:py-3 px-2.5 sm:px-3 text-right whitespace-nowrap">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleOpenSolution(sub);
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white font-bold transition text-[11px]"
+                              className="px-2.5 py-1 rounded-lg bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white font-bold transition text-[11px] cursor-pointer"
                             >
                               View Code
                             </button>
@@ -651,20 +651,20 @@ export default function LeetCodePage() {
 
             {/* Pagination Controls */}
             {filteredSubmissions.length > 0 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[var(--border-color)] font-mono text-xs text-[var(--secondary-color)]">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 pt-4 border-t border-[var(--border-color)] font-mono text-xs text-[var(--secondary-color)] w-full">
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-3 w-full sm:w-auto">
                   <span>
                     {locale === 'vi' 
-                      ? `Hiển thị ${startIndex + 1} - ${endIndex} trên ${filteredSubmissions.length} bài`
-                      : `Showing ${startIndex + 1} - ${endIndex} of ${filteredSubmissions.length} submissions`}
+                      ? `${startIndex + 1}-${endIndex}/${filteredSubmissions.length} bài`
+                      : `${startIndex + 1}-${endIndex} of ${filteredSubmissions.length}`}
                   </span>
                   
-                  <div className="flex items-center gap-1.5 ml-2">
-                    <span className="text-[10px] uppercase">{locale === 'vi' ? 'Mỗi trang:' : 'Per page:'}</span>
+                  <div className="flex items-center gap-1.5 ml-auto sm:ml-2">
+                    <span className="text-[10px] uppercase">{locale === 'vi' ? 'Trang:' : 'Per:'}</span>
                     <select
                       value={pageSize}
                       onChange={(e) => setPageSize(Number(e.target.value))}
-                      className="bg-[var(--terminal-header-bg)] border border-[var(--border-color)] rounded-lg px-2 py-0.5 text-xs text-[var(--text-color)] focus:outline-none focus:border-amber-500"
+                      className="bg-[var(--terminal-header-bg)] border border-[var(--border-color)] rounded-lg px-2 py-0.5 text-xs text-[var(--text-color)] focus:outline-none focus:border-amber-500 cursor-pointer"
                     >
                       <option value={10}>10</option>
                       <option value={15}>15</option>
@@ -676,11 +676,11 @@ export default function LeetCodePage() {
                 </div>
 
                 {/* Page Buttons */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center justify-center gap-1 w-full sm:w-auto flex-wrap">
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold"
+                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold cursor-pointer"
                   >
                     {locale === 'vi' ? 'Trước' : 'Prev'}
                   </button>
@@ -715,7 +715,7 @@ export default function LeetCodePage() {
                   <button
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold"
+                    className="px-2.5 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:bg-amber-500/10 hover:text-amber-400 disabled:opacity-40 disabled:cursor-not-allowed transition font-bold cursor-pointer"
                   >
                     {locale === 'vi' ? 'Sau' : 'Next'}
                   </button>
@@ -729,7 +729,7 @@ export default function LeetCodePage() {
       {/* Modal Solution Code Viewer */}
       <AnimatePresence>
         {selectedSubmission && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -738,15 +738,15 @@ export default function LeetCodePage() {
               className="w-full max-w-3xl max-h-[85vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-mono text-slate-200"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-950/80">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-3 sm:py-4 border-b border-slate-800 bg-slate-950/80">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0">
                     <Code2 className="w-5 h-5" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-base text-white flex items-center gap-2">
-                      {selectedSubmission.title}
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-sm sm:text-base text-white flex items-center gap-2 truncate">
+                      <span className="truncate">{selectedSubmission.title}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border shrink-0 ${
                         selectedSubmission.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                         selectedSubmission.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                         'bg-rose-500/10 text-rose-400 border-rose-500/20'
@@ -754,13 +754,13 @@ export default function LeetCodePage() {
                         {selectedSubmission.difficulty}
                       </span>
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-slate-400 truncate">
                       Language: <span className="text-amber-400 uppercase font-bold">{selectedSubmission.lang}</span> • Status: <span className="text-emerald-400 font-bold">{selectedSubmission.statusDisplay}</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
                   <a
                     href={`https://leetcode.com/problems/${selectedSubmission.titleSlug}/`}
                     target="_blank"
@@ -772,7 +772,7 @@ export default function LeetCodePage() {
                   </a>
                   <button
                     onClick={handleCopyCode}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition cursor-pointer"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? 'Copied!' : 'Copy'}</span>
@@ -787,14 +787,14 @@ export default function LeetCodePage() {
               </div>
 
               {/* Code Container */}
-              <div className="p-5 overflow-y-auto flex-1 bg-slate-950 font-mono text-xs leading-relaxed text-slate-300">
+              <div className="p-4 sm:p-5 overflow-y-auto flex-1 bg-slate-950 font-mono text-xs leading-relaxed text-slate-300">
                 {loadingCode ? (
                   <div className="flex items-center justify-center py-16 text-slate-400 gap-2">
                     <RefreshCw className="w-5 h-5 animate-spin text-amber-500" />
                     <span>Fetching verified solution code...</span>
                   </div>
                 ) : (
-                  <pre className="overflow-x-auto whitespace-pre font-mono p-4 rounded-xl bg-slate-900 border border-slate-800">
+                  <pre className="overflow-x-auto whitespace-pre font-mono p-3 sm:p-4 rounded-xl bg-slate-900 border border-slate-800">
                     <code>{solutionCode}</code>
                   </pre>
                 )}
