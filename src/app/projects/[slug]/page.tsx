@@ -88,7 +88,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="max-w-4xl mx-auto space-y-6 my-6 font-mono select-text"
+        className="max-w-4xl mx-auto space-y-4 sm:space-y-6 my-4 sm:my-6 font-mono select-text w-full min-w-0"
       >
         {/* Header breadcrumb */}
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
@@ -107,7 +107,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
         {/* Main image banner */}
         <div 
-          className="h-64 sm:h-96 w-full rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] shadow-xl relative group cursor-pointer"
+          className="h-56 sm:h-80 md:h-96 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] shadow-xl relative group cursor-pointer"
           onClick={() => setLightboxIndex(0)}
         >
           <img
@@ -119,7 +119,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
             }}
           />
           {project.featured && (
-            <span className="absolute top-4 right-4 px-3 py-1 rounded-xl bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[10px] font-mono text-[var(--primary-color)] font-extrabold shadow-lg backdrop-blur-md">
+            <span className="absolute top-3 right-3 sm:top-4 sm:right-4 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-xl bg-[var(--primary-bg)] border border-[var(--primary-border)] text-[9px] sm:text-[10px] font-mono text-[var(--primary-color)] font-extrabold shadow-lg backdrop-blur-md">
               {t('projects.featuredLabel')}
             </span>
           )}
@@ -132,14 +132,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Info card */}
-        <SpotlightCard className="space-y-6" spotlightColor="rgba(99, 102, 241, 0.15)">
-          <div className="space-y-3">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-color)] font-sans tracking-tight">{project.title}</h2>
+        <SpotlightCard className="space-y-5 sm:space-y-6 p-4 sm:p-6 md:p-8 min-w-0 w-full overflow-hidden" spotlightColor="rgba(99, 102, 241, 0.15)">
+          <div className="space-y-3 min-w-0">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[var(--text-color)] font-sans tracking-tight break-words">{project.title}</h2>
             
-            <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-[var(--secondary-color)]">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-[10px] text-[var(--secondary-color)]">
               {/* Project Start - End Date Timeline */}
               {(project.startDate || project.endDate || project.isCurrent) ? (
-                <span className="flex items-center space-x-1.5 bg-[var(--primary-bg)] px-3 py-1 rounded-xl border border-[var(--primary-border)] font-bold text-[var(--primary-color)]">
+                <span className="flex items-center space-x-1.5 bg-[var(--primary-bg)] px-2.5 sm:px-3 py-1 rounded-xl border border-[var(--primary-border)] font-bold text-[var(--primary-color)]">
                   <Clock className="w-3.5 h-3.5" />
                   <span>
                     {project.startDate || ''} 
@@ -148,7 +148,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                   </span>
                 </span>
               ) : (
-                <span className="flex items-center space-x-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-xl border border-[var(--border-color)] font-bold">
+                <span className="flex items-center space-x-1.5 bg-[var(--terminal-header-bg)] px-2.5 sm:px-3 py-1 rounded-xl border border-[var(--border-color)] font-bold">
                   <Calendar className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                   <span>{t('projects.dateLabel')} {new Date(project.createdAt).toLocaleDateString()}</span>
                 </span>
@@ -163,11 +163,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {/* Technologies list */}
-          <div className="flex flex-wrap gap-2 py-1">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 py-1">
             {project.technologies.map((t) => (
               <span
                 key={t.id}
-                className="px-3 py-1 rounded-xl text-xs font-mono bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-bold"
+                className="px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-mono bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--text-color)] font-bold"
               >
                 {t.name}
               </span>
@@ -175,14 +175,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {/* Content body */}
-          <div className="border-t border-[var(--border-color)] pt-6 text-sm font-sans leading-relaxed text-[var(--text-color)] select-text">
+          <div className="border-t border-[var(--border-color)] pt-5 sm:pt-6 text-sm font-sans leading-relaxed text-[var(--text-color)] select-text min-w-0 w-full overflow-hidden">
             {project.contentType === 'MARKDOWN' ? (
               <GitHubMarkdownView 
                 content={project.content || project.shortDescription} 
                 filename={`${project.slug}.md`}
               />
             ) : (
-              <div className="markdown-body">
+              <div className="markdown-body min-w-0 overflow-hidden">
                 <FormattedContent content={project.content || project.shortDescription} />
               </div>
             )}
@@ -190,8 +190,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
           {/* Illustrative Images Gallery */}
           {allProjectImages.length > 0 && (
-            <div className="border-t border-[var(--border-color)] pt-6 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="border-t border-[var(--border-color)] pt-6 space-y-4 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <h3 className="text-xs font-mono font-bold text-[var(--primary-color)] uppercase tracking-wider">
                   {locale === 'vi' ? 'Bộ sưu tập hình ảnh' : 'Project Image Gallery'} ({allProjectImages.length})
                 </h3>
@@ -199,12 +199,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                   {locale === 'vi' ? 'Nhấp vào ảnh để xem slide' : 'Click image for fullscreen viewer'}
                 </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {allProjectImages.map((imgUrl, idx) => {
                   return (
                     <div 
                       key={idx} 
-                      className="rounded-2xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer h-48 sm:h-56 shadow-md"
+                      className="rounded-2xl overflow-hidden border border-[var(--border-color)] bg-[var(--terminal-header-bg)] relative group cursor-pointer h-44 sm:h-56 shadow-md"
                       onClick={() => setLightboxIndex(idx)}
                     >
                       <img 
@@ -229,13 +229,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
           )}
 
           {/* Action Links */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-[var(--border-color)]">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-[var(--border-color)] w-full">
             {project.githubUrl && (
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:border-[var(--primary-border)] text-[var(--text-color)] font-bold text-xs transition"
+                className="w-full sm:flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--terminal-header-bg)] hover:border-[var(--primary-border)] text-[var(--text-color)] font-bold text-xs transition"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
                 <span>{t('projects.repoLabel')}</span>
@@ -246,7 +246,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs transition shadow-md active:scale-95"
+                className="w-full sm:flex-1 flex items-center justify-center space-x-1.5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs transition shadow-md active:scale-95"
               >
                 <ExternalLink className="w-4 h-4" />
                 <span>{t('projects.demoLabel')}</span>

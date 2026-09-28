@@ -26,18 +26,18 @@ export const GitHubMarkdownView: React.FC<GitHubMarkdownViewProps> = ({
   };
 
   return (
-    <div className={`rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl overflow-hidden font-sans ${className}`}>
+    <div className={`rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl overflow-hidden font-sans w-full min-w-0 ${className}`}>
       {/* GitHub-style File Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--terminal-header-bg)] border-b border-[var(--border-color)] font-mono text-xs">
-        <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[var(--primary-color)]" />
-          <span className="font-bold text-[var(--text-color)]">{filename}</span>
-          <span className="px-2 py-0.5 rounded text-[10px] bg-[var(--primary-bg)] text-[var(--primary-color)] border border-[var(--primary-border)] font-bold">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 bg-[var(--terminal-header-bg)] border-b border-[var(--border-color)] font-mono text-xs w-full">
+        <div className="flex items-center gap-2 flex-wrap min-w-0">
+          <FileText className="w-4 h-4 text-[var(--primary-color)] shrink-0" />
+          <span className="font-bold text-[var(--text-color)] truncate max-w-[150px] sm:max-w-none">{filename}</span>
+          <span className="px-2 py-0.5 rounded text-[10px] bg-[var(--primary-bg)] text-[var(--primary-color)] border border-[var(--primary-border)] font-bold shrink-0">
             GitHub Flavored Markdown
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-between sm:justify-end gap-1.5 w-full sm:w-auto">
           <div className="flex items-center bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-0.5">
             <button
               type="button"
@@ -78,58 +78,61 @@ export const GitHubMarkdownView: React.FC<GitHubMarkdownViewProps> = ({
       </div>
 
       {/* Content Area */}
-      <div className="p-6 sm:p-8 select-text">
+      <div className="p-4 sm:p-6 md:p-8 select-text w-full min-w-0 overflow-hidden">
         {activeTab === 'preview' ? (
-          <div className="prose prose-invert max-w-none space-y-4 text-[var(--text-color)] leading-relaxed text-sm sm:text-base">
+          <div className="prose prose-invert max-w-none space-y-4 text-[var(--text-color)] leading-relaxed text-sm sm:text-base break-words">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ node, ...props }) => (
-                  <h1 className="text-2xl sm:text-3xl font-extrabold pb-3 border-b border-[var(--border-color)] text-[var(--text-color)] mt-6 mb-4" {...props} />
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold pb-3 border-b border-[var(--border-color)] text-[var(--text-color)] mt-6 mb-4 break-words" {...props} />
                 ),
                 h2: ({ node, ...props }) => (
-                  <h2 className="text-xl sm:text-2xl font-bold pb-2 border-b border-[var(--border-color)] text-[var(--text-color)] mt-6 mb-3" {...props} />
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold pb-2 border-b border-[var(--border-color)] text-[var(--text-color)] mt-6 mb-3 break-words" {...props} />
                 ),
                 h3: ({ node, ...props }) => (
-                  <h3 className="text-lg sm:text-xl font-bold text-[var(--text-color)] mt-4 mb-2" {...props} />
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-[var(--text-color)] mt-4 mb-2 break-words" {...props} />
                 ),
                 p: ({ node, ...props }) => (
-                  <p className="my-3 leading-relaxed text-[var(--text-color)] opacity-90" {...props} />
+                  <p className="my-3 leading-relaxed text-[var(--text-color)] opacity-90 break-words" {...props} />
                 ),
                 ul: ({ node, ...props }) => (
-                  <ul className="list-disc list-inside space-y-1 my-3 pl-2" {...props} />
+                  <ul className="list-disc list-inside space-y-1 my-3 pl-2 break-words" {...props} />
                 ),
                 ol: ({ node, ...props }) => (
-                  <ol className="list-decimal list-inside space-y-1 my-3 pl-2" {...props} />
+                  <ol className="list-decimal list-inside space-y-1 my-3 pl-2 break-words" {...props} />
                 ),
                 li: ({ node, ...props }) => (
-                  <li className="text-[var(--text-color)] opacity-90" {...props} />
+                  <li className="text-[var(--text-color)] opacity-90 break-words" {...props} />
                 ),
                 blockquote: ({ node, ...props }) => (
-                  <blockquote className="border-l-4 border-[var(--primary-color)] pl-4 py-1 italic bg-[var(--primary-bg)]/40 rounded-r-lg my-4 text-[var(--secondary-color)]" {...props} />
+                  <blockquote className="border-l-4 border-[var(--primary-color)] pl-4 py-1 italic bg-[var(--primary-bg)]/40 rounded-r-lg my-4 text-[var(--secondary-color)] break-words" {...props} />
+                ),
+                img: ({ node, ...props }) => (
+                  <img className="max-w-full h-auto rounded-xl my-2 inline-block shadow-md" {...props} />
                 ),
                 code: ({ node, className, children, ...props }: any) => {
                   const match = /language-(\w+)/.exec(className || '');
                   const isInline = !match && !String(children).includes('\n');
                   return isInline ? (
-                    <code className="px-1.5 py-0.5 rounded bg-[var(--terminal-header-bg)] border border-[var(--border-color)] font-mono text-xs text-[var(--primary-color)] font-bold" {...props}>
+                    <code className="px-1.5 py-0.5 rounded bg-[var(--terminal-header-bg)] border border-[var(--border-color)] font-mono text-xs text-[var(--primary-color)] font-bold break-all" {...props}>
                       {children}
                     </code>
                   ) : (
-                    <div className="relative my-4 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 font-mono text-xs">
+                    <div className="relative my-4 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 font-mono text-xs max-w-full">
                       {match && (
                         <div className="px-4 py-1.5 bg-slate-900 border-b border-slate-800 text-[10px] uppercase font-bold text-slate-400">
                           {match[1]}
                         </div>
                       )}
-                      <pre className="p-4 overflow-x-auto text-slate-200">
+                      <pre className="p-4 overflow-x-auto text-slate-200 max-w-full">
                         <code>{children}</code>
                       </pre>
                     </div>
                   );
                 },
                 table: ({ node, ...props }) => (
-                  <div className="overflow-x-auto my-4 rounded-xl border border-[var(--border-color)]">
+                  <div className="overflow-x-auto my-4 rounded-xl border border-[var(--border-color)] max-w-full">
                     <table className="w-full text-left text-xs sm:text-sm font-mono" {...props} />
                   </div>
                 ),
@@ -143,7 +146,7 @@ export const GitHubMarkdownView: React.FC<GitHubMarkdownViewProps> = ({
                   <td className="p-3 border-t border-[var(--border-color)]" {...props} />
                 ),
                 a: ({ node, ...props }) => (
-                  <a className="text-[var(--primary-color)] hover:underline font-bold" target="_blank" rel="noopener noreferrer" {...props} />
+                  <a className="text-[var(--primary-color)] hover:underline font-bold break-all" target="_blank" rel="noopener noreferrer" {...props} />
                 )
               }}
             >

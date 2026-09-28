@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
@@ -102,20 +102,20 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
         </div>
 
         {/* Article Spotlight Card */}
-        <SpotlightCard className="p-6 sm:p-10 space-y-8" spotlightColor="rgba(99, 102, 241, 0.12)">
+        <SpotlightCard className="p-4 sm:p-6 md:p-10 space-y-6 sm:space-y-8 min-w-0 w-full overflow-hidden" spotlightColor="rgba(99, 102, 241, 0.12)">
           {/* Article Header */}
-          <div className="space-y-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--text-color)] leading-tight tracking-tight">
+          <div className="space-y-3 sm:space-y-4 min-w-0">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-[var(--text-color)] leading-tight tracking-tight break-words">
               {blog.title}
             </h1>
 
             {/* Metadata Pills */}
-            <div className="flex flex-wrap gap-2.5 font-mono text-[11px] text-[var(--secondary-color)] pt-1">
-              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+            <div className="flex flex-wrap gap-2 sm:gap-2.5 font-mono text-[10px] sm:text-[11px] text-[var(--secondary-color)] pt-1">
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-2.5 sm:px-3 py-1 rounded-lg border border-[var(--border-color)]">
                 <User className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span>{blog.createdBy?.fullName || (locale === 'vi' ? 'Tác giả' : 'Author')}</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-2.5 sm:px-3 py-1 rounded-lg border border-[var(--border-color)]">
                 <Calendar className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span>{new Date(blog.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
                   year: 'numeric',
@@ -123,7 +123,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
                   day: 'numeric'
                 })}</span>
               </span>
-              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-3 py-1 rounded-lg border border-[var(--border-color)]">
+              <span className="flex items-center gap-1.5 bg-[var(--terminal-header-bg)] px-2.5 sm:px-3 py-1 rounded-lg border border-[var(--border-color)]">
                 <Clock className="w-3.5 h-3.5 text-[var(--primary-color)]" />
                 <span>{readTime} {locale === 'vi' ? 'phút đọc' : 'min read'}</span>
               </span>
@@ -132,14 +132,39 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
 
           {/* Short description callout */}
           {blog.shortDescription && (
-            <div className="p-4 rounded-xl border border-[var(--primary-border)] bg-[var(--primary-bg)] text-xs text-[var(--text-color)] font-sans italic leading-relaxed">
+            <div className="p-3.5 sm:p-4 rounded-xl border border-[var(--primary-border)] bg-[var(--primary-bg)] text-xs text-[var(--text-color)] font-sans italic leading-relaxed break-words">
               &ldquo;{blog.shortDescription}&rdquo;
             </div>
           )}
 
           {/* Markdown Content */}
-          <div className="border-t border-[var(--border-color)]/60 pt-6 text-sm font-sans leading-relaxed text-[var(--secondary-color)] select-text prose dark:prose-invert max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <div className="border-t border-[var(--border-color)]/60 pt-5 sm:pt-6 text-sm font-sans leading-relaxed text-[var(--secondary-color)] select-text prose dark:prose-invert max-w-none break-words min-w-0 w-full overflow-hidden">
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                img: ({ node, ...props }) => (
+                  <img className="max-w-full h-auto rounded-xl my-3 inline-block shadow-md" {...props} />
+                ),
+                table: ({ node, ...props }) => (
+                  <div className="overflow-x-auto my-4 rounded-xl border border-[var(--border-color)] max-w-full">
+                    <table className="w-full text-left text-xs sm:text-sm font-mono" {...props} />
+                  </div>
+                ),
+                pre: ({ node, ...props }) => (
+                  <pre className="p-4 overflow-x-auto text-slate-200 max-w-full rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs" {...props} />
+                ),
+                code: ({ node, className, children, ...props }: any) => {
+                  const isInline = !className && !String(children).includes('\n');
+                  return isInline ? (
+                    <code className="px-1.5 py-0.5 rounded bg-[var(--terminal-header-bg)] border border-[var(--border-color)] font-mono text-xs text-[var(--primary-color)] font-bold break-all" {...props}>
+                      {children}
+                    </code>
+                  ) : (
+                    <code {...props}>{children}</code>
+                  );
+                }
+              }}
+            >
               {blog.content}
             </ReactMarkdown>
           </div>
