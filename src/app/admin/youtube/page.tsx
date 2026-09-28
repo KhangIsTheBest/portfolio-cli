@@ -236,84 +236,160 @@ export default function AdminYouTubePage() {
               <p className="text-xs">{locale === 'vi' ? 'Chưa có video nào. Hãy thêm video đầu tiên!' : 'No videos found. Add your first video!'}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-2xl border border-border-custom bg-card-custom shadow-xl">
-              <table className="w-full text-left text-xs font-mono">
-                <thead>
-                  <tr className="border-b border-border-custom text-secondary uppercase text-[10px] tracking-wider bg-slate-950/40">
-                    <th className="py-3 px-3">Thumbnail</th>
-                    <th className="py-3 px-3">Title & Link</th>
-                    <th className="py-3 px-3">Category</th>
-                    <th className="py-3 px-3">Duration</th>
-                    <th className="py-3 px-3">Status</th>
-                    <th className="py-3 px-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-custom">
-                  {videos.map((vid) => {
-                    const thumb = vid.thumbnailUrl || (vid.videoId ? `https://img.youtube.com/vi/${vid.videoId}/hqdefault.jpg` : '');
-                    return (
-                      <tr key={vid.id} className="hover:bg-slate-900/40 transition">
-                        <td className="py-3 px-3">
-                          <div className="w-20 h-12 rounded-lg overflow-hidden border border-border-custom bg-black relative">
-                            {thumb ? (
-                              <img src={thumb} alt={vid.title} className="w-full h-full object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-secondary">
-                                <Video className="w-4 h-4" />
-                              </div>
-                            )}
+            <div className="space-y-4">
+              {/* Desktop Table View (>= 768px) */}
+              <div className="hidden md:block overflow-x-auto rounded-2xl border border-border-custom bg-card-custom shadow-xl">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead>
+                    <tr className="border-b border-border-custom text-secondary uppercase text-[10px] tracking-wider bg-slate-950/40">
+                      <th className="py-3 px-3">Thumbnail</th>
+                      <th className="py-3 px-3">Title & Link</th>
+                      <th className="py-3 px-3">Category</th>
+                      <th className="py-3 px-3">Duration</th>
+                      <th className="py-3 px-3">Status</th>
+                      <th className="py-3 px-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-custom">
+                    {videos.map((vid) => {
+                      const thumb = vid.thumbnailUrl || (vid.videoId ? `https://img.youtube.com/vi/${vid.videoId}/hqdefault.jpg` : '');
+                      return (
+                        <tr key={vid.id} className="hover:bg-slate-900/40 transition">
+                          <td className="py-3 px-3">
+                            <div className="w-20 h-12 rounded-lg overflow-hidden border border-border-custom bg-black relative">
+                              {thumb ? (
+                                <img src={thumb} alt={vid.title} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-secondary">
+                                  <Video className="w-4 h-4" />
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="font-bold text-text font-sans line-clamp-1 max-w-xs">{vid.title}</div>
+                            <a
+                              href={vid.youtubeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-rose-400 hover:underline flex items-center gap-1 mt-0.5"
+                            >
+                              <span>{vid.videoId || vid.youtubeUrl}</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </td>
+                          <td className="py-3 px-3">
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                              {vid.category || 'General'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-secondary">
+                            {vid.duration || 'N/A'}
+                          </td>
+                          <td className="py-3 px-3">
+                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                              vid.active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                            }`}>
+                              {vid.active ? 'Active' : 'Hidden'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-right">
+                            <div className="flex items-center justify-end space-x-2">
+                              <button
+                                onClick={() => handleEdit(vid)}
+                                className="p-1.5 rounded-lg border border-border-custom text-secondary hover:text-cyan-custom hover:bg-slate-800 transition cursor-pointer"
+                                title="Edit"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(vid.id)}
+                                className="p-1.5 rounded-lg border border-border-custom text-rose-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List (< 768px) */}
+              <div className="md:hidden space-y-3">
+                {videos.map((vid) => {
+                  const thumb = vid.thumbnailUrl || (vid.videoId ? `https://img.youtube.com/vi/${vid.videoId}/hqdefault.jpg` : '');
+                  return (
+                    <div 
+                      key={vid.id} 
+                      className="rounded-2xl border border-border-custom bg-card-custom p-4 space-y-3 shadow-lg"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-24 aspect-video rounded-lg overflow-hidden border border-border-custom bg-black shrink-0 relative">
+                          {thumb ? (
+                            <img src={thumb} alt={vid.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-secondary">
+                              <Video className="w-4 h-4" />
+                            </div>
+                          )}
+                          {vid.duration && (
+                            <span className="absolute bottom-1 right-1 px-1 py-0.2 bg-black/80 text-white text-[9px] rounded font-mono">
+                              {vid.duration}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-xs text-text line-clamp-2">{vid.title}</h4>
+                          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                              {vid.category || 'General'}
+                            </span>
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                              vid.active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                            }`}>
+                              {vid.active ? 'Active' : 'Hidden'}
+                            </span>
                           </div>
-                        </td>
-                        <td className="py-3 px-3">
-                          <div className="font-bold text-text font-sans line-clamp-1 max-w-xs">{vid.title}</div>
-                          <a
-                            href={vid.youtubeUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[10px] text-rose-400 hover:underline flex items-center gap-1 mt-0.5"
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-border-custom/50 text-[11px]">
+                        <a
+                          href={vid.youtubeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-rose-400 hover:underline flex items-center gap-1 text-[10px]"
+                        >
+                          <span>YouTube Link</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleEdit(vid)}
+                            className="px-2.5 py-1 rounded-lg border border-border-custom text-secondary hover:text-cyan-custom hover:bg-slate-800 transition flex items-center gap-1 text-[11px]"
                           >
-                            <span>{vid.videoId || vid.youtubeUrl}</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        </td>
-                        <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                            {vid.category || 'General'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-secondary">
-                          {vid.duration || 'N/A'}
-                        </td>
-                        <td className="py-3 px-3">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                            vid.active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-400'
-                          }`}>
-                            {vid.active ? 'Active' : 'Hidden'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <button
-                              onClick={() => handleEdit(vid)}
-                              className="p-1.5 rounded-lg border border-border-custom text-secondary hover:text-cyan-custom hover:bg-slate-800 transition cursor-pointer"
-                              title="Edit"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(vid.id)}
-                              className="p-1.5 rounded-lg border border-border-custom text-rose-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
-                              title="Delete"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                            <Edit2 className="w-3 h-3" />
+                            <span>{locale === 'vi' ? 'Sửa' : 'Edit'}</span>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(vid.id)}
+                            className="px-2.5 py-1 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition flex items-center gap-1 text-[11px]"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>{locale === 'vi' ? 'Xóa' : 'Del'}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

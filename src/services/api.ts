@@ -739,7 +739,7 @@ export const apiService = {
     throw new Error(result.message || 'Failed to retrieve code');
   },
 
-  async syncLeetCode(): Promise<LeetCodeStats> {
+  async syncLeetCode(): Promise<any> {
     if (DEBUG) console.log('Triggering LeetCode manual sync...');
     const response = await fetchWithTimeout('/api/v1/admin/leetcode/sync', {
       method: 'POST',
@@ -748,9 +748,9 @@ export const apiService = {
     if (!response.ok) {
       await handleErrorResponse(response, 'Failed to sync LeetCode data');
     }
-    const result: ApiResponse<LeetCodeStats> = await response.json();
-    if (result.success && result.data) {
-      return result.data;
+    const result: ApiResponse<any> = await response.json();
+    if (result.success) {
+      return result.data || result.message;
     }
     throw new Error(result.message || 'Failed to sync LeetCode stats');
   },

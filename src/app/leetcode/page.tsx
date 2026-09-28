@@ -244,11 +244,8 @@ export default function LeetCodePage() {
   const handleSync = async () => {
     try {
       setSyncing(true);
-      const newStats = await api.syncLeetCode();
-      setStats(newStats);
-      if (newStats.recentSubmissions) {
-        setSubmissions(newStats.recentSubmissions);
-      }
+      await api.syncLeetCode();
+      await fetchLeetCodeData();
     } catch (err: any) {
       console.error('Sync failed:', err);
       // Fallback reload

@@ -409,9 +409,39 @@ export default function AdminProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* LeetCode Settings */}
             <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-bold text-amber-400">
-                <Code2 className="w-4 h-4" />
-                <span>LeetCode Integration</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-xs font-bold text-amber-400">
+                  <Code2 className="w-4 h-4" />
+                  <span>LeetCode Integration</span>
+                </div>
+                <button
+                  type="button"
+                  disabled={saving || !leetcodeUsername}
+                  onClick={async () => {
+                    try {
+                      setSaving(true);
+                      setMessage(null);
+                      const result = await apiService.syncLeetCode();
+                      setMessage({
+                        type: 'success',
+                        text: locale === 'vi' 
+                          ? `Đồng bộ LeetCode thành công! ${typeof result === 'string' ? result : ''}` 
+                          : `LeetCode sync completed! ${typeof result === 'string' ? result : ''}`
+                      });
+                    } catch (err: any) {
+                      setMessage({
+                        type: 'error',
+                        text: locale === 'vi' ? `Lỗi đồng bộ: ${err.message}` : `Sync error: ${err.message}`
+                      });
+                    } finally {
+                      setSaving(false);
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-lg border border-amber-500/30 hover:bg-amber-500/20 text-amber-400 text-[10px] font-bold flex items-center gap-1.5 transition disabled:opacity-40 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3 h-3 ${saving ? 'animate-spin' : ''}`} />
+                  <span>{locale === 'vi' ? 'Đồng bộ bài giải' : 'Sync Submissions'}</span>
+                </button>
               </div>
 
               <div className="space-y-1">
@@ -422,24 +452,26 @@ export default function AdminProfilePage() {
                   type="text"
                   value={leetcodeUsername}
                   onChange={(e) => setLeetcodeUsername(e.target.value)}
-                  placeholder="e.g. pdkhang or PhanDuyKhang"
+                  placeholder="e.g. psmNQXkg5O or pdkhang"
                   className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-amber-500/50"
                 />
               </div>
 
               <div className="space-y-1">
                 <label className="text-[10px] text-secondary uppercase font-bold">
-                  LeetCode Session Cookie (LEETCODE_SESSION)
+                  LeetCode Session / Cookies String
                 </label>
-                <input
-                  type="password"
+                <textarea
+                  rows={2}
                   value={leetcodeSession}
                   onChange={(e) => setLeetcodeSession(e.target.value)}
-                  placeholder="Optional cookie to auto-fetch submission code"
-                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-xs focus:outline-none focus:border-amber-500/50"
+                  placeholder="LEETCODE_SESSION=eyJ0eX...; csrftoken=a1b2c3... (hoặc paste toàn bộ Cookie string)"
+                  className="w-full px-3 py-2 rounded-xl border border-border-custom bg-slate-950/60 text-text font-mono text-[11px] focus:outline-none focus:border-amber-500/50 resize-y"
                 />
-                <p className="text-[9px] text-secondary">
-                  {locale === 'vi' ? 'Dùng để tự động trích xuất code bài nộp khi bấm xem giải pháp.' : 'Used to automatically extract solution code for submissions.'}
+                <p className="text-[9px] text-secondary leading-relaxed">
+                  {locale === 'vi' 
+                    ? '💡 Hướng dẫn: Mở leetcode.com -> F12 -> tab Network -> click request bất kỳ -> copy toàn bộ header "Cookie" (hoặc ít nhất LEETCODE_SESSION & csrftoken) dán vào đây để hệ thống tự động cào 100% bài nộp lịch sử kèm mã nguồn lưu vào cơ sở dữ liệu.' 
+                    : '💡 Tip: Open leetcode.com -> F12 -> Network tab -> copy "Cookie" header (or LEETCODE_SESSION & csrftoken) to auto-fetch all historic submissions & source code.'}
                 </p>
               </div>
             </div>
