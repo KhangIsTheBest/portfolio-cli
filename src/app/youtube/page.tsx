@@ -78,49 +78,49 @@ export default function YouTubePage() {
   });
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto font-sans">
+    <div className="min-h-screen py-6 sm:py-10 px-0 sm:px-4 lg:px-8 max-w-6xl mx-auto font-sans w-full">
       {/* Station Channel Header */}
-      <div className="relative overflow-hidden rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 sm:p-8 mb-8 shadow-2xl">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-2xl">
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 relative z-10">
-          <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-            <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-rose-500/40 p-1 bg-slate-900 shadow-xl shadow-rose-500/20">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-5 sm:gap-6 relative z-10 w-full min-w-0">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left min-w-0 flex-1 w-full">
+            <div className="relative shrink-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-2 border-rose-500/40 p-1 bg-slate-900 shadow-xl shadow-rose-500/20">
                 <img
                   src={profile?.avatarUrl || "https://api.dicebear.com/7.x/bottts/svg?seed=PhanDuyKhang"}
                   alt="YouTube Channel Avatar"
                   className="w-full h-full object-cover rounded-xl"
                 />
               </div>
-              <span className="absolute -bottom-2 -right-2 p-1.5 rounded-lg bg-rose-600 text-white shadow-lg">
-                <Youtube className="w-4 h-4" />
+              <span className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 p-1 sm:p-1.5 rounded-lg bg-rose-600 text-white shadow-lg">
+                <Youtube className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </span>
             </div>
 
-            <div>
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                <span className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider">Official Video Channel</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                <span className="text-xs font-mono text-[var(--secondary-color)]">Tech & Engineering</span>
+            <div className="min-w-0 flex-1 w-full">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2 mb-1.5">
+                <span className="text-[10px] sm:text-xs font-mono font-bold text-rose-400 uppercase tracking-wider">Official Video Channel</span>
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-rose-500"></span>
+                <span className="text-[10px] sm:text-xs font-mono text-[var(--secondary-color)]">Tech & Engineering</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-color)]">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[var(--text-color)] break-words">
                 {profile?.fullName || "Phan Duy Khang"} <span className="text-rose-500 font-mono">Channel</span>
               </h1>
-              <p className="text-xs font-mono text-[var(--secondary-color)] mt-1">
+              <p className="text-[11px] sm:text-xs font-mono text-[var(--secondary-color)] mt-1 break-words">
                 {profile?.youtubeHandle || "@phanduykhang.dev"} • Tech Tutorials, Architecture Breakdown & Live Coding
               </p>
             </div>
           </div>
 
           {/* Channel Link button */}
-          <div className="flex items-center gap-3">
+          <div className="w-full sm:w-auto flex justify-center sm:justify-end shrink-0 pt-2 sm:pt-0">
             <a
               href={profile?.youtubeChannelId 
                 ? (profile.youtubeChannelId.startsWith('http') ? profile.youtubeChannelId : `https://youtube.com/${profile.youtubeChannelId}`)
                 : "https://youtube.com"}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono transition shadow-lg shadow-rose-600/30"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono transition shadow-lg shadow-rose-600/30"
             >
               <Youtube className="w-4 h-4" />
               <span>{locale === 'vi' ? 'Xem Kênh' : 'Visit Channel'}</span>
@@ -132,14 +132,14 @@ export default function YouTubePage() {
 
       {/* Main Content Area */}
       {videos.length === 0 ? (
-        <div className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-12 text-center shadow-xl">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center border border-rose-500/20">
-            <Tv className="w-8 h-8" />
+        <div className="rounded-2xl sm:rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 sm:p-12 text-center shadow-xl">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center border border-rose-500/20">
+            <Tv className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
-          <h3 className="text-xl font-bold text-[var(--text-color)] mb-2 font-mono">
+          <h3 className="text-lg sm:text-xl font-bold text-[var(--text-color)] mb-2 font-mono">
             {locale === 'vi' ? 'Chưa có video nào được đăng tải' : 'No Videos Published Yet'}
           </h3>
-          <p className="text-sm text-[var(--secondary-color)] max-w-md mx-auto mb-6 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[var(--secondary-color)] max-w-md mx-auto mb-6 leading-relaxed">
             {locale === 'vi'
               ? 'Hiện tại hệ thống chưa cập nhật video công khai trong thư viện. Bạn có thể ghé thăm trực tiếp kênh YouTube chính thức để theo dõi các nội dung mới nhất.'
               : 'There are currently no public videos published in this library. You can visit the official YouTube channel to check out latest tutorials and livestreams.'}
@@ -149,7 +149,7 @@ export default function YouTubePage() {
               href={profile.youtubeChannelId.startsWith('http') ? profile.youtubeChannelId : `https://youtube.com/${profile.youtubeChannelId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono transition shadow-lg shadow-rose-600/30"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono transition shadow-lg shadow-rose-600/30"
             >
               <Youtube className="w-4 h-4" />
               <span>{locale === 'vi' ? 'Xem Kênh trên YouTube' : 'Visit YouTube Channel'}</span>
@@ -161,8 +161,8 @@ export default function YouTubePage() {
         <>
           {/* Main Video Theater Stage */}
           {selectedVideo && (
-            <div className="mb-10 space-y-4">
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-black shadow-2xl">
+            <div className="mb-8 sm:mb-10 space-y-4">
+              <div className="relative aspect-video w-full rounded-xl sm:rounded-2xl overflow-hidden border border-[var(--border-color)] bg-black shadow-2xl">
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${selectedVideo.videoId}?autoplay=0&rel=0`}
                   title={selectedVideo.title}
@@ -173,10 +173,10 @@ export default function YouTubePage() {
               </div>
 
               {/* Playing Video Metadata */}
-              <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-xl">
+              <div className="rounded-xl sm:rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-6 shadow-xl">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
                       <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
                         {selectedVideo.category || 'Engineering'}
                       </span>
@@ -187,17 +187,17 @@ export default function YouTubePage() {
                         </span>
                       )}
                     </div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-color)]">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[var(--text-color)] break-words">
                       {selectedVideo.title}
                     </h2>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                     <a
                       href={selectedVideo.youtubeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-rose-500/40 text-[var(--text-color)] hover:text-rose-400 text-xs font-mono font-bold transition shadow-sm"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--terminal-header-bg)] border border-[var(--border-color)] hover:border-rose-500/40 text-[var(--text-color)] hover:text-rose-400 text-xs font-mono font-bold transition shadow-sm"
                     >
                       <Youtube className="w-3.5 h-3.5 text-rose-500" />
                       <span>Xem trên YouTube</span>
@@ -207,7 +207,7 @@ export default function YouTubePage() {
                 </div>
 
                 {selectedVideo.description && (
-                  <p className="mt-4 text-xs sm:text-sm text-[var(--secondary-color)] leading-relaxed border-t border-[var(--border-color)] pt-4">
+                  <p className="mt-4 text-xs sm:text-sm text-[var(--secondary-color)] leading-relaxed border-t border-[var(--border-color)] pt-4 break-words">
                     {selectedVideo.description}
                   </p>
                 )}
@@ -217,10 +217,10 @@ export default function YouTubePage() {
 
           {/* Playlist Grid & Search Filter */}
           <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-4">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-4">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Tv className="w-5 h-5 text-rose-500" />
-                <h3 className="text-lg font-bold text-[var(--text-color)] font-mono">
+                <h3 className="text-base sm:text-lg font-bold text-[var(--text-color)] font-mono">
                   {locale === 'vi' ? 'Danh sách Video & Chuyên đề' : 'Video Library & Playlists'}
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--secondary-color)]">
@@ -229,7 +229,7 @@ export default function YouTubePage() {
               </div>
 
               {/* Search */}
-              <div className="relative min-w-[220px]">
+              <div className="relative w-full sm:w-auto sm:min-w-[220px]">
                 <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--secondary-color)]" />
                 <input
                   type="text"
@@ -242,12 +242,12 @@ export default function YouTubePage() {
             </div>
 
             {/* Categories Bar */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none font-mono text-xs">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none font-mono text-xs w-full max-w-full">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition cursor-pointer shrink-0 ${
                     activeCategory === cat
                       ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20'
                       : 'bg-[var(--terminal-header-bg)] border border-[var(--border-color)] text-[var(--secondary-color)] hover:text-[var(--text-color)]'
@@ -259,7 +259,7 @@ export default function YouTubePage() {
             </div>
 
             {/* Video Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredVideos.map((video) => {
                 const isPlaying = selectedVideo?.id === video.id;
                 const thumb = video.thumbnailUrl || (video.videoId ? `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg` : '');
@@ -273,7 +273,7 @@ export default function YouTubePage() {
                       setSelectedVideo(video);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className={`group relative rounded-2xl overflow-hidden border bg-[var(--card-bg)] shadow-xl cursor-pointer flex flex-col transition ${
+                    className={`group relative rounded-xl sm:rounded-2xl overflow-hidden border bg-[var(--card-bg)] shadow-xl cursor-pointer flex flex-col transition ${
                       isPlaying 
                         ? 'border-rose-500 shadow-rose-500/20 ring-2 ring-rose-500/20' 
                         : 'border-[var(--border-color)] hover:border-rose-500/40'
@@ -287,8 +287,8 @@ export default function YouTubePage() {
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       />
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
-                        <div className={`p-3 rounded-full ${isPlaying ? 'bg-rose-600 text-white' : 'bg-slate-900/80 text-white group-hover:bg-rose-600'} transition shadow-xl`}>
-                          <Play className="w-5 h-5 fill-current" />
+                        <div className={`p-2.5 sm:p-3 rounded-full ${isPlaying ? 'bg-rose-600 text-white' : 'bg-slate-900/80 text-white group-hover:bg-rose-600'} transition shadow-xl`}>
+                          <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
                         </div>
                       </div>
 
@@ -306,13 +306,13 @@ export default function YouTubePage() {
                     </div>
 
                     {/* Info Content */}
-                    <div className="p-4 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h4 className="font-bold text-sm text-[var(--text-color)] group-hover:text-rose-400 transition line-clamp-2">
+                    <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between min-w-0">
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-sm text-[var(--text-color)] group-hover:text-rose-400 transition line-clamp-2 break-words">
                           {video.title}
                         </h4>
                         {video.description && (
-                          <p className="mt-1.5 text-xs text-[var(--secondary-color)] line-clamp-2 leading-relaxed">
+                          <p className="mt-1.5 text-xs text-[var(--secondary-color)] line-clamp-2 leading-relaxed break-words">
                             {video.description}
                           </p>
                         )}
