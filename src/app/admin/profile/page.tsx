@@ -176,11 +176,11 @@ export default function AdminProfilePage() {
         type: 'success',
         text: locale === 'vi' ? 'Cập nhật hồ sơ thành công!' : 'Profile updated successfully!'
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to update profile:', err);
       setMessage({
         type: 'error',
-        text: locale === 'vi' ? 'Không thể cập nhật hồ sơ. Vui lòng thử lại.' : 'Failed to update profile. Please try again.'
+        text: err.message || (locale === 'vi' ? 'Không thể cập nhật hồ sơ. Vui lòng thử lại.' : 'Failed to update profile. Please try again.')
       });
     } finally {
       setSaving(false);
